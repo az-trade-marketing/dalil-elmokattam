@@ -50,8 +50,8 @@ class Admin extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function importFiles()
+    public function stores()
     {
-        return $this->hasMany(ImportFile::class);
+        return $this->hasMany(Store::class);
     }
 }

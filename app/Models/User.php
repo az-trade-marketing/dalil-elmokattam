@@ -25,7 +25,7 @@ class User extends Authenticatable implements JWTSubject
 
 
 
-    protected $guarde = [ ];
+    protected $guarde = [];
 
     protected $hidden = [
         'password',
@@ -52,10 +52,14 @@ class User extends Authenticatable implements JWTSubject
         'otp'=>'integer',
         'status'=>'integer',
     ];
-    // public function points()
-    // {
-    //     return $this->hasMany(Point::class, 'app_users_id');
-    // }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    public function favorits()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }
 
 
