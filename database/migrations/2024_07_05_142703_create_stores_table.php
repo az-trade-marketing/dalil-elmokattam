@@ -15,6 +15,16 @@ return new class extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
+            $table->string('name_en');
+            $table->string('name_ar');
+            $table->text('description_en')->nullable();
+            $table->text('description_ar')->nullable();
+            $table->string('image')->nullable();
+            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('area_id')->references('id')->on('areas');
+            $table->boolean('status')->default(true);
+            $table->json('boundaries');
             $table->timestamps();
         });
     }
