@@ -7,38 +7,55 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+<?php
 
-class User extends Authenticatable
+namespace App\Models;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Traits\HasPermissions;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Tymon\JWTAuth\Traits\JWTSubject as JWTSubjectTrait;
+
+class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles , HasPermissions  ;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+
+    protected $guarde = [ ];
+
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
+  public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
     /**
-     * The attributes that should be cast.
+     * Return a key value array, containing any custom claims to be added to the JWT.
      *
-     * @var array<string, string>
+     * @return array
      */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+    // public function notifiable()
+    // {
+    //     return $this->morphMany(ManualNotification::class,'notifiable');
+    // }
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'otp'=>'integer',
+        'status'=>'integer',
     ];
+    // public function points()
+    // {
+    //     return $this->hasMany(Point::class, 'app_users_id');
+    // }
 }
+
+

@@ -26,7 +26,7 @@ class CategoryRequest extends FormRequest
         return [
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'logo' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:2048',
         ];
     }
 }

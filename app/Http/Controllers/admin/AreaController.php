@@ -41,10 +41,10 @@ class AreaController extends Controller
     public function store(AreaRequest $request)
     {
         $validatedData = $request->validated();
-        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-            $avatar = $request->file('logo');
-            $logo = $this->upload($avatar, 'uploads/area');
-            $validatedData['logo'] = $logo;
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $avatar = $request->file('image');
+            $image = $this->upload($avatar, 'uploads/area');
+            $validatedData['image'] = $image;
         }
 
         $area = Area::create($validatedData);
@@ -85,16 +85,16 @@ class AreaController extends Controller
     {
 
         $area =Area::findOrFail($id);
-        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-            // Delete the old logo if it exists
-            if ($area->logo && Storage::exists('uploads/area/' . $area->logo)) {
-                Storage::delete('uploads/area/' . $area->logo);
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            // Delete the old image if it exists
+            if ($area->image && Storage::exists('uploads/area/' . $area->image)) {
+                Storage::delete('uploads/area/' . $area->image);
             }
-            // Upload the new logo
-            $avatar = $request->file('logo');
-            $logo = upload($avatar, 'uploads/area');
+            // Upload the new image
+            $avatar = $request->file('image');
+            $image = upload($avatar, 'uploads/area');
             $validatedData = $request->validated();
-            $validatedData['logo'] = $logo;
+            $validatedData['image'] = $image;
             $area->update($validatedData);
         } else {
             $area->update($request->validated());
@@ -114,8 +114,8 @@ class AreaController extends Controller
     {
         $area = Area::findOrFail($id);
 
-        if ($area->logo && Storage::exists('uploads/area/' . $area->logo)) {
-            Storage::delete('uploads/area/' . $area->logo);
+        if ($area->image && Storage::exists('uploads/area/' . $area->image)) {
+            Storage::delete('uploads/area/' . $area->image);
         }
         $area->delete();
 

@@ -41,10 +41,10 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $validatedData = $request->validated();
-        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-            $avatar = $request->file('logo');
-            $logo = upload($avatar, 'uploads/category');
-            $validatedData['logo'] = $logo;
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $avatar = $request->file('image');
+            $image = upload($avatar, 'uploads/category');
+            $validatedData['image'] = $image;
         }
 
         $category = Category::create($validatedData);
@@ -85,16 +85,16 @@ class CategoryController extends Controller
     {
 
         $category = Category::findOrFail($id);
-        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-            // Delete the old logo if it exists
-            if ($category->logo && Storage::exists('uploads/category/' . $category->logo)) {
-                Storage::delete('uploads/category/' . $category->logo);
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            // Delete the old image if it exists
+            if ($category->image && Storage::exists('uploads/category/' . $category->image)) {
+                Storage::delete('uploads/category/' . $category->image);
             }
-            // Upload the new logo
-            $avatar = $request->file('logo');
-            $logo = upload($avatar, 'uploads/category');
+            // Upload the new image
+            $avatar = $request->file('image');
+            $image = upload($avatar, 'uploads/category');
             $validatedData = $request->validated();
-            $validatedData['logo'] = $logo;
+            $validatedData['image'] = $image;
             $category->update($validatedData);
         } else {
             $category->update($request->validated());
@@ -114,8 +114,8 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        if ($category->logo && Storage::exists('uploads/category/' . $category->logo)) {
-            Storage::delete('uploads/category/' . $category->logo);
+        if ($category->image && Storage::exists('uploads/category/' . $category->image)) {
+            Storage::delete('uploads/category/' . $category->image);
         }
         $category->delete();
 
