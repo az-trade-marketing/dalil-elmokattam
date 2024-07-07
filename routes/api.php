@@ -31,8 +31,7 @@ use App\Http\Controllers\User\Auth\SocialAuthController;
     Route::get('login/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);
 
 Route::group([
-    'middleware' => 'auth:users',
-
+    'middleware' => ['tokencheck'],
 ], function ($router) {
     Route::post('password/change', [AuthController::class, 'changePassword']);
     Route::post('password/reset', [AuthController::class, 'resetPassword']);
