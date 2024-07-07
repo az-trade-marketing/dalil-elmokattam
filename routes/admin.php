@@ -25,6 +25,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
    Route::resource('permisions', PermisionsController::class);
 });
 
+Route::get("view-test",function(){
+   return view("admin.layout2.app");
+});
 
  // ============================== lang ====================
  Route::get('lang/{lang}', function ($lang) {
