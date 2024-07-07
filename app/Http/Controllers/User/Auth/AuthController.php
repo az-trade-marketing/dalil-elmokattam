@@ -1,146 +1,26 @@
 <?php
 
 namespace App\Http\Controllers\User\Auth;
+
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Mail\PasswordResetEmail;
+use App\Http\Requests\UserRequest;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function check_number(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'phone' => ['required'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => "false", 'error' => $validator->errors()], 422);
-        }
-
-        //check if the phone is exists
-        $phone = "009665" . $request->phone;
-        $user = User::where('phone', $phone)->first();
-
-        $is_new_user = true;
-
-        //generate OTP
-         $otp = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
-
-        try {
-            if ($user) {
-                //save code in database
-                $user->otp = $otp;
-                $user->save();
-                if ($user->name != "new_user") {
-                    $is_new_user = false;
-                }
-
-                if ($user->status == 0) {
-                    return response()->json(['success' => "false", 'is_new' => false], 403);
-                }
-            } else {
-                //create user
-                $user = User::create([
-                    'name' => 'new_user',
-                    'phone' => $phone,
-                    'otp' => $otp,
-                    'api_token' => Str::random(100),
-                ]);
-            }
-
-            $text = "رمز التحقق هو: " . $otp . " للاستخدام في تطبيق قطون  ";
-            $this->send_sms($phone, $text);
-
-            return response()->json(['success' => "true", 'is_new' => $is_new_user], 200);
-        } catch (\Exception $e) {
-            return response()->json(['success' => "false", 'is_new' => false], 403);
-        }
-
-    }
-    public function check_opt(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'phone' => ['required'],
-            'otp' => ['required'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => "false", 'error' => $validator->errors()], 422);
-        }
-
-        $phone = "009665". $request->phone;
-        if($request->phone == "93783093")
-        {
-            $user = User::where('phone', $phone)->first();
-            $token = JWTAuth::fromUser($user);
-
-            return response()->json([
-                'access_token' => $token,
-                "data" => $user,
-                'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            ]);
-        }
-
-        $user = User::where('phone', $phone)->where('otp',$request->otp)->first();
-        if($user)
-        {
-            if(isset($request->name) && $request->name != "")
-            {
-                $user->name = $request->name;
-                $user->save();
-            }
-            $token = JWTAuth::fromUser($user);
-
-            return response()->json([
-                'access_token' => $token,
-                'token_type' => 'bearer',
-                "data" => $user,
-                'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            ]);
-        }else{
-            return response()->json([ 'error' => 'wrong data'], 403);
-        }
-    }
-    public function update_user_password(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'token' => 'required',
-            'old_password' => 'required',
-            'new_password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => "false", 'error' => $validator->errors()], 422);
-        }
-
-        $user = User::where('api_token', $request->token)->first();
-        if ($user) {
-            $email = $user->email;
-            $old_password = $request->old_password;
-
-            if (Auth::guard('app_users')->attempt(['email' => $email, 'password' => $old_password])) {
 
 
-                $user->password = Hash::make($request->new_password);
-
-
-                $user->save();
-
-                return response()->json(['success' => "true", 'user' => $user], 200);
-            } else {
-                return response()->json(['success' => "false", 'error' => "you do not have access"], 403);
-            }
-        } else {
-            return response()->json(['success' => "false", 'error' => "you do not have access 1"],  403);
-        }
-    }
-    public function login(Request $request)
+    public function signin(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => ['required'],
@@ -154,102 +34,164 @@ class AuthController extends Controller
         $email = $request->email;
         $password = $request->password;
 
-        if (Auth::guard('app_users')->attempt(['email' => $email, 'password' => $password])) {
+        if (Auth::guard('users')->attempt(['email' => $email, 'password' => $password])) {
 
             $user = User::where('email', $email)->first();
-
-            return response()->json(['success' => "true", 'user' => $user], 200);
+            $token = JWTAuth::fromUser($user);
+            return response()->json(['success' => "true", 'user' => $user, 'token' => $token], 200);
         }
-
-
         $error = json_decode('{"failed": "you do not have access"}', true);
-
         return response()->json(['success' => "false", 'error' => $error], 403);
     }
-    public function store(Request $request)
+    public function signup(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:250',
-            'email' => 'required|unique:app_users',
-            'password' => 'required|min:8|max:250',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required|same:password',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['success' => "false", 'error' => $validator->errors()], 422);
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->first(),
+            ], 422);
         }
 
         $user = User::create([
-            'name' => $request->name,
-            'password' => Hash::make($request->password),
-            'api_token' => Str::random(100),
             'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'phone' => $request->phone,
+            'gender' => $request->gender,
+            'date_of_birth' => $request->date_of_birth,
+            'lat' => $request->lat,
+            'lon' => $request->lon
         ]);
 
-        $new_user = User::where('email', $request->email)->first();
-        return response()->json(['success' => "true", 'user' => $new_user], 200);
+        $token = JWTAuth::fromUser($user);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User registered successfully',
+            'user' => $user,
+            'token' => $token,
+        ], 200);
     }
-    public function send_sms($number, $text)
+
+
+    public function resetPassword(Request $request)
     {
-        try {
+        $validator = Validator::make($request->all(), [
+            'newPassword' => 'required|min:8',
+        ]);
 
-            $token = "730e84907c2db2bd82f06807860e2cf5";
-            $url = "https://api.taqnyat.sa/v1/messages";
-
-            $sender = "qotoon";
-
-            //You may send message to 1 destination or multiple destinations by supply destinations number in one string and separate the numbers with "," or provide a array of strings
-            //يمكنك ارسال الرسائل الى جهة واحدة من خلال او اكثر تزويدنا بالارقام في متغير نصي واحد تكون فيه الارقام مفصولة عن بعضها باستخدام "," او من خلال تزويدنا بمصفوفة من الارقام
-            $recipients = $number;
-
-            $body = $text;
-
-            $customRequest = "POST"; //POST or GET
-            $data = array(
-                'bearerTokens' => $token,
-                'sender' => $sender,
-                'recipients' => $recipients,
-                'body' => $body,
-            );
-            // Log::info('SMS Response', ['number' => $number]);
-
-            $data = json_encode($data);
-
-            $curl = curl_init();
-
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 10,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => $customRequest,
-                CURLOPT_POSTFIELDS => $data,
-                CURLOPT_HTTPHEADER => array('Content-Type:application/json'),
-            ));
-
-
-            $response = curl_exec($curl);
-
-        // Log the response
-        // Log::info('SMS Response', ['response' => $response]);
-
-        if ($response === false) {
-            $error = curl_error($curl);
-            // Log curl error
-            // Log::error('Curl error', ['error' => $error]);
-            curl_close($curl);
-            return false;
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->first(),
+            ], 422);
         }
 
-        curl_close($curl);
-        return true;
-        } catch (\Exception $e) {
-            return false;
+        $user = Auth::guard('users')->user();
+
+        if (!$user) {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first(),
+                ], 422);
+            }
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No user found with this email.',
+                ], 404);
+            }
         }
+
+        $user->password = Hash::make($request->newPassword);
+        $user->save();
+
+        return response()->json([
+            'isSuccess' => true,
+            'message' => 'Password reset successfully.',
+        ], 200);
     }
 
 
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'oldPassword' => 'required',
+            'newPassword' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+        }
+
+        $user = Auth::guard('users')->user();
+        if (!Hash::check($request->oldPassword, $user->password)) {
+            return response()->json(['status' => false, 'message' => 'password is incorrect'], 310);
+        }
+        $user->password = Hash::make($request->input('newPassword'));
+        $user->save();
+
+        return response()->json(['isSuccess' => true], 200);
+    }
+
+    public function forgetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+        }
+
+        // Try to find the user by email
+        $user = $this->broker()->getUser($request->only('email'));
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found.'
+            ], 404);
+        }
+
+        // Create a password reset token
+        $token = $this->broker()->createToken($user);
+        // Send the password reset email
+        Mail::to($user->email)->send(new PasswordResetEmail($token, $user->email));
+
+        // Check if the email was sent successfully
+        return response()->json([
+            'message' => 'Password reset link sent successfully.'
+        ]);
+    }
+
+    // Ensure this method is in the controller to get the password broker
+    protected function broker()
+    {
+        return Password::broker('users');
+    }
+
+    public function logout()
+    {
+        $authenticatedUserId = Auth::guard('users')->user()->id;
+        $user = User::find($authenticatedUserId);
+        $user->tokens->each(function ($token, $key) {
+            $token->delete();
+        });
+        return response()->json(['isSignOut' => true]);
+    }
 }

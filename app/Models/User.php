@@ -1,15 +1,6 @@
 <?php
 
 namespace App\Models;
-
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-<?php
-
-namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,8 +15,17 @@ class User extends Authenticatable implements JWTSubject
     use HasApiTokens, HasFactory, Notifiable, HasRoles , HasPermissions  ;
 
 
-
-    protected $guarde = [];
+    protected $fillable = [
+        'email',
+        'password',
+        'firstname',
+        'lastname',
+        'phone',
+        'gender',
+        'date_of_birth',
+        'lat',
+        'lon',
+    ];
 
     protected $hidden = [
         'password',

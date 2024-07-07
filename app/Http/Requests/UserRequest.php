@@ -21,13 +21,13 @@ class UserRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3',
             'email' => 'sometimes|nullable|unique:users',
+            'password_confirmation' => 'required|same:password',
             'password' => 'required|string|min:6',
-            'avatar' => 'sometimes|nullable|mimes:jpeg,png,jpg,gif,svg|max:10240',
+            'photo' => 'sometimes|nullable|mimes:jpeg,png,jpg,gif,svg|max:10240',
             'mobile' => 'sometimes|nullable|unique:users',
         ];
     }
