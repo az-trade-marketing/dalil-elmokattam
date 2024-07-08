@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -53,7 +54,25 @@ class UserController extends Controller
             'userData' => $user,
         ], 200);
     }
+    public function editProfileImage(Request $request)
+    {
 
+        $user = User::find(Auth::guard('users')->user()->id);
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User not found'], 310);
+        }
+        if (request()->hasFile('photo') && request('photo') != '') {
+            if ($user->photo && Storage::exists('uploads/user/' . $user->photo)) {
+                Storage::delete('uploads/user/' . $user->photo);
+            }
+            $avatar = $request->file('photo');
+            $photo = upload($avatar, 'uploads/admin');
+            $user->photo = $photo;
+
+        }else {
+            return response()->json(['status' => false, 'message' => 'Image not uploaded successfully'], 310);
+        }
+    }
     public function deleteAccount(Request $request)
     {
         $user = User::where('id', Auth::guard('users')->user()->id)->first();

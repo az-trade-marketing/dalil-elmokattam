@@ -38,5 +38,6 @@ Route::group([
     //////users
      Route::get('getUserProfile', [UserController::class, 'getUserProfile']);
     Route::post('editProfile', [UserController::class, 'editProfile']);
+    Route::post('editProfileImage', [UserController::class, 'editProfileImage']);
     Route::delete('deleteAccount', [UserController::class, 'deleteAccount']);
 });
