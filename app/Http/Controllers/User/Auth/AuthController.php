@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User\Auth;
 
+use random;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+
+use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -81,53 +84,78 @@ class AuthController extends Controller
     }
 
 
-    public function resetPassword(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'newPassword' => 'required|min:8',
-        ]);
+    // public function resetPassword(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'newPassword' => 'required|min:8',
+    //     ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => $validator->errors()->first(),
-            ], 422);
-        }
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => $validator->errors()->first(),
+    //         ], 422);
+    //     }
 
-        $user = Auth::guard('users')->user();
+    //     $user = Auth::guard('users')->user();
 
-        if (!$user) {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email',
-            ]);
+    //     if (!$user) {
+    //         $validator = Validator::make($request->all(), [
+    //             'email' => 'required|email',
+    //         ]);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => $validator->errors()->first(),
-                ], 422);
-            }
+    //         if ($validator->fails()) {
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'message' => $validator->errors()->first(),
+    //             ], 422);
+    //         }
 
-            $user = User::where('email', $request->email)->first();
+    //         $user = User::where('email', $request->email)->first();
 
-            if (!$user) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'No user found with this email.',
-                ], 404);
-            }
-        }
+    //         if (!$user) {
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'message' => 'No user found with this email.',
+    //             ], 404);
+    //         }
+    //     }
 
-        $user->password = Hash::make($request->newPassword);
-        $user->save();
+    //     $user->password = Hash::make($request->newPassword);
+    //     $user->save();
 
+    //     return response()->json([
+    //         'isSuccess' => true,
+    //         'message' => 'Password reset successfully.',
+    //     ], 200);
+    // }
+
+public function resetPassword(Request $request)
+{
+    $request->validate([
+        'token' => 'required',
+        'password' => 'required|min:8|confirmed',
+    ]);
+
+    $passwordReset = PasswordReset::where('token', hash('sha256', $request->token))->first();
+
+    if (!$passwordReset) {
         return response()->json([
-            'isSuccess' => true,
-            'message' => 'Password reset successfully.',
-        ], 200);
+            'message' => 'This password reset token is invalid.'
+        ], 404);
     }
 
+    $user = User::where('email', $passwordReset->email)->first();
+    $user->update([
+        'password' => bcrypt($request->password)
+    ]);
 
+    $passwordReset->delete();
+
+    return response()->json([
+        'message' => 'Your password has been reset successfully.'
+    ]);
+}
     public function changePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -149,42 +177,79 @@ class AuthController extends Controller
         return response()->json(['isSuccess' => true], 200);
     }
 
+    // public function forgetPassword(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'email' => 'required|email',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+    //     }
+
+    //     // Try to find the user by email
+    //     $user = $this->broker()->getUser($request->only('email'));
+
+    //     if (!$user) {
+    //         return response()->json([
+    //             'message' => 'User not found.'
+    //         ], 404);
+    //     }
+
+    //     // Create a password reset token
+    //     $token = $this->broker()->createToken($user);
+    //     // Send the password reset email
+    //     Mail::to($user->email)->send(new PasswordResetEmail($token, $user->email));
+
+    //     // Check if the email was sent successfully
+    //     return response()->json([
+    //         'message' => 'Password reset link sent successfully.'
+    //     ]);
+    // }
+
+    // // Ensure this method is in the controller to get the password broker
+    // protected function broker()
+    // {
+    //     return Password::broker('users');
+    // }
     public function forgetPassword(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-        ]);
+        $request->validate(['email' => 'required|email']);
 
-        if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
-        }
-
-        // Try to find the user by email
-        $user = $this->broker()->getUser($request->only('email'));
+        $user = User::where('email', $request->email)->first();
 
         if (!$user) {
             return response()->json([
-                'message' => 'User not found.'
+                'message' => 'We can\'t find a user with that email address.'
             ], 404);
         }
 
-        // Create a password reset token
-        $token = $this->broker()->createToken($user);
-        // Send the password reset email
-        Mail::to($user->email)->send(new PasswordResetEmail($token, $user->email));
+        $token = $this->generateResetToken($user);
+        $this->sendPasswordResetEmail($user, $token);
 
-        // Check if the email was sent successfully
         return response()->json([
-            'message' => 'Password reset link sent successfully.'
+            'message' => 'We have emailed your password reset link!'
         ]);
     }
 
-    // Ensure this method is in the controller to get the password broker
-    protected function broker()
+    protected function generateResetToken(User $user)
     {
-        return Password::broker('users');
+        $token = Str::random(60);
+
+        PasswordReset::updateOrCreate([
+            'email' => $user->email
+        ], [
+            'token' =>  $token,
+            'created_at' => now()
+        ]);
+
+        return $token;
     }
 
+    protected function sendPasswordResetEmail(User $user, $token)
+    {
+        Mail::to($user->email)->send(new PasswordResetEmail($token));
+    }
     public function logout()
     {
         $authenticatedUserId = Auth::guard('users')->user()->id;

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone')->unique()->nullable();
             $table->string('password');
-            $table->string('password-confirmation');
+            $table->string('password-confirmation')->nullable();
             $table->enum('gender', ['male', 'female'])->default('male');
             $table->string('provider_id')->nullable();
             $table->date('date_of_birth')->nullable();
