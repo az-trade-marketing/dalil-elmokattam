@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AreaController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\PermisionsController;
+use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesController;
 
 //================== Route Login Admin =========================
@@ -26,7 +26,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
    Route::get('dashboard', [DashboardController::class, 'index']);
    Route::resource('users', UserController::class);
    Route::resource('roles', RolesController::class);
-   Route::resource('permisions', PermisionsController::class);
+   Route::get('roles-get-data', [RolesController::class, 'data']);
+   Route::resource('permissions', PermissionsController::class);
+   Route::get('permissions-get-data', [PermissionsController::class, 'data']);
 
    // category 
    Route::resource('categories', CategoryController::class);
