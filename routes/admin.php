@@ -4,12 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AreaController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PermisionsController;
 use App\Http\Controllers\Admin\RolesController;
 
 //================== Route Login Admin =========================
 Route::get('login', [AdminAuthenticatedSessionController::class, 'login'])->name('AdminFormLogin');
 Route::post('/login', [AdminAuthenticatedSessionController::class, 'store'])->name('loginAdmin');
+Route::post('/logout', [AdminAuthenticatedSessionController::class, 'destroy'])->name('logoutAdmin');
 Route::get('forgot-password', [AdminAuthenticatedSessionController::class, 'forgotPassword'])->name('admin.forgotPassword');
 Route::post('forgot-password', [AdminAuthenticatedSessionController::class, 'forgotPasswordPost'])->name('admin.forgotPassword.post');
 Route::get('reset-password/{token}', [AdminAuthenticatedSessionController::class, 'resetPassword'])->name('admin.resetPassword');
@@ -23,11 +27,22 @@ Route::group(['middleware' => 'auth:admin'], function () {
    Route::resource('users', UserController::class);
    Route::resource('roles', RolesController::class);
    Route::resource('permisions', PermisionsController::class);
+
+   // category 
+   Route::resource('categories', CategoryController::class);
+   Route::get('cat-data', [CategoryController::class, 'cat_cat']);
+   Route::resource('areas', AreaController::class);
+   Route::get('get-data', [AreaController::class, 'data']);
+
+   Route::get("view-test",function(){
+      $script_datatable = true;
+      return view("admin.categories.index",compact('script_datatable'));
+   });
+
+   Route::post('/user/language', [AdminController::class, 'updateLanguage'])->name('user.language.update');
+
 });
 
-Route::get("view-test",function(){
-   return view("admin.layout2.app");
-});
 
  // ============================== lang ====================
  Route::get('lang/{lang}', function ($lang) {

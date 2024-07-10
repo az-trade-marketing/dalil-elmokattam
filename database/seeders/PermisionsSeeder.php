@@ -34,6 +34,7 @@ class PermisionsSeeder extends Seeder
                 $permissionNameAr =   $actionNames['ar']. ' ' .$categoryNames['ar'];
 
                 Permission::firstOrCreate([
+                    'name' => $permissionNameEn,
                     'name_en' => $permissionNameEn,
                     'name_ar' => $permissionNameAr,
                     'cat_name_en' => $categoryNames['en'],

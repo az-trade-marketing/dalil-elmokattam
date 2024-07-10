@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateAdminRequest;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -106,4 +107,16 @@ class AdminController extends Controller
         session()->flash('success', 'تم تعطيل الحساب بنجاح');
         return back();
     }
+
+    public function updateLanguage(Request $request)
+    {
+        $user = Admin::find(Auth::user()->id);
+        $user->lang = $request->input('language');
+        $user->save();
+
+        session()->put('lang', $user->lang);
+        app()->setLocale($user->lang);
+        return redirect()->back()->with('status', 'Language updated successfully!');
+    }
+
 }

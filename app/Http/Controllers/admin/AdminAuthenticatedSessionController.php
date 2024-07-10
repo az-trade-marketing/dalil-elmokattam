@@ -33,6 +33,8 @@ class AdminAuthenticatedSessionController extends Controller
         return redirect()->intended(RouteServiceProvider::ADMIN);
     }
 
+    
+
 
     public function destroy(Request $request)
     {

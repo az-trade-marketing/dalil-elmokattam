@@ -1,4 +1,11 @@
 <?php
+if (!function_exists('image_path')) {
+    function image_path($url = '')
+    {
+        return url('images/' . $url);
+    }
+}
+
 if (!function_exists('aurl')) {
     function aurl($url = '')
     {
@@ -16,27 +23,27 @@ if (!function_exists('lang')) {
 
 
 if (!function_exists('upload')) {
-    function upload($file, $path)
+    function upload($file)
     {
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->storeAs($path, $filename);
-        return $filename;
+        $imageName = time().'.'.$file->getClientOriginalExtension();
+        $file->move(public_path('images'), $imageName);
+        return $imageName;
     }
-    }
-    /////////////function to location
-    function pointStringToCoordinates($pointString)
-    {
-        $coordinates = explode(" ", $pointString);
-        return array("x" => $coordinates[0], "y" => $coordinates[1]);
-    }
-    function pointOnVertex($point, $vertices)
-    {
-        foreach ($vertices as $vertex) {
-            if ($point == $vertex) {
-                return true;
-            }
+}
+/////////////function to location
+function pointStringToCoordinates($pointString)
+{
+    $coordinates = explode(" ", $pointString);
+    return array("x" => $coordinates[0], "y" => $coordinates[1]);
+}
+function pointOnVertex($point, $vertices)
+{
+    foreach ($vertices as $vertex) {
+        if ($point == $vertex) {
+            return true;
         }
     }
+}
 
     function pointInPolygon($point, $polygon)
     {

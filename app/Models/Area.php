@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Area extends Model
 {
     use HasFactory;
-    protected $guarde = [];
+    protected $guarded = ['id'];
     public function stores() {
         return $this->hasMany(Store::class);
     }

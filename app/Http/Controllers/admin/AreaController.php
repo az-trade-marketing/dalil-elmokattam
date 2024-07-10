@@ -17,11 +17,14 @@ class AreaController extends Controller
      */
     public function index()
     {
-        $areas = Area::all();
-        return view('admin.areas.index',get_defined_vars());
-
+        return view('admin.areas.index');
     }
 
+    public function data()
+    {
+        $results = Area::query()->orderByDesc("id")->get();
+        return response()->json($results);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -43,7 +46,7 @@ class AreaController extends Controller
         $validatedData = $request->validated();
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $avatar = $request->file('image');
-            $image = $this->upload($avatar, 'uploads/area');
+            $image = upload($avatar);
             $validatedData['image'] = $image;
         }
 
@@ -60,7 +63,8 @@ class AreaController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Area::findOrFail($id);
+        return response()->json($data);
     }
 
     /**
@@ -101,7 +105,8 @@ class AreaController extends Controller
         }
 
         session()->flash('success', 'تم تحديث بيانات المنطقه بنجاح');
-        return back();
+        return response()->json('success');
+        // return back();
     }
 
     /**

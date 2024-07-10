@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
-    protected $guarde = [];
+    protected $guarded = ['id'];
+
     public function stores() {
         return $this->hasMany(Store::class);
     }
