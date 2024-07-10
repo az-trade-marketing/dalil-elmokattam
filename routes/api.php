@@ -59,4 +59,6 @@ Route::get('/user-favorits', [FavoriteController::class, 'index']);
 ////////categories
 Route::get('categories', [GeneralController::class, 'all_categories']);
 Route::get('areas', [GeneralController::class, 'all_areas']);
+///stores
+Route::get('stores', [GeneralController::class, 'all_stores']);
 
