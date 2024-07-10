@@ -12,4 +12,7 @@ class Category extends Model
     public function stores() {
         return $this->hasMany(Store::class);
     }
+    public function tags() {
+        return $this->belongsToMany(Tag::class);
+    }
 }

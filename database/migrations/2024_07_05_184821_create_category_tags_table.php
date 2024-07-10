@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('store_tag', function (Blueprint $table) {
+        Schema::create('category_tags', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tag_id')->references('id')->on('tags');
-            $table->foreignId('store_id')->references('id')->on('stores');
+            $table->foreignId('category_id')->references('id')->on('categories');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('category_tags');
     }
 };

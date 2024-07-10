@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description');
+            $table->string('title_ar');
+            $table->string('title_en');
+            $table->text('description_ar')->nullable();
+            $table->text('description_en')->nullable();
             $table->enum('type',['monthly','weekly','yearly']);
             $table->decimal('price')->default(0);
             $table->integer('duration')->nullable();

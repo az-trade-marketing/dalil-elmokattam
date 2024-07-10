@@ -3,9 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\User\GeneralController;
+use App\Http\Controllers\User\FavoriteController;
 use App\Http\Controllers\User\Auth\AuthController;
 use App\Http\Controllers\User\Auth\SocialAuthController;
-use App\Http\Controllers\User\GeneralController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,8 +46,17 @@ Route::group([
     Route::post('editProfile', [UserController::class, 'editProfile']);
     Route::post('editProfileImage', [UserController::class, 'editProfileImage']);
     Route::delete('deleteAccount', [UserController::class, 'deleteAccount']);
+
+   //reviews route
+Route::post('/review', [ReviewController::class, 'store']);
+Route::post('/review/{review}', [ReviewController::class, 'update']);
+Route::delete('/review/{review}', [ReviewController::class, 'destroy']);
+//wishlist route
+Route::post('/favorit', [FavoriteController::class, 'store']);
+Route::post('/update-favorit', [FavoriteController::class, 'update']);
+Route::get('/user-favorits', [FavoriteController::class, 'index']);
 });
 ////////categories
 Route::get('categories', [GeneralController::class, 'all_categories']);
 Route::get('areas', [GeneralController::class, 'all_areas']);
-//
+

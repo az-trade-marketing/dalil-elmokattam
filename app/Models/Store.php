@@ -19,14 +19,15 @@ class Store extends Model
     public function admin() {
         return $this->belongsTo(Admin::class);
     }
-    public function tags() {
-        return $this->belongsToMany(Tag::class);
-    }
+
     public function gallaries() {
         return $this->hasMany(GallaryStore::class);
     }
     public function reviews() {
         return $this->hasMany(Review::class);
+    }
+    public function favorites() {
+        return $this->hasMany(Favorite::class);
     }
     public function reports() {
         return $this->hasMany(Report::class);
