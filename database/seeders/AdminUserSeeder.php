@@ -25,7 +25,7 @@ class AdminUserSeeder extends Seeder
             $permissions = Permission::where('guard_name','admin')->pluck('id','id')->all();
             $role->syncPermissions($permissions);
             $user->assignRole([$role->id]);
-            }
+        }
 
 
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('mobile')->nullable();
-            $table->string('photo');
+            $table->string('photo')->nullable();
             $table->enum('type', ['superAdmin', 'admin','store'])->default('superAdmin');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();

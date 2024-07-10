@@ -24,6 +24,7 @@ class Admin extends Authenticatable
         'type',
         'status',
         'photo',
+        'lang',
     ];
 
     /**
