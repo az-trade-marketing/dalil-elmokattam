@@ -1,5 +1,6 @@
 
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AreaController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesController;
 
@@ -22,32 +24,37 @@ Route::post('reset-password/{token}', [AdminAuthenticatedSessionController::clas
 
 Route::group(['middleware' => 'auth:admin'], function () {
 
-     //Dashboard Controller
-   Route::get('dashboard', [DashboardController::class, 'index']);
-   Route::resource('users', UserController::class);
-   Route::resource('roles', RolesController::class);
-   Route::get('roles-get-data', [RolesController::class, 'data']);
-   Route::resource('permissions', PermissionsController::class);
-   Route::get('permissions-get-data', [PermissionsController::class, 'data']);
+    // ============================== dashboard ====================
+    Route::get('dashboard', [DashboardController::class, 'index']);
+    // ============================== roles ====================
+    Route::resource('users', UserController::class);
+    Route::resource('roles', RolesController::class);
+    Route::get('roles-get-data', [RolesController::class, 'data']);
+    // ============================== permissions ====================
+    Route::resource('permissions', PermissionsController::class);
+    Route::get('permissions-get-data', [PermissionsController::class, 'data']);
+    // ============================== categories ====================
+    Route::resource('categories', CategoryController::class);
+    Route::get('cat-data', [CategoryController::class, 'cat_cat']);
+    // ============================== areas ====================
+    Route::resource('areas', AreaController::class);
+    Route::get('get-data', [AreaController::class, 'data']);
+    // ============================== features ====================
+    Route::resource('features', FeatureController::class);
+    Route::get('features-get-data', [FeatureController::class, 'data']);
+    // ==============================  ====================
+    Route::get("view-test", function () {
+        $script_datatable = true;
+        return view("admin.categories.index", compact('script_datatable'));
+    });
+    // ============================== lang ====================
 
-   // category 
-   Route::resource('categories', CategoryController::class);
-   Route::get('cat-data', [CategoryController::class, 'cat_cat']);
-   Route::resource('areas', AreaController::class);
-   Route::get('get-data', [AreaController::class, 'data']);
-
-   Route::get("view-test",function(){
-      $script_datatable = true;
-      return view("admin.categories.index",compact('script_datatable'));
-   });
-
-   Route::post('/user/language', [AdminController::class, 'updateLanguage'])->name('user.language.update');
-
+    Route::post('/user/language', [AdminController::class, 'updateLanguage'])->name('user.language.update');
 });
 
 
- // ============================== lang ====================
- Route::get('lang/{lang}', function ($lang) {
+// ============================== lang ====================
+Route::get('lang/{lang}', function ($lang) {
     session()->put('lang', $lang);
 
     return redirect()->back();

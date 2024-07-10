@@ -44,4 +44,5 @@ return [
     'role'      =>  'قاعده',
     'category_en'      =>  'القسم ب الانجليزيه',
     'category_ar'      =>  'القسم ب العربيه',
+    'features'      =>   'سمات'
 ];

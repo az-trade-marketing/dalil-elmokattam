@@ -43,4 +43,5 @@ return [
     'role'      =>  'role',
     'category_en'      =>  ' Cat En ',
     'category_ar'      =>  'Cat ar',
+    'features'=>'features',
 ];

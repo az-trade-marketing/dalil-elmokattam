@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Feature extends Model
 {
     use HasFactory;
-    protected $guarde = [];
+    protected $fillable = ['name_en','name_ar'];
     public function subscriptions() {
         return $this->belongsToMany(Subscription::class);
     }
