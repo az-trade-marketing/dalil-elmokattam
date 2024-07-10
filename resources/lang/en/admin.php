@@ -37,5 +37,10 @@ return [
     'updatedSuccessfully'      =>  'updated successfully',
     'addedSuccessfully'      =>  'added successfully',
     'updatemes'      =>  'The item has been updated successfully.',
-
+    'permission'      =>  'permission',
+    'permissions'      =>  'permissions',
+    'roles'      =>  'roles',
+    'role'      =>  'role',
+    'category_en'      =>  ' Cat En ',
+    'category_ar'      =>  'Cat ar',
 ];

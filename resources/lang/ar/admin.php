@@ -38,4 +38,10 @@ return [
     'updatedSuccessfully'      =>  'تم التعديل بنجاح!',
     'addedSuccessfully'      =>  'تم الاضافه بنجاح!',
     'updatemes'      =>  'تم تحديث العنصر بنجاح.',
+    'permission'      =>  'اذن',
+    'permissions'      =>  'الاذونات',
+    'roles'      =>  'القواعد',
+    'role'      =>  'قاعده',
+    'category_en'      =>  'القسم ب الانجليزيه',
+    'category_ar'      =>  'القسم ب العربيه',
 ];

@@ -15,11 +15,14 @@ class RolesController extends Controller
      */
     public function index()
     {
-
-        $roles = Role::where('guard_name', 'admin')->get();
         return view('admin.roles.index',get_defined_vars());
     }
 
+    public function data()
+    {
+        $results = Role::query()->orderByDesc("id")->get();
+        return response()->json($results);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -27,7 +30,7 @@ class RolesController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.roles.create');
     }
 
     /**
