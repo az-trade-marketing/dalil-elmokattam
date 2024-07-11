@@ -43,4 +43,5 @@ return [
     'role'      =>  'role',
     'category_en'      =>  ' Cat En ',
     'category_ar'      =>  'Cat ar',
+    'Total_users_with_this_role'      =>  'Total users with this role:',
 ];

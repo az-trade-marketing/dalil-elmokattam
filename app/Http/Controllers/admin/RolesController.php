@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Contracts\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolesController extends Controller
@@ -15,7 +17,18 @@ class RolesController extends Controller
      */
     public function index()
     {
-        return view('admin.roles.index',get_defined_vars());
+        $results = Role::get();
+        $locale = app()->getLocale();
+        $catNameColumn = $locale === 'ar' ? 'cat_name_ar' : 'cat_name_en';
+        $nameColumn = $locale === 'ar' ? 'name_ar' : 'name_en';
+
+        $permissions = DB::table('permissions')
+        ->select('name_ar', 'name_en', $catNameColumn)
+        ->orderBy($catNameColumn)
+        ->get();
+        $groupedPermissions = $permissions->groupBy($catNameColumn);
+
+        return view('admin.roles.index',get_defined_vars(),compact("results","groupedPermissions"));
     }
 
     public function data()
@@ -41,7 +54,7 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**

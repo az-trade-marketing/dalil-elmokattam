@@ -127,7 +127,7 @@
                                         <!--begin::Modal body-->
                                         <div class="modal-body px-5 my-7">
                                             <!--begin::Form-->
-                                            <form id="kt_modal_edit_user_form" class="form" action="#">
+                                           <form id="kt_modal_add_role_form" class="form" action="#">
                                                 @csrf
                                                 @method('PUT')
                                                 <input type="hidden" name="id" id="editId">

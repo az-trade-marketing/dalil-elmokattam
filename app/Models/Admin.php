@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
 
@@ -54,5 +55,10 @@ class Admin extends Authenticatable
     public function stores()
     {
         return $this->hasMany(Store::class);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role');
     }
 }
