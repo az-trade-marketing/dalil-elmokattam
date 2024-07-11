@@ -55,6 +55,15 @@ class RolesController extends Controller
     public function store(Request $request)
     {
         dd($request->all());
+        $this->validate($request, [
+            'name_ar' => 'required|unique:roles,name_ar',
+            'name_en' => 'required|unique:roles,name_en',
+
+            // 'permission' => 'required',
+        ]);
+        $role = Role::create(['name_ar' => $request->input('name_ar'), 'name_en' => $request->input('name_en'), 'guard_name' => 'admin']);
+        return redirect()->route('admin-roles')
+        ->with('success', 'Role created successfully');
     }
 
     /**
@@ -88,7 +97,16 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name_ar' => 'required',
+            'name_en' => 'required',
+        ]);
+        $role = Role::find($id);
+        $role->name_en = $request->input('name_en');
+        $role->name_ar = $request->input('name_ar');
+        $role->save();
+        return redirect()->route('admin-roles')
+        ->with('success', 'Role updated successfully');
     }
 
     /**

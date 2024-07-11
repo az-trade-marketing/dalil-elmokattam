@@ -46,4 +46,5 @@ return [
     'category_ar'      =>  'القسم ب العربيه',
     'Total_users_with_this_role'      =>  'إجمالي المستخدمين الذين لديهم هذا الدور:',
 
+    'features'      =>   'سمات'
 ];

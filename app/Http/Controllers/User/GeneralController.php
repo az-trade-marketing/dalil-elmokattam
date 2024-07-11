@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Area;
+use App\Models\Store;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AreaResource;
+use App\Http\Resources\StoreResource;
 use App\Http\Resources\CategoryResource;
 
 class GeneralController extends Controller
@@ -25,6 +27,11 @@ class GeneralController extends Controller
     {
        $areas= Area::with('stores')->get();
       return response()->json(['isSuccess' => true, 'data' =>AreaResource::collection($areas)], 200);
+    }
+    public function all_stores()
+    {
+       $stores= Store::with('category','area','reviews','subscription')->get();
+      return response()->json(['isSuccess' => true, 'data' =>StoreResource::collection($stores)], 200);
     }
     /**
      * Show the form for creating a new resource.

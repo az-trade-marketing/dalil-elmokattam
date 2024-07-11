@@ -6,7 +6,7 @@
         <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
 
             <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.permissions") }}</h1>
+                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.features") }}</h1>
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                     <li class="breadcrumb-item text-muted">
                         <a href="index.html" class="text-muted text-hover-primary">{{ __("admin.home") }}</a>
@@ -14,7 +14,7 @@
                     <li class="breadcrumb-item">
                         <span class="bullet bg-gray-500 w-5px h-2px"></span>
                     </li>
-                    <li class="breadcrumb-item text-muted">{{ __("admin.permissions") }}</li>
+                    <li class="breadcrumb-item text-muted">{{ __("admin.features") }}</li>
 
                 </ul>
             </div>
@@ -36,7 +36,7 @@
                         <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                             <!--begin::Add user-->
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
-                            <i class="ki-duotone ki-plus fs-2"></i>{{ __("admin.add") . ' '.__("admin.permission") }}</button>
+                            <i class="ki-duotone ki-plus fs-2"></i>{{ __("admin.add") . ' '.__("admin.features") }}</button>
                             <!--end::Add user-->
                         </div>
 
@@ -77,16 +77,7 @@
                                                     <input type="text" name="name_en" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.name_en") }}" />
                                                     <div class="invalid-feedback text-danger" id="error-name_en"></div>
                                                 </div>
-                                                <div class="fv-row mb-7">
-                                                    <label class="required fw-semibold fs-6 mb-2">{{ __("admin.category_ar") }}</label>
-                                                    <input type="text" name="cat_name_ar" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.category_ar") }}" />
-                                                    <div class="invalid-feedback text-danger" id="error-cat_name_ar"></div>
-                                                </div>
-                                                <div class="fv-row mb-7">
-                                                    <label class="required fw-semibold fs-6 mb-2">{{ __("admin.category_en") }}</label>
-                                                    <input type="text" name="cat_name_en"  class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.category_en") }}" />
-                                                    <div class="invalid-feedback text-danger" id="error-cat_name_en"></div>
-                                                </div>
+
                                             </div>
                                             <div class="text-center pt-10">
                                                 <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
@@ -118,7 +109,7 @@
                                     <div class="modal-content">
                                         <!--begin::Modal header-->
                                         <div class="modal-header" id="kt_modal_edit_user_header">
-                                            <h2 class="fw-bold">{{ __("admin.edit").' '. __("admin.permission") }}</h2>
+                                            <h2 class="fw-bold">{{ __("admin.edit").' '. __("admin.features") }}</h2>
                                             <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
                                                 <i class="ki-duotone ki-cross fs-1"></i>
                                             </div>
@@ -127,7 +118,7 @@
                                         <!--begin::Modal body-->
                                         <div class="modal-body px-5 my-7">
                                             <!--begin::Form-->
-                                           <form id="kt_modal_add_role_form" class="form" action="#">
+                                            <form id="kt_modal_edit_user_form" class="form" action="#">
                                                 @csrf
                                                 @method('PUT')
                                                 <input type="hidden" name="id" id="editId">
@@ -142,16 +133,7 @@
                                                         <input type="text" name="name_en" id="editNameEn" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.name_en") }}" />
                                                         <div class="invalid-feedback text-danger" id="error-edit-name_en" style="display: none;"></div>
                                                     </div>
-                                                    <div class="fv-row mb-7">
-                                                        <label class="required fw-semibold fs-6 mb-2">{{ __("admin.category_ar") }}</label>
-                                                        <input type="text" name="cat_name_ar" id="editCatNameAr" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.category_ar") }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-cat_name_ar" style="display: none;"></div>
-                                                    </div>
-                                                    <div class="fv-row mb-7">
-                                                        <label class="required fw-semibold fs-6 mb-2">{{ __("admin.category_en") }}</label>
-                                                        <input type="text" name="cat_name_en" id="ediCatNameEn" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.category_en") }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-cat_name_en" style="display: none;"></div>
-                                                    </div>
+
                                                 </div>
                                                 <div class="text-center pt-10">
                                                     <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
@@ -186,8 +168,6 @@
                             <th>#</th>
                             <th>{{__('admin.name_ar')}}</th>
                             <th>{{__('admin.name_en')}}</th>
-                            <th>{{__('admin.category_ar')}}</th>
-                            <th>{{__('admin.category_en')}}</th>
                             <th>{{__('admin.action')}}</th>
                           </tr>
                         </thead>
@@ -219,7 +199,7 @@
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type:'GET',
                     dataType :'json',
-                    url :"/admin/permissions-get-data",
+                    url :"/admin/features-get-data",
                     success:function(response){
                         $('.country_table').html('');
                         $('#myTable').DataTable().destroy();
@@ -228,8 +208,7 @@
                         $.each(response ,function(key , item){
                                 var name_ar = item.name_ar ?? '';
                                 var name_en = item.name_en ?? '';
-                                var cat_ar = item.cat_name_ar ?? '';
-                                var cat_en = item.cat_name_en ?? '';
+
                                 $('.country_table').append('<tr>\
                                         <td class=" text-center pt-4">\
                                             <h6>#'+item.id+'</h6> \
@@ -240,15 +219,9 @@
                                         <td class="align-middle name text-nowrap ">\
                                             <h6 class="m-0 p-0">'+name_en+' </h6>  \
                                         </td>\
-                                        <td class="align-middle name text-nowrap ">\
-                                            <h6 class="m-0 p-0">'+cat_ar+' </h6>  \
-                                        </td>\
-                                        <td class="align-middle name text-nowrap ">\
-                                            <h6 class="m-0 p-0">'+cat_en+' </h6>  \
-                                        </td>\
                                         <td class="min-w-100 pt-3">\
                                             <div class="d-flex">\
-                                                <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'" data-cat_ar="'+ item.cat_name_ar +'"data-cat_en="'+ item.cat_name_en+'">{{ __("admin.edit") }}</a>\
+                                                <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'" >{{ __("admin.edit") }}</a>\
                                                 <a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="'+ item.id +'"  value="'+item.id+'">{{ __("admin.delete") }}</a>\
                                             </div>\
                                         </td>\
@@ -266,13 +239,11 @@
                 var id = $(this).data('id');
                 var nameAr =    $(this).data('name_ar');
                 var nameEn = $(this).data('name_en');
-                var catNameAr = $(this).data('cat_ar');
-                var catNameEn = $(this).data('cat_en');
+
                 $('#editId').val(id);
                 $('#editNameAr').val(nameAr);
                 $('#editNameEn').val(nameEn);
-                $('#editCatNameAr').val(catNameAr);
-                $('#ediCatNameEn').val(catNameEn);
+
                 $('#kt_modal_edit_user').modal('show');
             });
 
@@ -285,7 +256,7 @@
                 var id = $('#editId').val();
 
                 $.ajax({
-                    url: '/admin/permissions/' + id,
+                    url: '/admin/features/' + id,
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -339,7 +310,7 @@
                 $('.invalid-feedback').text('');
 
                 $.ajax({
-                    url: '/admin/permissions',
+                    url: '/admin/features',
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -391,7 +362,7 @@
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'get',
                     dataType: 'text',
-                    url: "/admin/permissions/" + item_id,
+                    url: "/admin/features/" + item_id,
                     success: function(response) {
                         try {
                             var jsonResponse = JSON.parse(response);
@@ -453,7 +424,7 @@
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'delete',
                     dataType: 'text', // تغيير dataType إلى text
-                    url: "/admin/permissions/" + item_id,
+                    url: "/admin/features/" + item_id,
                     data: {
                         id: item_id
                     },
