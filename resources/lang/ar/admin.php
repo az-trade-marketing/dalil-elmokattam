@@ -65,5 +65,7 @@ return [
     'yearly' => 'سنوي',
     'price' => 'السعر',
     'duration' => 'المدة',
+    'description_ar' => 'الوصف بالعربية',
+    'description_en' => 'الوصف بالإنجليزية',
 
 ];

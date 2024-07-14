@@ -99,19 +99,19 @@
                                                     <div class="row g-9 mb-8">
                                                         <div class="col-md-6 fv-row">
                                                             <label
-                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.name_ar') }}</label>
-                                                            <input type="text" name="name_ar"
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.description_ar') }}</label>
+                                                            <input type="text" name="description_ar"
                                                                 class="form-control form-control-solid mb-3 mb-lg-0"
-                                                                placeholder="{{ __('admin.name_ar') }}" />
-                                                            <div class="text-danger" id="error-name_ar"></div>
+                                                                placeholder="{{ __('admin.description_ar') }}" />
+                                                            <div class="text-danger" id="error-description_ar"></div>
                                                         </div>
                                                         <div class="col-md-6 fv-row">
                                                             <label
-                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.name_en') }}</label>
-                                                            <input type="text" name="name_en"
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.description_en') }}</label>
+                                                            <input type="text" name="description_en"
                                                                 class="form-control form-control-solid mb-3 mb-lg-0"
-                                                                placeholder="{{ __('admin.name_en') }}" />
-                                                            <div class="invalid-feedback text-danger" id="error-name_en">
+                                                                placeholder="{{ __('admin.description_en') }}" />
+                                                            <div class="invalid-feedback text-danger" id="error-description_en">
                                                             </div>
                                                         </div>
                                                     </div>

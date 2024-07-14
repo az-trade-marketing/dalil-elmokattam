@@ -64,4 +64,6 @@ return [
     'yearly'=>'yearly',
     'price'=>'price',
     'duration'=>'duration',
+    'description_ar'=>'description ar',
+    'description_en'=>'description en',
 ];
