@@ -80,19 +80,19 @@
                                                     <div class="row g-9 mb-8">
                                                         <div class="col-md-6 fv-row">
                                                             <label
-                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.name_ar') }}</label>
-                                                            <input type="text" name="name_ar"
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.title_ar') }}</label>
+                                                            <input type="text" name="title_ar"
                                                                 class="form-control form-control-solid mb-3 mb-lg-0"
-                                                                placeholder="{{ __('admin.name_ar') }}" />
-                                                            <div class="text-danger" id="error-name_ar"></div>
+                                                                placeholder="{{ __('admin.title_ar') }}" />
+                                                            <div class="text-danger" id="error-title_ar"></div>
                                                         </div>
                                                         <div class="col-md-6 fv-row">
                                                             <label
-                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.name_en') }}</label>
-                                                            <input type="text" name="name_en"
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.title_en') }}</label>
+                                                            <input type="text" name="title_en"
                                                                 class="form-control form-control-solid mb-3 mb-lg-0"
-                                                                placeholder="{{ __('admin.name_en') }}" />
-                                                            <div class="invalid-feedback text-danger" id="error-name_en">
+                                                                placeholder="{{ __('admin.title_en') }}" />
+                                                            <div class="invalid-feedback text-danger" id="error-title_en">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -226,20 +226,20 @@
                                                 <div class="d-flex flex-column scroll-y px-5 px-lg-10">
                                                     <div class="fv-row mb-7">
                                                         <label
-                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.name_ar') }}</label>
-                                                        <input type="text" name="name_ar" id="editNameAr"
+                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.title_ar') }}</label>
+                                                        <input type="text" name="title_ar" id="editNameAr"
                                                             class="form-control form-control-solid mb-3 mb-lg-0"
-                                                            placeholder="{{ __('admin.name_ar') }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-name_ar"
+                                                            placeholder="{{ __('admin.title_ar') }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-title_ar"
                                                             style="display: none;"></div>
                                                     </div>
                                                     <div class="fv-row mb-7">
                                                         <label
-                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.name_en') }}</label>
-                                                        <input type="text" name="name_en" id="editNameEn"
+                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.title_en') }}</label>
+                                                        <input type="text" name="title_en" id="editNameEn"
                                                             class="form-control form-control-solid mb-3 mb-lg-0"
-                                                            placeholder="{{ __('admin.name_en') }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-name_en"
+                                                            placeholder="{{ __('admin.title_en') }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-title_en"
                                                             style="display: none;"></div>
                                                     </div>
 
@@ -278,8 +278,13 @@
                             <thead class="bg-200 text-900">
                                 <tr>
                                     <th>#</th>
-                                    <th>{{ __('admin.name_ar') }}</th>
-                                    <th>{{ __('admin.name_en') }}</th>
+                                    <th>{{ __('admin.title_ar') }}</th>
+                                    <th>{{ __('admin.title_en') }}</th>
+                                    <th>{{ __('admin.description_ar') }}</th>
+                                    <th>{{ __('admin.description_en') }}</th>
+                                    <th>{{ __('admin.type') }}</th>
+                                    <th>{{ __('admin.price') }}</th>
+                                    <th>{{ __('admin.duration') }}</th>
                                     <th>{{ __('admin.action') }}</th>
                                 </tr>
                             </thead>
@@ -301,11 +306,9 @@
 
 @section('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
         $(document).ready(function() {
-
-            get_data()
+            get_data();
 
             function get_data() {
                 $.ajax({
@@ -319,55 +322,83 @@
                         $('.country_table').html('');
                         $('#myTable').DataTable().destroy();
                         $('#myTable tbody').empty();
-                        var select_type = $('.level_select option:selected').val();
                         $.each(response, function(key, item) {
-                            var name_ar = item.name_ar ?? '';
-                            var name_en = item.name_en ?? '';
+                            var title_ar = item.title_ar ?? '';
+                            var title_en = item.title_en ?? '';
+                            var description_ar = item.description_ar ?? '';
+                            var description_en = item.description_en ?? '';
+                            var type = item.type ?? '';
+                            var features = item.features ?? '';
+                            var price = item.price ?? '';
+                            var duration = item.duration ?? '';
 
-                            $('.country_table').append('<tr>\
-                                            <td class=" text-center pt-4">\
-                                                <h6>#' + item.id + '</h6> \
-                                            </td>\
-                                            <td class="align-middle name text-nowrap ">\
-                                                <h6 class="m-0 p-0">' + name_ar + ' </h6>  \
-                                            </td>\
-                                            <td class="align-middle name text-nowrap ">\
-                                                <h6 class="m-0 p-0">' + name_en +
-                                ' </h6>  \
-                                            </td>\
-                                            <td class="min-w-100 pt-3">\
-                                                <div class="d-flex">\
-                                                    <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="' +
-                                item.id + '" data-name_ar="' + item.name_ar +
-                                '" data-name_en="' + item.name_en +
-                                '" >{{ __('admin.edit') }}</a>\
-                                                    <a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="' +
-                                item.id + '"  value="' + item.id + '">{{ __('admin.delete') }}</a>\
-                                                </div>\
-                                            </td>\
-                                        </tr>\
-                                    ')
-                            // }
+                            $('.country_table').append(`
+                                <tr>
+                                    <td class="text-center pt-4">
+                                        <h6>#${item.id}</h6>
+                                    </td>
+                                    <td class="align-middle name text-nowrap">
+                                        <h6 class="m-0 p-0">${title_ar}</h6>
+                                    </td>
+                                    <td class="align-middle name text-nowrap">
+                                        <h6 class="m-0 p-0">${title_en}</h6>
+                                    </td>
+                                    <td class="align-middle description_ar text-nowrap">
+                                        <h6 class="m-0 p-0">${description_ar}</h6>
+                                    </td>
+                                    <td class="align-middle description_en text-nowrap">
+                                        <h6 class="m-0 p-0">${description_en}</h6>
+                                    </td>
+                                    <td class="align-middle type text-nowrap">
+                                        <h6 class="m-0 p-0">${type}</h6>
+                                    </td>
+                                    <td class="align-middle features text-nowrap">
+                                        <h6 class="m-0 p-0">${features}</h6>
+                                    </td>
+                                    <td class="align-middle price text-nowrap">
+                                        <h6 class="m-0 p-0">${price}</h6>
+                                    </td>
+                                    <td class="align-middle duration text-nowrap">
+                                        <h6 class="m-0 p-0">${duration}</h6>
+                                    </td>
+                                    <td class="min-w-100 pt-3">
+                                        <div class="d-flex">
+                                            <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="${item.id}" data-title_ar="${item.title_ar}" data-title_en="${item.title_en}" data-description_ar="${item.description_ar}" data-description_en="${item.description_en}" data-type="${item.type}" data-features="${item.features}" data-price="${item.price}" data-duration="${item.duration}">{{ __('admin.edit') }}</a>
+                                            <a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="${item.id}" value="${item.id}">{{ __('admin.delete') }}</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `);
                         });
 
-                        let table = new DataTable('#myTable');
+                        $('#myTable').DataTable();
                     }
-                })
+                });
             }
 
             $(document).on('click', '.editButton', function() {
                 var id = $(this).data('id');
-                var nameAr = $(this).data('name_ar');
-                var nameEn = $(this).data('name_en');
+                var nameAr = $(this).data('title_ar');
+                var nameEn = $(this).data('title_en');
+                var descriptionAr = $(this).data('description_ar');
+                var descriptionEn = $(this).data('description_en');
+                var type = $(this).data('type');
+                var features = $(this).data('features');
+                var price = $(this).data('price');
+                var duration = $(this).data('duration');
 
                 $('#editId').val(id);
                 $('#editNameAr').val(nameAr);
                 $('#editNameEn').val(nameEn);
+                $('#editDescriptionAr').val(descriptionAr);
+                $('#editDescriptionEn').val(descriptionEn);
+                $('#editType').val(type);
+                $('#editFeatures').val(features);
+                $('#editPrice').val(price);
+                $('#editDuration').val(duration);
 
                 $('#kt_modal_edit_user').modal('show');
             });
-
-
 
             $('#editSubmitButton').on('click', function(e) {
                 e.preventDefault();
@@ -402,7 +433,6 @@
                                 text: response.message,
                             });
                         }
-                        get_data();
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {
@@ -413,8 +443,6 @@
                         } else {
                             alert('An error occurred. Please try again.');
                         }
-
-                        $label.removeClass('d-none');
                     }
                 });
             });
@@ -506,7 +534,7 @@
 
                                 swalWithBootstrapButtons.fire({
                                     title: '{{ __('admin.isDelete') }} ' + jsonResponse
-                                        .name_en + ' !!?',
+                                        .title_en + ' !!?',
                                     text: '{{ __('admin.revet') }}',
                                     icon: 'warning',
                                     showCancelButton: true,
