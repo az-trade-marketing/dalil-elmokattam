@@ -148,7 +148,7 @@
 
                                                         @foreach ($features as $feature)
                                                         <option value="{{ $feature->id }}">
-                                                            {{ $feature->name_ar }}
+                                                            {{ $feature->title_ar }}
                                                         </option>
                                                         @endforeach
 
