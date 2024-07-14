@@ -444,9 +444,7 @@
                                     <td class="align-middle type text-nowrap">
                                         <h6 class="m-0 p-0">${type}</h6>
                                     </td>
-                                    <td class="align-middle features text-nowrap">
-                                        <h6 class="m-0 p-0">${type}</h6>
-                                    </td>
+
                                     <td class="align-middle price text-nowrap">
                                         <h6 class="m-0 p-0">${price}</h6>
                                     </td>
