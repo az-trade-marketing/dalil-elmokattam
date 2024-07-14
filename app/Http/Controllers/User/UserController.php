@@ -29,7 +29,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'nullable|email|unique:users,email,' . $authenticatedUserId . ',id',
             'phone' => 'nullable|string|unique:users,mobile,' . $authenticatedUserId . ',id',
-            'name' => 'nullable|string|max:255',
+
         ]);
 
         if ($validator->fails()) {
@@ -38,16 +38,9 @@ class UserController extends Controller
                 'message' => $validator->errors()->first(),
             ], 422);
         }
-        $user = User::find($authenticatedUserId);
 
-        $user->email = $request->email === null ? $user->email : $request->email;
-        $user->firstname = $request->firstname;
-        $user->lastname  = $request->lastname;
-        $user->phone = $request->phone == null ? $user->mobile : $request->phone;
-        $user->gender = $request->gender;
-        $user->date_of_birth = $request->date_of_birth;
-        $user->lat = $request->lat;
-        $user->lon = $request->lon;
+        $user = User::find($authenticatedUserId);
+        $user->update($request->all());
         $user->save();
         return response()->json([
             'status' => true,

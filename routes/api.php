@@ -51,6 +51,7 @@ Route::group([
 Route::post('/review', [ReviewController::class, 'store']);
 Route::post('/review/{review}', [ReviewController::class, 'update']);
 Route::delete('/review/{review}', [ReviewController::class, 'destroy']);
+Route::get('/user-reviews', [ReviewController::class, 'index']);
 //wishlist route
 Route::post('/favorit', [FavoriteController::class, 'store']);
 Route::post('/update-favorit', [FavoriteController::class, 'update']);
