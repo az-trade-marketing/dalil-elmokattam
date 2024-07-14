@@ -16,7 +16,7 @@ class FeatureController extends Controller
    public function index()
    {
        $Features = Feature::all();
-       return view('admin.Features.index', get_defined_vars());
+       return view('admin.features.index', get_defined_vars());
    }
 
    /**
@@ -26,8 +26,13 @@ class FeatureController extends Controller
     */
    public function create(Request $request)
    {
+    return view('admin.features.index');
    }
-
+   public function data()
+   {
+       $features = Feature::query()->orderByDesc("id")->get();
+       return response()->json($features);
+   }
    /**
     * Store a newly created resource in storage.
     *
@@ -47,8 +52,10 @@ class FeatureController extends Controller
             'message' => $validator->errors()->first(),
         ], 422);
     }
-       $validatedData = $request->validated();
-       $feature = Feature::create($validatedData);
+
+    $validatedData = $validator->validated();
+
+    $feature = Feature::create($validatedData);
        session()->flash('success', 'تم تحديث بيانات المنطقه بنجاح');
        return back();
    }
@@ -88,7 +95,6 @@ class FeatureController extends Controller
         'name_ar' => 'required|string|max:255',
         'name_en' => 'required|string|max:255',
     ]);
-
     if ($validator->fails()) {
         return response()->json([
             'status' => false,
@@ -96,7 +102,7 @@ class FeatureController extends Controller
         ], 422);
     }
        $feature = Feature::findOrFail($id);
-       $feature->update($request->validated());
+       $feature->update($validator->validated());
        session()->flash('success', 'تم تحديث بيانات المنطقه بنجاح');
        return back();
    }
@@ -109,9 +115,15 @@ class FeatureController extends Controller
     */
    public function destroy($id)
    {
-       $feature = Feature::findOrFail($id);
-       $feature->delete();
+    try {
+        $feature = Feature::findOrFail($id);
+        $feature->delete();
+        return response()->json(["message" => "success"], 200);
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return response()->json(["error" => "Permission not found"], 404);
+    } catch (\Exception $e) {
+        return response()->json(["error" => $e->getMessage()], 500);
+    }
 
-       return response()->json(['message' => 'Feature deleted successfully.']);
    }
 }
