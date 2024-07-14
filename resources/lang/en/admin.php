@@ -66,4 +66,6 @@ return [
     'duration'=>'duration',
     'description_ar'=>'description ar',
     'description_en'=>'description en',
+    'title_ar'=>'title ar',
+    'title_en'=>'title en',
 ];

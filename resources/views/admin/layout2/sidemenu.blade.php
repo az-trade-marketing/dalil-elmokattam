@@ -181,7 +181,7 @@
                             <!--end:Menu sub-->
                         </div>
                         @endcan
-                        @can("features Read")
+                        @can("subscription Read")
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                             <!--begin:Menu link-->
                             <span class="menu-link">

@@ -67,5 +67,7 @@ return [
     'duration' => 'المدة',
     'description_ar' => 'الوصف بالعربية',
     'description_en' => 'الوصف بالإنجليزية',
+    'title_ar' => 'عنوان بالعربي',
+    'title_en' => 'عنوان بالإنجليزي',
 
 ];

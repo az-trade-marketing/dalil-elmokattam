@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Permission;
 class PermisionsSeeder extends Seeder
 {
 
-    public function run() 
+    public function run()
     {
         $categories = [
             'admins' => ['en' => 'admin', 'ar' => 'المسؤلين'],
@@ -21,6 +21,8 @@ class PermisionsSeeder extends Seeder
             'joinedStore' => ['en' => 'Joined Store', 'ar' => 'المتاجر المنضمه'],
             'settings' => ['en' => 'Settings', 'ar' => 'الإعدادات'],
             'roles' => ['en' => 'roles', 'ar' => 'القواعد'],
+            'features' => ['en' => 'subscription', 'ar' => 'اشتراك'],
+
         ];
 
         $actions = [
