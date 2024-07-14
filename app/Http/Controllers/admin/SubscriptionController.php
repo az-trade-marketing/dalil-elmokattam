@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Feature;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,9 +16,15 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $features  = Feature::all();
 
+        return view('admin.subscriptions.index',get_defined_vars());
+    }
+    public function data()
+    {
+        $subscriptions = Subscription::query()->orderByDesc("id")->get();
+        return response()->json($subscriptions);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -25,7 +32,10 @@ class SubscriptionController extends Controller
      */
     public function create()
     {
-        //
+        $features  = Feature::all();
+
+        return view('admin.subscriptions.index',get_defined_vars());
+
     }
 
     /**
@@ -44,7 +54,6 @@ class SubscriptionController extends Controller
             'type' => 'required|in:monthly,weekly,yearly',
             'price' => 'required|numeric',
             'duration' => 'nullable|integer',
-            'status' => 'required|string|in:active,inactive',
             'features' => 'nullable|array',
             'features.*' => 'exists:features,id'
         ]);
@@ -96,7 +105,7 @@ class SubscriptionController extends Controller
             'type' => 'required|in:monthly,weekly,yearly',
             'price' => 'required|numeric',
             'duration' => 'nullable|integer',
-            'status' => 'required|string|in:active,inactive',
+
             'features' => 'nullable|array',
             'features.*' => 'exists:features,id'
         ]);
@@ -117,10 +126,16 @@ class SubscriptionController extends Controller
      */
     public function destroy($id)
     {
+        try {
         $subscription = Subscription::findOrFail($id);
         $subscription->features()->detach();
         $subscription->delete();
-
-        return response()->json(null, 204);
+        return response()->json(["message" => "success"], 200);
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return response()->json(["error" => "Permission not found"], 404);
+    } catch (\Exception $e) {
+        return response()->json(["error" => $e->getMessage()], 500);
     }
+
+   }
 }

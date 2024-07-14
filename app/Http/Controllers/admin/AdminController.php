@@ -53,20 +53,20 @@ class AdminController extends Controller
     }
 
     public function store(AdminRequest $request)
-    {     
+    {
         $admin = new Admin();
         $admin->name = $request->name;
         $admin->email = $request->email;
         $admin->mobile = $request->mobile;
         $admin->status = 1;
         $admin->password = bcrypt($request->password);
-        
+
         if ($request->hasFile('photo') && $request->file('photo') != '') {
             $avatar = $request->file('photo');
             $photo = upload($avatar);
             $admin->photo = $photo;
         }
-        
+
         $admin->save();
         if (count($request->roles)) {
             foreach ($request->roles as $roleId) {
@@ -75,7 +75,7 @@ class AdminController extends Controller
             }
         }
         return response()->json(["message" => "success"], 200);
-        
+
     }
 
     public function edit($id)

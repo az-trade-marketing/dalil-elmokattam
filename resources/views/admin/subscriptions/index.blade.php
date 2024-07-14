@@ -111,7 +111,8 @@
                                                             <input type="text" name="description_en"
                                                                 class="form-control form-control-solid mb-3 mb-lg-0"
                                                                 placeholder="{{ __('admin.description_en') }}" />
-                                                            <div class="invalid-feedback text-danger" id="error-description_en">
+                                                            <div class="invalid-feedback text-danger"
+                                                                id="error-description_en">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -146,11 +147,11 @@
                                                                 data-placeholder="@lang('admin.features')"
                                                                 data-allow-clear="true" multiple="multiple">
 
-                                                        @foreach ($features as $feature)
-                                                        <option value="{{ $feature->id }}">
-                                                            {{ $feature->title_ar }}
-                                                        </option>
-                                                        @endforeach
+                                                                @foreach ($features as $feature)
+                                                                    <option value="{{ $feature->id }}">
+                                                                        {{ $feature->title_ar }}
+                                                                    </option>
+                                                                @endforeach
 
 
                                                             </select>
@@ -209,11 +210,18 @@
                                     <div class="modal-content">
                                         <!--begin::Modal header-->
                                         <div class="modal-header" id="kt_modal_edit_user_header">
-                                            <h2 class="fw-bold">{{ __('admin.edit') . ' ' . __('admin.subscription') }}</h2>
+                                            <!--begin::Modal title-->
+                                            <h2 class="fw-bold">{{ __('admin.edit') . ' ' . __('admin.category') }}</h2>
+                                            <!--end::Modal title-->
+                                            <!--begin::Close-->
                                             <div class="btn btn-icon btn-sm btn-active-icon-primary"
                                                 data-kt-users-modal-action="close">
-                                                <i class="ki-duotone ki-cross fs-1"></i>
+                                                <i class="ki-duotone ki-cross fs-1">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
                                             </div>
+                                            <!--end::Close-->
                                         </div>
                                         <!--end::Modal header-->
                                         <!--begin::Modal body-->
@@ -223,26 +231,111 @@
                                                 @csrf
                                                 @method('PUT')
                                                 <input type="hidden" name="id" id="editId">
-                                                <div class="d-flex flex-column scroll-y px-5 px-lg-10">
-                                                    <div class="fv-row mb-7">
+                                                <div class="d-flex flex-column scroll-y px-5 px-lg-10"
+                                                    id="kt_modal_edit_user_scroll" data-kt-scroll="true"
+                                                    data-kt-scroll-activate="true" data-kt-scroll-max-height="auto"
+                                                    data-kt-scroll-dependencies="#kt_modal_edit_user_header"
+                                                    data-kt-scroll-wrappers="#kt_modal_edit_user_scroll"
+                                                    data-kt-scroll-offset="300px">
+                                                    <div class="row g-9 mb-8">
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.title_ar') }}</label>
+                                                            <input type="text" name="title_ar" id="editNameAr"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.title_ar') }}" />
+                                                            <div class="invalid-feedback text-danger"
+                                                                id="error-edit-title_ar" style="display: none;"></div>
+                                                        </div>
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.title_en') }}</label>
+                                                            <input type="text" name="title_en" id="editNameEn"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.title_en') }}" />
+                                                            <div class="invalid-feedback text-danger"
+                                                                id="error-edit-title_en" style="display: none;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row g-9 mb-8">
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.description_ar') }}</label>
+                                                            <input type="text" name="description_ar"
+                                                                id="editDescriptionAr"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.description_ar') }}" />
+                                                            <div class="invalid-feedback text-danger"
+                                                                id="error-edit-description_ar" style="display: none;">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.description_en') }}</label>
+                                                            <input type="text" name="description_en"
+                                                                id="editDescriptionEn"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.description_en') }}" />
+                                                            <div class="invalid-feedback text-danger"
+                                                                id="error-edit-description_en" style="display: none;">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row g-9 mb-8">
                                                         <label
-                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.title_ar') }}</label>
-                                                        <input type="text" name="title_ar" id="editNameAr"
-                                                            class="form-control form-control-solid mb-3 mb-lg-0"
-                                                            placeholder="{{ __('admin.title_ar') }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-title_ar"
-                                                            style="display: none;"></div>
+                                                            class="col-lg-4 col-form-label required fw-bold fs-6">@lang('admin.type')</label>
+                                                        <div class="fv-row fv-plugins-icon-container">
+                                                            <select id="editTypeSelect"
+                                                                class="form-select form-select-solid"
+                                                                data-hide-search="true"
+                                                                data-placeholder="@lang('admin.type')" name="type"
+                                                                required>
+                                                                <option value="">@lang('admin.type')</option>
+                                                                <option value="weekly">@lang('admin.weekly')</option>
+                                                                <option value="monthly">@lang('admin.monthly')</option>
+                                                                <option value="yearly">@lang('admin.yearly')</option>
+                                                            </select>
+                                                            <div class="fv-plugins-message-container invalid-feedback">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="fv-row mb-7">
                                                         <label
-                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.title_en') }}</label>
-                                                        <input type="text" name="title_en" id="editNameEn"
-                                                            class="form-control form-control-solid mb-3 mb-lg-0"
-                                                            placeholder="{{ __('admin.title_en') }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-title_en"
-                                                            style="display: none;"></div>
+                                                            class="col-lg-4 col-form-label required fw-bold fs-6">@lang('admin.features')</label>
+                                                        <div id="editFeaturesContainer">
+                                                            <select id="editFeaturesSelect"
+                                                                class="form-select form-select-solid" dir="rtl"
+                                                                name="features[]" data-control="select2"
+                                                                data-close-on-select="false"
+                                                                data-placeholder="@lang('admin.features')"
+                                                                data-allow-clear="true" multiple="multiple">
+                                                                @foreach ($features as $feature)
+                                                                    <option value="{{ $feature->id }}">
+                                                                        {{ $feature->name_ar}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
                                                     </div>
-
+                                                    <div class="row g-9 mb-8">
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.price') }}</label>
+                                                            <input type="number" name="price" id="editPrice"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.price') }}" />
+                                                            <div class="invalid-feedback text-danger"
+                                                                id="error-edit-price" style="display: none;"></div>
+                                                        </div>
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.duration') }}</label>
+                                                            <input type="number" name="duration" id="editDuration"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.duration') }}" />
+                                                            <div class="invalid-feedback text-danger"
+                                                                id="error-edit-duration" style="display: none;"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="text-center pt-10">
                                                     <button type="reset" class="btn btn-light me-3"
@@ -257,7 +350,6 @@
                                                     </button>
                                                 </div>
                                             </form>
-
                                             <!--end::Form-->
                                         </div>
                                         <!--end::Modal body-->
@@ -266,6 +358,7 @@
                                 </div>
                                 <!--end::Modal dialog-->
                             </div>
+
                             {{-- end modal for edit --}}
                         </div>
                         <!--end::Card toolbar-->
@@ -328,7 +421,6 @@
                             var description_ar = item.description_ar ?? '';
                             var description_en = item.description_en ?? '';
                             var type = item.type ?? '';
-                            var features = item.features ?? '';
                             var price = item.price ?? '';
                             var duration = item.duration ?? '';
 
@@ -353,7 +445,7 @@
                                         <h6 class="m-0 p-0">${type}</h6>
                                     </td>
                                     <td class="align-middle features text-nowrap">
-                                        <h6 class="m-0 p-0">${features}</h6>
+                                        <h6 class="m-0 p-0">${type}</h6>
                                     </td>
                                     <td class="align-middle price text-nowrap">
                                         <h6 class="m-0 p-0">${price}</h6>
@@ -378,8 +470,8 @@
 
             $(document).on('click', '.editButton', function() {
                 var id = $(this).data('id');
-                var nameAr = $(this).data('title_ar');
-                var nameEn = $(this).data('title_en');
+                var titleAr = $(this).data('title_ar');
+                var titleEn = $(this).data('title_en');
                 var descriptionAr = $(this).data('description_ar');
                 var descriptionEn = $(this).data('description_en');
                 var type = $(this).data('type');
@@ -388,12 +480,12 @@
                 var duration = $(this).data('duration');
 
                 $('#editId').val(id);
-                $('#editNameAr').val(nameAr);
-                $('#editNameEn').val(nameEn);
+                $('#editNameAr').val(titleAr);
+                $('#editNameEn').val(titleEn);
                 $('#editDescriptionAr').val(descriptionAr);
                 $('#editDescriptionEn').val(descriptionEn);
-                $('#editType').val(type);
-                $('#editFeatures').val(features);
+                $('#editTypeSelect').val(type).trigger('change');
+                $('#editFeaturesSelect').val(features).trigger('change');
                 $('#editPrice').val(price);
                 $('#editDuration').val(duration);
 
@@ -438,7 +530,7 @@
                         if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
                             for (var field in errors) {
-                                $('#error-' + field).text(errors[field][0]).show();
+                                $('#error-edit-' + field).text(errors[field][0]).show();
                             }
                         } else {
                             alert('An error occurred. Please try again.');
@@ -446,6 +538,7 @@
                     }
                 });
             });
+
 
             $('#submitButton').on('click', function() {
                 var $button = $(this);
@@ -561,7 +654,7 @@
                             }
                         } catch (e) {
                             console.error('Parsing Error:',
-                            e); // التحقق من وجود أخطاء في التحليل
+                                e); // التحقق من وجود أخطاء في التحليل
                         }
                     },
                     error: function(xhr, status, error) {
