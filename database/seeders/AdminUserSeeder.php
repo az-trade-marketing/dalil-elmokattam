@@ -21,11 +21,10 @@ class AdminUserSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => bcrypt('12345678')
             ]);
-            $role = Role::create(['name_en' => 'super-admin','name_ar' => 'المدير العام','guard_name'=>'admin']);
-            $permissions = Permission::where('guard_name','admin')->pluck('id','id')->all();
-            $role->syncPermissions($permissions);
-            $user->assignRole([$role->id]);
-        }
+
+        $role = Role::first();
+        $user->assignRole([$role->id]);
+    }
 
 
 }

@@ -6,27 +6,34 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $this->middleware('permission:categories Read');
+    }
     public function index()
     {
-        $results = Category::query()->orderByDesc("id")->get();
-        return view('admin.categories.index',compact("results"));
+        $tags = Tag::query()->get();
+        return view('admin.categories.index',compact("tags"));
     }
 
     public function cat_cat()
     {
         $results = Category::query()->orderByDesc("id")->get();
-        return response()->json($results);
+        $permissions = [
+            'canCreate' => auth()->user()->can('categories Create'),
+            'canDelete' => auth()->user()->can('categories Delete')
+        ];
+        return response()->json([
+            'data' => $results,
+            'permissions' => $permissions
+        ]);
     }
 
     /**

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     use HasFactory;
-    protected $guarde = [ ];
+    protected $guarded = ["id"];
 
     public function categories()
     {

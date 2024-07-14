@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Storage;
 
 class AreaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $this->middleware('permission:areas Read');
+    }
+    
     public function index()
     {
         return view('admin.areas.index');
@@ -23,7 +23,14 @@ class AreaController extends Controller
     public function data()
     {
         $results = Area::query()->orderByDesc("id")->get();
-        return response()->json($results);
+        $permissions = [
+            'canCreate' => auth()->user()->can('areas Create'),
+            'canDelete' => auth()->user()->can('areas Delete')
+        ];
+        return response()->json([
+            'data' => $results,
+            'permissions' => $permissions
+        ]);
     }
     /**
      * Show the form for creating a new resource.

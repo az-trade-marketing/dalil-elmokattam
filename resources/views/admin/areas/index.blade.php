@@ -34,10 +34,12 @@
                     <div class="card-toolbar">
                         <!--begin::Toolbar-->
                         <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                            @can("areas Create")
                             <!--begin::Add user-->
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
                             <i class="ki-duotone ki-plus fs-2"></i>{{ __("admin.add") . ' '.__("admin.area") }}</button>
                             <!--end::Add user-->
+                            @endcan
                         </div>
                        
                         {{-- modal for adding  --}}
@@ -165,47 +167,6 @@
                 <!--end::Card header-->
                 <!--begin::Card body-->
                 <div class="card-body py-4">
-
-                    {{-- <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
-                        <thead>
-                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                                <th class="w-10px pe-2">
-                                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                                        <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_table_users .form-check-input" value="1" />
-                                    </div>
-                                </th>
-                                <th class="min-w-125px">{{ __("admin.name_ar") }}</th>
-                                <th class="min-w-125px">{{ __("admin.name_en") }}</th>
-                                <th class="min-w-125px">{{ __("admin.logo") }}</th>
-                                <th class="min-w-125px">{{ __("admin.status") }}</th>
-                                <th class="text-end min-w-100px">{{ __("admin.action") }}</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-gray-600 fw-semibold">
-                                
-                                @forelse ($results as $result)
-                                    <tr>
-                                        <td>
-                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                <input class="form-check-i  nput" type="checkbox" value="1" />
-                                            </div>
-                                        </td>
-                                        <td>dsdsdsds</td>
-                                        <td>sdsdsds</td>
-                                        <td> ddsdsdsds </td>
-                                        <td>cxdsdsds</td>
-                                        <td class="text-end">
-                                            sadssasas
-                                            
-                                        </td>
-                                    </tr>
-                                @empty
-                                    
-                                @endforelse
-                                    
-                        </tbody>
-                    </table> --}}
-
                     <!--begin::Table-->
                     <table class="table mb-0 data-table fs--1" id="myTable">
                         <thead class="bg-200 text-900">
@@ -251,10 +212,18 @@
                         $('#myTable').DataTable().destroy();
                         $('#myTable tbody').empty();
                         var select_type = $('.level_select option:selected').val();
-                        $.each(response ,function(key , item){
+                        var permissions = response.permissions;
+                        $.each(response.data ,function(key , item){
                                 var country_img = item.image ?  item.image : '{{asset("admin/assets/img/user.png")}}' ;
                                 var name_ar = item.name_ar ?? '';
                                 var name_en = item.name_en ?? '';
+                                var actionButtons = '';
+                                if (permissions.canCreate) {
+                                    actionButtons += '<a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'" data-image="'+ country_img +'">{{ __("admin.edit") }}</a>';
+                                }
+                                if (permissions.canDelete) {
+                                    actionButtons += '<a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="'+ item.id +'"  value="'+item.id+'">{{ __("admin.delete") }}</a>';
+                                }
                                 $('.country_table').append('<tr>\
                                         <td class=" text-center pt-4">\
                                             <h6>#'+item.id+'</h6> \
@@ -271,10 +240,7 @@
                                                 </div> \
                                         </td>\
                                         <td class="min-w-100 pt-3">\
-                                            <div class="d-flex">\
-                                                <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'" data-image="'+ country_img +'">{{ __("admin.edit") }}</a>\
-                                                <a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="'+ item.id +'"  value="'+item.id+'">{{ __("admin.delete") }}</a>\
-                                            </div>\
+                                            <div class="d-flex">'+ actionButtons +'</div>\
                                         </td>\
                                     </tr>\
                                 ')
