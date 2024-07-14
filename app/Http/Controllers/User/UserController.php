@@ -15,8 +15,8 @@ class UserController extends Controller
     public function getUserProfile()
     {
         $user = User::where('id', Auth::guard('users')->user()->id)->first();
+        $user['photo']=asset('images/' . $user->photo);
         if ($user) {
-            $locale = app()->getLocale();
             return response()->json([
                 'userData' => $user,
             ], 200);
@@ -63,15 +63,16 @@ class UserController extends Controller
         }
         if (request()->hasFile('photo') && request('photo') != '') {
             if ($user->photo && Storage::exists('uploads/user/' . $user->photo)) {
-                Storage::delete('uploads/user/' . $user->photo);
+                Storage::delete('images/' . $user->photo);
             }
             $avatar = $request->file('photo');
-            $photo = upload($avatar, 'uploads/admin');
+            $photo = upload($avatar);
             $user->photo = $photo;
-
+           $user->save();
         }else {
             return response()->json(['status' => false, 'message' => 'Image not uploaded successfully'], 310);
         }
+        return response()->json(['status' => false, 'message' => 'Image  uploaded successfully'], 200);
     }
     public function deleteAccount(Request $request)
     {
