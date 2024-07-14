@@ -19,5 +19,6 @@ class RoleSeeder extends Seeder
         $permissions = Permission::get();
        // Sync the permissions with the role
        $role->syncPermissions($permissions);
+        
     }
 }
