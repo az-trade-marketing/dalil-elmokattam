@@ -2,17 +2,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\AreaController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\FeatureController;
-use App\Http\Controllers\Admin\PermissionsController;
-use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\AreaController;
 use App\Http\Controllers\Admin\TagsController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\FeatureController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
 
 //================== Route Login Admin =========================
 Route::get('login', [AdminAuthenticatedSessionController::class, 'login'])->name('AdminFormLogin');
@@ -28,12 +29,12 @@ Route::group(['middleware' => 'auth:admin'], function () {
 
     // ============================== dashboard ====================
     Route::get('dashboard', [DashboardController::class, 'index']);
-   //  ======================admin============
+    //  ======================admin============
     Route::resource('admins', AdminController::class);
     Route::get('admins-get-data', [AdminController::class, 'data']);
-   // =======================tags==================
-   Route::resource('tags', TagsController::class);
-   Route::get('tags-get-data', [TagsController::class, 'data']);
+    // =======================tags==================
+    Route::resource('tags', TagsController::class);
+    Route::get('tags-get-data', [TagsController::class, 'data']);
 
     // ============================== roles ====================
     Route::resource('users', UserController::class);
@@ -51,6 +52,12 @@ Route::group(['middleware' => 'auth:admin'], function () {
     // ============================== features ====================
     Route::resource('features', FeatureController::class);
     Route::get('features-get-data', [FeatureController::class, 'data']);
+    // ============================== features ====================
+    Route::resource('features', FeatureController::class);
+    Route::get('features-get-data', [FeatureController::class, 'data']);
+    // ============================== subscription ====================
+    Route::resource('subscription', SubscriptionController::class);
+    Route::get('subscription-get-data', [SubscriptionController::class, 'data']);
     // ==============================  ====================
     Route::get("view-test", function () {
         $script_datatable = true;

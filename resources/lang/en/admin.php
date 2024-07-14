@@ -56,4 +56,12 @@ return [
     'tag'      =>   'tag',
     'tags'      =>   'tags',
     'no_roles'      =>   'No roles assigned',
+    'subscription'=>'Subscription',
+    'features'=>'features',
+    'type'=>'type',
+    'weekly'=>'weekly',
+    'monthly'=>'monthly',
+    'yearly'=>'yearly',
+    'price'=>'price',
+    'duration'=>'duration',
 ];

@@ -57,5 +57,13 @@ return [
     'tag'      =>   'علامه',
     'tags'      =>   'العلامات',
     'no_roles'      =>   'لا يوجد قواعد!',
+    'subscription' => 'اشتراك',
+    'features' => 'ميزات',
+    'type' => 'نوع',
+    'weekly' => 'أسبوعي',
+    'monthly' => 'شهري',
+    'yearly' => 'سنوي',
+    'price' => 'السعر',
+    'duration' => 'المدة',
 
 ];
