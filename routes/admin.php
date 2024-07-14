@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\TagsController;
 
 //================== Route Login Admin =========================
 Route::get('login', [AdminAuthenticatedSessionController::class, 'login'])->name('AdminFormLogin');
@@ -26,6 +28,13 @@ Route::group(['middleware' => 'auth:admin'], function () {
 
     // ============================== dashboard ====================
     Route::get('dashboard', [DashboardController::class, 'index']);
+   //  ======================admin============
+    Route::resource('admins', AdminController::class);
+    Route::get('admins-get-data', [AdminController::class, 'data']);
+   // =======================tags==================
+   Route::resource('tags', TagsController::class);
+   Route::get('tags-get-data', [TagsController::class, 'data']);
+
     // ============================== roles ====================
     Route::resource('users', UserController::class);
     Route::resource('roles', RolesController::class);

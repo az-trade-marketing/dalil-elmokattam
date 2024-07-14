@@ -8,15 +8,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class FeatureController extends Controller
-{ /**
-    * Display a listing of the resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
+{ 
+    public function __construct()
+    {
+        $this->middleware('permission:features Read');
+    }
    public function index()
    {
+<<<<<<< HEAD
        $Features = Feature::all();
        return view('admin.features.index', get_defined_vars());
+=======
+       return view('admin.Features.index');
+>>>>>>> bc154f42fc6962720908c1967aef5d1ac4cfb243
    }
 
    /**

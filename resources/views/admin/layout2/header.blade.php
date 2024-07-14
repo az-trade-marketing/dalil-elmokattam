@@ -31,8 +31,5 @@
 			<link href="{{ asset("admin/assets/css/dataTables.bootstrap5.min.css")}}" rel="stylesheet" type="text/css" />
 		@endif
 		
-
-
-		
 	</head>
 	<!--end::Head-->

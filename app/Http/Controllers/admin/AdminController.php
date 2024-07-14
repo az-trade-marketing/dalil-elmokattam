@@ -6,46 +6,76 @@ use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 use App\Http\Requests\AdminRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateAdminRequest;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
+
 
 class AdminController extends Controller
 {
-    public function index()
+    public function __construct()
     {
-        $admins = Admin::all();
-        return view('admin.admins.index', get_defined_vars());
+        $this->middleware('permission:admin Read');
     }
 
+    public function index()
+    {
+        $roles = Role::get();
+        return view('admin.admins.index',compact("roles"));
+    }
+
+    public function data()
+    {
+        $results = Admin::with("roles")->orderByDesc("id")->get();
+        $permissions = [
+            'canCreate' => auth()->user()->can('admin Create'),
+            'canDelete' => auth()->user()->can('admin Delete')
+        ];
+        return response()->json([
+            'data' => $results,
+            'permissions' => $permissions
+        ]);
+    }
 
     public function create()
     {
         $roles =   Role::where('guard_name', 'admin')->get();
         return view('admin.admins.create', get_defined_vars());
     }
-    public function store(AdminRequest $request)
-    {
 
+    public function show($id)
+    {
+        $admin =   Admin::with("roles")->findOrFail($id);
+        return response()->json($admin);
+    }
+
+    public function store(AdminRequest $request)
+    {     
         $admin = new Admin();
         $admin->name = $request->name;
-        $admin->type = $request->type;
         $admin->email = $request->email;
-        $admin->status = $request->status;
-        $admin->password =  bcrypt($request->password);
-        if (request()->hasFile('photo') && request('photo') != '') {
+        $admin->mobile = $request->mobile;
+        $admin->status = 1;
+        $admin->password = bcrypt($request->password);
+        
+        if ($request->hasFile('photo') && $request->file('photo') != '') {
             $avatar = $request->file('photo');
-            $photo = upload($avatar, 'uploads/admin');
+            $photo = upload($avatar);
             $admin->photo = $photo;
         }
+        
         $admin->save();
-        $admin->roles()->sync($request->roles);
-        session()->flash('success', 'تم اضافة الحساب بنجاح');
-        return back();
+        if (count($request->roles)) {
+            foreach ($request->roles as $roleId) {
+                $role = Role::findById($roleId);
+                $admin->assignRole($role);
+            }
+        }
+        return response()->json(["message" => "success"], 200);
+        
     }
 
     public function edit($id)
@@ -57,12 +87,11 @@ class AdminController extends Controller
 
     public function update(UpdateAdminRequest $request, $id)
     {
-
         $admin = Admin::find($id);
         $admin->name = $request->name;
-        $admin->type = $request->type;
+        $admin->type = 'admin';
         $admin->email = $request->email;
-        $admin->status = $request->status;
+        $admin->status = 1;
         if (request('password')) {
             $admin->password =  bcrypt($request->password);
         } else {
@@ -81,9 +110,13 @@ class AdminController extends Controller
         $admin->save();
         DB::table('model_has_roles')->where('model_id', $admin->id)->delete();
         // Assign new roles
-        $admin->roles()->sync($request->roles);
-        session()->flash('success', 'تم تحديث بيانات الحساب بنجاح');
-        return back();
+        if (count($request->roles)) {
+            foreach ($request->roles as $roleId) {
+                $role = Role::findById($roleId);
+                $admin->assignRole($role);
+            }
+        }
+        return response()->json(["message" => "success"], 200);
     }
     public function delete($id)
     {
@@ -117,6 +150,19 @@ class AdminController extends Controller
         session()->put('lang', $user->lang);
         app()->setLocale($user->lang);
         return redirect()->back()->with('status', 'Language updated successfully!');
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $admin = Admin::findOrFail($id);
+            $admin->delete();
+            return response()->json(["message" => "success"], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(["error" => "admin not found"], 404);
+        } catch (\Exception $e) {
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
     }
 
 }

@@ -8,16 +8,19 @@ use Spatie\Permission\Models\Permission;
 class PermisionsSeeder extends Seeder
 {
 
-    public function run()
+    public function run() 
     {
         $categories = [
-            'management' => ['en' => 'Management', 'ar' => 'إدارة'],
-            'users' => ['en' => 'Users', 'ar' => 'المستخدمين'],
-            'areas' => ['en' => 'Areas', 'ar' => 'المناطق'],
-            'categories' => ['en' => 'Categories', 'ar' => 'الفئات'],
+            'admins' => ['en' => 'admin', 'ar' => 'المسؤلين'],
+            'tags' => ['en' => 'tags', 'ar' => 'العلامات'],
+            'users' => ['en' => 'users', 'ar' => 'المستخدمين'],
+            'categories' => ['en' => 'categories', 'ar' => 'الفئات'],
+            'areas' => ['en' => 'areas', 'ar' => 'المناطق'],
+            'features' => ['en' => 'features', 'ar' => 'الميزات'],
             'activeStore' => ['en' => 'Active Store', 'ar' => 'المتاجر النشطه'],
             'joinedStore' => ['en' => 'Joined Store', 'ar' => 'المتاجر المنضمه'],
             'settings' => ['en' => 'Settings', 'ar' => 'الإعدادات'],
+            'roles' => ['en' => 'roles', 'ar' => 'القواعد'],
         ];
 
         $actions = [
