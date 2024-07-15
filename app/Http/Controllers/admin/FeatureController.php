@@ -15,9 +15,6 @@ class FeatureController extends Controller
     }
    public function index()
    {
-
-
-
        return view('admin.Features.index');
 
    }

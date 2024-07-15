@@ -57,9 +57,9 @@ class ReviewController extends Controller
         }
         $reviews = Review::create([
             'user_id' => Auth::guard('users')->user()->id,
-            'store_id' => $request->apartment_id,
+            'store_id' => $request->store_id,
             'title' => $request->title,
-            'descriptions' => $request->descriptions,
+            'message' => $request->descriptions,
             'rating' => $request->rating,
         ]);
         return response()->json(['isSuccess' => true, 'data' =>  $reviews], 200);
@@ -99,7 +99,7 @@ class ReviewController extends Controller
 
         $review->update([
             'user_id' => Auth::guard('users')->user()->id,
-            'store_id' => $request->apartment_id,
+            'store_id' => $request->store_id,
             'title' => $request->title,
             'descriptions' => $request->descriptions,
             'rating' => $request->rating,

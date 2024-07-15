@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     use HasFactory;
-    protected $guarde = [];
+    protected $guarded = [];
     public function store() {
         return $this->belongsTo(Store::class);
     }
