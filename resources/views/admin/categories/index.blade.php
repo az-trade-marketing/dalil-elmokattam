@@ -15,7 +15,7 @@
                         <span class="bullet bg-gray-500 w-5px h-2px"></span>
                     </li>
                     <li class="breadcrumb-item text-muted">{{ __("admin.categories") }}</li>
-                   
+
                 </ul>
             </div>
         </div>
@@ -46,7 +46,7 @@
                             <span class="me-2" data-kt-user-table-select="selected_count"></span>Selected</div>
                             <button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">Delete Selected</button>
                         </div>
-                       
+
                         {{-- modal for adding  --}}
                         <div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true">
                             <!--begin::Modal dialog-->
@@ -97,6 +97,28 @@
                                                         @endforeach
                                                     </select>
                                                 </div> --}}
+
+                                            </div>
+                                            <div class="fv-row mb-7">
+                                                <label
+                                                    class="col-lg-4 col-form-label required fw-bold fs-6">@lang('admin.tags')</label>
+                                                <div id="business-tags-container">
+                                                    <select
+                                                        class="form-select form-select-solid" dir="rtl"
+                                                        name="tags[]"
+                                                        data-close-on-select="false"
+                                                        data-placeholder="@lang('admin.tags')"
+                                                        data-allow-clear="true" multiple="multiple">
+
+                                                        @foreach ($tags as $tag)
+                                                            <option value="{{ $tag->id }}">
+                                                                {{ $tag->name_ar }}
+                                                            </option>
+                                                        @endforeach
+
+
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="text-center pt-10">
                                                 <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
@@ -195,7 +217,7 @@
                           </tr>
                         </thead>
                         <tbody class="list country_table">
-                
+
                         </tbody>
                       </table>
                     <!--end::Table-->
@@ -337,7 +359,7 @@
                 });
             });
 
-            
+
 
             $('#submitButton').on('click', function() {
                 var $button = $(this);
@@ -364,7 +386,7 @@
                     },
                     error: function(xhr) {
                         alert('An error occurred. Please try again.');
-                        
+
                         $label.removeClass('d-none');
                         $progress.addClass('d-none');
                     }
@@ -373,6 +395,6 @@
         });
     </script>
 
-    
+
 @endsection
 @endsection
