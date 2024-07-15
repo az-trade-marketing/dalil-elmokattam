@@ -19,7 +19,9 @@ class CategoryController extends Controller
     }
     public function index()
     {
-        $tags = Tag::query()->get();
+        $name = app()->getLocale() == "ar" ? "name_ar" : "name_en";
+        $tagNames = Tag::query()->pluck($name)->toArray();
+        $tags = json_encode($tagNames);
         return view('admin.categories.index',compact("tags"));
     }
 
@@ -55,14 +57,24 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $validatedData = $request->validated();
+
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $avatar = $request->file('image');
             $image = upload($avatar);
-            $validatedData['logo'] = $image;
+            $validatedData['image'] = $image;
         }
+        
         $category = Category::create($validatedData);
-        session()->flash('success', 'تم تحديث بيانات القسم بنجاح');
-        return response()->json("success",200);
+        $tags = $request->tags;
+        
+        foreach (json_decode($tags[0]) as $key => $value) {
+            $tag = Tag::where("name_ar", $value->value)->orWhere("name_en", $value->value)->first();
+            if ($tag) {
+                $category->tags()->attach($tag->id);
+            }
+        }
+        
+        return response()->json(["message" => "success"], 200);
     }
 
     /**
@@ -73,7 +85,11 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = Category::find($id);
+        $tags = $category->tags->map(function($tag) {
+            return app()->getLocale() == "ar" ? $tag->name_ar : $tag->name_en;
+        });
+        return response()->json(["tags" => $tags]);
     }
 
     /**
@@ -96,26 +112,38 @@ class CategoryController extends Controller
      */
     public function update(CategoryRequest $request, $id)
     {
+        $validatedData = $request->validated();
 
-        $category = Category::findOrFail($id);
+        // تحديث الصورة إذا تم رفع صورة جديدة
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            // Delete the old image if it exists
-            $imagePath = image_path($category->logo) ;
-            if (File::exists($imagePath)) {
-                File::delete($imagePath);
-            }
-            // Upload the new image
             $avatar = $request->file('image');
             $image = upload($avatar);
-            $validatedData = $request->validated();
-            $validatedData['logo'] = $image;
-            $category->update($validatedData);
-        } else {
-            $category->update($request->validated());
+            $validatedData['image'] = $image;
         }
+    
+        // العثور على الفئة وتحديثها
+        $category = Category::findOrFail($id);
+        $category->update($validatedData);
+    
+        // تحديث العلامات المرتبطة
+        $tags = $request->tags;
+    
+        // إنشاء مصفوفة لتخزين معرفات العلامات
+        $tagIds = [];
+    
+        foreach (json_decode($tags[0]) as $key => $value) {
+            $tag = Tag::where("name_ar", $value->value)->orWhere("name_en", $value->value)->first();
+            if ($tag) {
+                $tagIds[] = $tag->id;
+            }
+        }
+    
+        // مزامنة العلامات المرتبطة بالفئة
+        $category->tags()->sync($tagIds);
+    
+        // استجابة JSON
+        return response()->json(["message" => "success"], 200);
 
-        session()->flash('success', 'تم تحديث بيانات القسم بنجاح');
-        return response()->json("success",200);
     }
 
     /**

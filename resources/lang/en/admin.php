@@ -69,5 +69,8 @@ return [
     'title_ar'=>'title ar',
     'title_en'=>'title en',
     'signout' => 'Sign Out',
+    'appName' => 'Dalil Almokattam',
+    'management' => 'Management',
+    'authentication' => 'Authentication',
 
 ];

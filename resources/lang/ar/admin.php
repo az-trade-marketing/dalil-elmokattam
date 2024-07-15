@@ -70,5 +70,8 @@ return [
     'title_ar' => 'عنوان بالعربي',
     'title_en' => 'عنوان بالإنجليزي',
     'signout' => 'تسجيل خروج',
+    'appName' => 'دليل المقطم',
+    'management' => 'التحكم',
+    'authentication' => 'المصادقة',
 
 ];

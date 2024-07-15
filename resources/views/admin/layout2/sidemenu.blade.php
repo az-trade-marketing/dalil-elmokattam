@@ -3,9 +3,9 @@
         <!--begin::Logo-->
         <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
             <!--begin::Logo image-->
-            <a href="index.html">
-                <img alt="Logo" src="assets/media/logos/default-dark.svg" class="h-25px app-sidebar-logo-default" />
-                <img alt="Logo" src="assets/media/logos/default-small.svg" class="h-20px app-sidebar-logo-minimize" />
+            <a href="{{ url("admin/dashboard") }}">
+                <img alt="Logo" src="{{ url("images/Dalil.png") }}" class="h-85px app-sidebar-logo-default" />
+                <img alt="Logo" src="{{ url("images/Dalil.png") }}" class="h-20px app-sidebar-logo-minimize" />
             </a>
             <!--end::Logo image-->
             <!--begin::Sidebar toggle-->
@@ -31,7 +31,7 @@
             <!--begin::Menu wrapper-->
             <div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper">
                 <!--begin::Scroll wrapper-->
-                <div id="kt_app_sidebar_menu_scroll" class="scroll-y my-5 mx-3" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
+                <div id="kt_app_sidebar_menu_scroll" class="scroll-y my-5 mx-3" data-kt-scroll="true"  data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
                     <!--begin::Menu-->
                     <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
                         <!--begin:Menu item-->
@@ -61,10 +61,9 @@
                         </div>
                         <!--end:Menu item-->
                         <!--begin:Menu item-->
-                        @can("admin Read")
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "admins" || Request::segment(2) == "roles") ? "hover show" :""  }}">
                             <!--begin:Menu link-->
-                            <span class="menu-link">
+                            <span class="menu-link {{ (Request::segment(2) == "admins" || Request::segment(2) == "roles") ? "active" :""  }}">
                                 <span class="menu-icon">
                                     <i class="ki-duotone ki-address-book fs-2">
                                         <span class="path1"></span>
@@ -72,57 +71,38 @@
                                         <span class="path3"></span>
                                     </i>
                                 </span>
-                                <span class="menu-title">{{ __("admin.admins") }}</span>
+                                <span class="menu-title">{{ __("admin.authentication") }}</span>
                                 <span class="menu-arrow"></span>
                             </span>
                             <!--end:Menu link-->
                             <!--begin:Menu sub-->
                             <div class="menu-sub menu-sub-accordion">
-                                <div class="menu-item">
-                                    <a class="menu-link" href="{{ url("admin/admins") }}">
-                                        <span class="menu-bullet">
+                                @can('admin Read')
+                                <div class="menu-item ">
+                                    <a class="menu-link  {{ Request::segment(2) == "admins" ? "active" :""  }}" href="{{ url("admin/admins") }}">
+                                        <span class="menu-bullet ">
                                             <span class="bullet bullet-dot"></span>
                                         </span>
-                                        <span class="menu-title">{{ __("admin.admins") }}</span>
+                                        <span class="menu-title ">{{ __("admin.admins") }}</span>
                                     </a>
                                 </div>
-
-                            </div>
-                            <!--end:Menu sub-->
-                        </div>
-                        @endcan
-                        @can("roles Read")
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <!--begin:Menu link-->
-                            <span class="menu-link">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-address-book fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">{{ __("admin.roles") }}</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <!--end:Menu link-->
-                            <!--begin:Menu sub-->
-                            <div class="menu-sub menu-sub-accordion">
+                                @endcan
+                                @can("roles Read")
                                 <div class="menu-item">
-                                    <a class="menu-link" href="{{ url("admin/roles") }}">
+                                    <a class="menu-link {{ Request::segment(2) == "roles" ? "active" :""  }}" href="{{ url("admin/roles") }}">
                                         <span class="menu-bullet">
                                             <span class="bullet bullet-dot"></span>
                                         </span>
                                         <span class="menu-title">{{ __("admin.roles") }}</span>
                                     </a>
                                 </div>
+                                @endcan
 
                             </div>
                             <!--end:Menu sub-->
                         </div>
-                        @endcan
-                        @can("categories Read")
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "categories" || Request::segment(2) == "features" || Request::segment(2) == "tags") ? "hover show" :""  }}">
                             <!--begin:Menu link-->
                             <span class="menu-link">
                                 <span class="menu-icon">
@@ -132,55 +112,49 @@
                                         <span class="path3"></span>
                                     </i>
                                 </span>
-                                <span class="menu-title">{{ __("admin.categories") }}</span>
+                                <span class="menu-title">{{ __("admin.management") }}</span>
                                 <span class="menu-arrow"></span>
                             </span>
                             <!--end:Menu link-->
                             <!--begin:Menu sub-->
                             <div class="menu-sub menu-sub-accordion">
+                                @can('categories Read')
                                 <div class="menu-item">
-                                    <a class="menu-link" href="{{ url("admin/categories") }}">
+                                    <a class="menu-link {{ (Request::segment(2) == "categories" ) ? "active" :""  }}" href="{{ url("admin/categories") }}">
                                         <span class="menu-bullet">
                                             <span class="bullet bullet-dot"></span>
                                         </span>
                                         <span class="menu-title">{{ __("admin.categories") }}</span>
                                     </a>
                                 </div>
-
-                            </div>
-                            <!--end:Menu sub-->
-                        </div>
-                        @endcan
-                        @can("features Read")
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <!--begin:Menu link-->
-                            <span class="menu-link">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-address-book fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">{{ __("admin.features") }}</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <!--end:Menu link-->
-                            <!--begin:Menu sub-->
-                            <div class="menu-sub menu-sub-accordion">
+                                @endcan
+                                @can("features Read")
                                 <div class="menu-item">
-                                    <a class="menu-link" href="{{ url("admin/features") }}">
+                                    <a class="menu-link {{ (Request::segment(2) == "features" ) ? "active" :""  }}" href="{{ url("admin/features") }}">
                                         <span class="menu-bullet">
                                             <span class="bullet bullet-dot"></span>
                                         </span>
                                         <span class="menu-title">{{ __("admin.features") }}</span>
                                     </a>
                                 </div>
+                                @endcan
+
+                                @can("tags Read")
+                                <div class="menu-item">
+                                    <a class="menu-link {{ (Request::segment(2) == "tags" ) ? "active" :""  }}" href="{{ url("admin/tags") }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __("admin.tags") }}</span>
+                                    </a>
+                                </div>
+                                @endcan
 
                             </div>
                             <!--end:Menu sub-->
                         </div>
-                        @endcan
+                      
+                      
                         @can("subscription Read")
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                             <!--begin:Menu link-->
@@ -204,66 +178,6 @@
                                             <span class="bullet bullet-dot"></span>
                                         </span>
                                         <span class="menu-title">{{ __("admin.subscription") }}</span>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <!--end:Menu sub-->
-                        </div>
-                        @endcan
-                        @can("areas Read")
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <!--begin:Menu link-->
-                            <span class="menu-link">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-address-book fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">{{ __("admin.areas") }}</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <!--end:Menu link-->
-                            <!--begin:Menu sub-->
-                            <div class="menu-sub menu-sub-accordion">
-                                <div class="menu-item">
-                                    <a class="menu-link" href="{{ url("admin/areas") }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __("admin.areas") }}</span>
-                                    </a>
-                                </div>
-
-                            </div>
-                            <!--end:Menu sub-->
-                        </div>
-                        @endcan
-                        @can("tags Read")
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <!--begin:Menu link-->
-                            <span class="menu-link">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-address-book fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">{{ __("admin.tags") }}</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <!--end:Menu link-->
-                            <!--begin:Menu sub-->
-                            <div class="menu-sub menu-sub-accordion">
-                                <div class="menu-item">
-                                    <a class="menu-link" href="{{ url("admin/tags") }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __("admin.tags") }}</span>
                                     </a>
                                 </div>
 

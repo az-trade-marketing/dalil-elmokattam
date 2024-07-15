@@ -26,9 +26,7 @@ class CategoryRequest extends FormRequest
         return [
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
-             'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:max_width=3000,max_height=3000',
         ];
     }
 }

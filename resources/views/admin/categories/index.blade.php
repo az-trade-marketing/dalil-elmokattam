@@ -46,7 +46,6 @@
                             <span class="me-2" data-kt-user-table-select="selected_count"></span>Selected</div>
                             <button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">Delete Selected</button>
                         </div>
-
                         {{-- modal for adding  --}}
                         <div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true">
                             <!--begin::Modal dialog-->
@@ -71,81 +70,42 @@
                                     <!--begin::Modal body-->
                                     <div class="modal-body px-5 my-7">
                                         <!--begin::Form-->
-                                        <form id="kt_modal_add_user_form" class="form" action="#">
+                                        <form id="kt_modal_add_user_formm" class="form" action="#">
                                             @csrf
                                             <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
-                                                <div class="fv-row mb-7">
-                                                    <label class="required fw-semibold fs-6 mb-2">{{ __("admin.name_ar") }} </label>
-                                                    <input type="text" name="name_ar" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.name_ar") }} " />
+                                                <!--begin::Input group-->
+                                                <div class="fv-row mb-10">
+                                                    <div class="row g-9 mb-8">
+                                                        <!--begin::Col-->
+                                                        <div class="col-md-6 fv-row">
+                                                            <label class="required fs-6 fw-semibold mb-2">{{ __("admin.name_ar") }}</label>
+                                                            <input type="text" class="form-control form-control-solid" placeholder="{{ __("admin.name_ar") }}" name="name_ar" />
+                                                            <div class="text-danger" id="error-name_ar"></div>
+                                                        </div>
+                                                        <!--end::Col-->
+                                                        <!--begin::Col-->
+                                                        <div class="col-md-6 fv-row">
+                                                            <label class="required fs-6 fw-semibold mb-2">{{ __("admin.name_en") }}</label>
+                                                            <input type="text" class="form-control form-control-solid" placeholder="{{ __("admin.name_en") }}" name="name_en" />
+                                                            <div class="text-danger" id="error-name_en"></div>
+                                                        </div>
+                                                        <!--end::Col-->
+                                                    </div>
                                                 </div>
-                                                <div class="fv-row mb-7">
-                                                    <label class="required fw-semibold fs-6 mb-2">{{ __("admin.name_en") }} </label>
-                                                    <input type="text" name="name_en" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.name_en") }} " />
-                                                </div>
+                                                <!--end::Input group-->
                                                 <div class="fv-row mb-7">
                                                     <label class="required fw-semibold fs-6 mb-2">{{ __("admin.logo") }} </label>
                                                     <input type="file" name="image" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.logo") }} " />
+                                                    <div class="invalid-feedback text-danger" id="error-image" style="display: none;"></div>
+                                                    <div class="text-muted fs-7 mb-7">ex:jpeg,png,jpg  height:3000 width:3000</div>
                                                 </div>
-                                                	<!--begin::Card body-->
-												<div class="card-body pt-0">
-													<!--begin::Input group-->
-													<!--begin::Label-->
-													<label class="form-label">Categories</label>
-													<!--end::Label-->
-													<!--begin::Select2-->
-													<select class="form-select mb-2" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
-														<option></option>
-														<option value="Computers">Computers</option>
-														<option value="Watches">Watches</option>
-														<option value="Headphones">Headphones</option>
-														<option value="Footwear">Footwear</option>
-														<option value="Cameras">Cameras</option>
-														<option value="Shirts">Shirts</option>
-														<option value="Household">Household</option>
-														<option value="Handbags">Handbags</option>
-														<option value="Wines">Wines</option>
-														<option value="Sandals">Sandals</option>
-													</select>
-													<!--end::Select2-->
-													<!--begin::Description-->
-													<div class="text-muted fs-7 mb-7">Add product to a category.</div>
-													<!--end::Description-->
-												</div>
-												<!--end::Card body-->
-                                               <!--begin::Input group-->
-                                               {{-- <div class="d-flex flex-column mb-8 fv-row">
-                                                    <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                                                        <span class="required">{{ __('admin.tags') }}</span>
-                                                    </label>
-                                                    <select name="categories[]" id="categories" multiple="multiple" class="form-control">
-                                                        @foreach($tags as $tag)
-                                                            <option value="{{ $tag->id }}">{{ $tag->name_en }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div> --}}
-
-                                            </div>
-                                            <div class="fv-row mb-7">
-                                                <label
-                                                    class="col-lg-4 col-form-label required fw-bold fs-6">@lang('admin.tags')</label>
-                                                <div id="business-tags-container">
-                                                    <select
-                                                        class="form-select form-select-solid" dir="rtl"
-                                                        name="tags[]"
-                                                        data-close-on-select="false"
-                                                        data-placeholder="@lang('admin.tags')"
-                                                        data-allow-clear="true" multiple="multiple">
-
-                                                        @foreach ($tags as $tag)
-                                                            <option value="{{ $tag->id }}">
-                                                                {{ $tag->name_ar }}
-                                                            </option>
-                                                        @endforeach
-
-
-                                                    </select>
+                                                <div class="fv-row mb-7">
+                                                    <label class="form-label d-block">{{ __("admin.tags") }}</label>
+                                                    <input id="kt_ecommerce_add_product_tagss" name="tags[]" class="form-control mb-2" value="" />
                                                 </div>
+                                                  
                                             </div>
+                                         
                                             <div class="text-center pt-10">
                                                 <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
                                                 <button type="button" id="submitButton" class="btn btn-primary" data-kt-users-modal-action="submit">
@@ -194,19 +154,27 @@
                                                     <div class="fv-row mb-7">
                                                         <label class="required fw-semibold fs-6 mb-2">{{ __("admin.name_ar") }}</label>
                                                         <input type="text" name="name_ar" id="editNameAr" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.name_ar") }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-name_ar" style="display: none;"></div>
                                                     </div>
                                                     <div class="fv-row mb-7">
                                                         <label class="required fw-semibold fs-6 mb-2">{{ __("admin.name_en") }}</label>
                                                         <input type="text" name="name_en" id="editNameEn" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.name_en") }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-name_en" style="display: none;"></div>
                                                     </div>
                                                     <div class="fv-row mb-7">
                                                         <label class="required fw-semibold fs-6 mb-2">{{ __("admin.logo") }}</label>
                                                         <input type="file" name="image" id="editImage" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.logo") }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-logo" style="display: none;"></div>
+                                                        <div class="text-muted fs-7 mb-7">ex:jpeg,png,jpg  height:3000 width:3000</div>
                                                     </div>
                                                     <div class="fv-row mb-7">
                                                         <div >
                                                             <img src="" alt="" id="editImagePreview" width="100" height="100">
                                                         </div>
+                                                    </div>
+                                                    <div class="fv-row mb-7">
+                                                        <label class="form-label d-block">{{ __("admin.tags") }}</label>
+                                                        <input id="edit_tagss" name="tags[]" class="form-control mb-2" value="" />
                                                     </div>
                                                 </div>
                                                 <div class="text-center pt-10">
@@ -262,12 +230,25 @@
 <!--end::Content wrapper-->
 
 @section("js")
+<script src="{{ asset("admin/assets/js/custom/apps/ecommerce/catalog/save-product.js") }}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
 
             get_data()
             function get_data(){
+                const t = document.getElementById("kt_ecommerce_add_product_tagss");
+                if (t) {
+                    new Tagify(t, {
+                        whitelist: <?php echo $tags ?> ,
+                        dropdown: {
+                            maxItems: 20,
+                            classname: "tagify__inline__suggestions",
+                            enabled: 0,
+                            closeOnSelect: false
+                        }
+                    });
+                }
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type:'GET',
@@ -282,13 +263,13 @@
                         var permissions = response.permissions;
 
                         $.each(response.data, function(key, item){
-                            var country_img = item.logo ?  item.logo : '{{asset("admin/assets/img/user.png")}}' ;
+                            var country_img = item.image ?  item.image : '{{asset("/assets/img/user.png")}}' ;
                             var name_ar = item.name_ar ?? '';
                             var name_en = item.name_en ?? '';
                             var actionButtons = '';
 
                             if (permissions.canCreate) {
-                                actionButtons += '<a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'" data-logo="'+ item.logo +'">{{ __("admin.edit") }}</a>';
+                                actionButtons += '<a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'" data-logo="'+ item.image +'">{{ __("admin.edit") }}</a>';
                             }
                             if (permissions.canDelete) {
                                 actionButtons += '<a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="'+ item.id +'">{{ __("admin.delete") }}</a>';
@@ -326,7 +307,36 @@
                 var nameAr  = $(this).data('name_ar');
                 var nameEn  = $(this).data('name_en');
                 var logo    = $(this).data('logo');
-                console.log($(this).data());
+
+                $.ajax({
+                    url: '/admin/categories/' + id,
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        var selectedTags = response.tags;
+                        const t = document.getElementById("edit_tagss");
+                        if (t) {
+                            var tagify = new Tagify(t, {
+                                whitelist: <?php echo $tags ?> ,
+                                dropdown: {
+                                    maxItems: 20,
+                                    classname: "tagify__inline__suggestions",
+                                    enabled: 0,
+                                    closeOnSelect: false
+                                }
+                            });
+
+                            // إضافة العلامات المحددة
+                            tagify.addTags(selectedTags);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+
                 $('#editId').val(id);
                 $('#editNameAr').val(nameAr);
                 $('#editNameEn').val(nameEn);
@@ -373,10 +383,37 @@
                     contentType: false,
                     success: function(response) {
                         $('#kt_modal_edit_user').modal('hide');
+                        if (response.message == 'success') {
+                            $('#kt_modal_add_user').modal('hide');
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: "{{ __("admin.addedSuccessfully") }}",
+                                text: '{{ __("admin.updatemes") }}',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                            get_data(); 
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message,
+                            });
+                        }
                         get_data();
                     },
                     error: function(xhr) {
-                        alert('An error occurred. Please try again.');
+                        if (xhr.status === 422) { 
+                            var errors = xhr.responseJSON.errors;
+                            for (var field in errors) {
+                                $('#error-' + field).text(errors[field][0]).show();
+                            }
+                        } else {
+                            alert('An error occurred. Please try again.');
+                        }
+
+                        $label.removeClass('d-none');
                     }
                 });
             });
@@ -387,7 +424,7 @@
                 var $button = $(this);
                 var $label = $button.find('.indicator-label');
                 var $progress = $button.find('.indicator-progress');
-                var formData = new FormData($('#kt_modal_add_user_form')[0]);
+                var formData = new FormData($('#kt_modal_add_user_formm')[0]);
 
                 $label.addClass('d-none');
                 $progress.removeClass('d-none');
@@ -403,14 +440,37 @@
                     contentType: false,
                     success: function(response) {
                         $label.removeClass('d-none');
-                        $progress.addClass('d-none');
+                        if (response.message == 'success') {
+                            $('#kt_modal_add_user').modal('hide');
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: "{{ __("admin.addedSuccessfully") }}",
+                                text: '{{ __("admin.updatemes") }}',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                            get_data(); 
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message,
+                            });
+                        }
                         get_data();
                     },
                     error: function(xhr) {
-                        alert('An error occurred. Please try again.');
+                        if (xhr.status === 422) { 
+                            var errors = xhr.responseJSON.errors;
+                            for (var field in errors) {
+                                $('#error-' + field).text(errors[field][0]).show();
+                            }
+                        } else {
+                            alert('An error occurred. Please try again.');
+                        }
 
                         $label.removeClass('d-none');
-                        $progress.addClass('d-none');
                     }
                 });
             });
