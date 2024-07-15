@@ -153,7 +153,7 @@ class AuthController extends Controller
             ], 404);
         }
         $user->update([
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->newPassword)
         ]);
 
         $passwordReset->delete();
