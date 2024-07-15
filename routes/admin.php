@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
+use App\Http\Controllers\Admin\ZonesController;
 
 //================== Route Login Admin =========================
 Route::get('login', [AdminAuthenticatedSessionController::class, 'login'])->name('AdminFormLogin');
@@ -32,9 +33,14 @@ Route::group(['middleware' => 'auth:admin'], function () {
     //  ======================admin============
     Route::resource('admins', AdminController::class);
     Route::get('admins-get-data', [AdminController::class, 'data']);
-    // =======================tags==================
-    Route::resource('tags', TagsController::class);
-    Route::get('tags-get-data', [TagsController::class, 'data']);
+    Route::get('test', function (){
+        return view("admin.categories.test");
+    });
+   // =======================tags==================
+   Route::resource('tags', TagsController::class);
+   Route::get('tags-get-data', [TagsController::class, 'data']);
+    // =====================zones==========================
+    Route::resource('zones', ZonesController::class);
 
     // ============================== roles ====================
     Route::resource('users', UserController::class);

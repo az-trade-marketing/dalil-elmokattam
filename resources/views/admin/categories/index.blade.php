@@ -59,7 +59,7 @@
                                         <h2 class="fw-bold">{{  __("admin.add").' '. __("admin.category") }}</h2>
                                         <!--end::Modal title-->
                                         <!--begin::Close-->
-                                        <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                                        <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal" aria-label="Close">
                                             <i class="ki-duotone ki-cross fs-1">
                                                 <span class="path1"></span>
                                                 <span class="path2"></span>
@@ -86,6 +86,32 @@
                                                     <label class="required fw-semibold fs-6 mb-2">{{ __("admin.logo") }} </label>
                                                     <input type="file" name="image" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.logo") }} " />
                                                 </div>
+                                                	<!--begin::Card body-->
+												<div class="card-body pt-0">
+													<!--begin::Input group-->
+													<!--begin::Label-->
+													<label class="form-label">Categories</label>
+													<!--end::Label-->
+													<!--begin::Select2-->
+													<select class="form-select mb-2" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
+														<option></option>
+														<option value="Computers">Computers</option>
+														<option value="Watches">Watches</option>
+														<option value="Headphones">Headphones</option>
+														<option value="Footwear">Footwear</option>
+														<option value="Cameras">Cameras</option>
+														<option value="Shirts">Shirts</option>
+														<option value="Household">Household</option>
+														<option value="Handbags">Handbags</option>
+														<option value="Wines">Wines</option>
+														<option value="Sandals">Sandals</option>
+													</select>
+													<!--end::Select2-->
+													<!--begin::Description-->
+													<div class="text-muted fs-7 mb-7">Add product to a category.</div>
+													<!--end::Description-->
+												</div>
+												<!--end::Card body-->
                                                <!--begin::Input group-->
                                                {{-- <div class="d-flex flex-column mb-8 fv-row">
                                                     <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
@@ -121,9 +147,9 @@
                                                 </div>
                                             </div>
                                             <div class="text-center pt-10">
-                                                <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
+                                                <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
                                                 <button type="button" id="submitButton" class="btn btn-primary" data-kt-users-modal-action="submit">
-                                                    <span class="indicator-label">Submit</span>
+                                                    <span class="indicator-label">{{ __("admin.save") }}</span>
                                                     <span class="indicator-progress d-none">Please wait...
                                                       <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                                     </span>
@@ -149,8 +175,11 @@
                                         <!--begin::Modal header-->
                                         <div class="modal-header" id="kt_modal_edit_user_header">
                                             <h2 class="fw-bold">{{ __("admin.edit").' '. __("admin.category") }}</h2>
-                                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                                                <i class="ki-duotone ki-cross fs-1"></i>
+                                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal" aria-label="Close">
+                                                <i class="ki-duotone ki-cross fs-1">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
                                             </div>
                                         </div>
                                         <!--end::Modal header-->
@@ -181,9 +210,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="text-center pt-10">
-                                                    <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
+                                                    <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
                                                     <button type="button" id="editSubmitButton" class="btn btn-primary" data-kt-users-modal-action="submit">
-                                                        <span class="indicator-label">Save changes</span>
+                                                        <span class="indicator-label">{{ __("admin.save") }}</span>
                                                         <span class="indicator-progress d-none">Please wait...
                                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                                         </span>
@@ -234,13 +263,6 @@
 
 @section("js")
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#test-select').select2();
-    });
-</script>
-
     <script>
         $(document).ready(function() {
 
