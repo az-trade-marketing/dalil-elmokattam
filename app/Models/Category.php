@@ -14,6 +14,6 @@ class Category extends Model
         return $this->hasMany(Store::class);
     }
     public function tags() {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class,'category_tags');
     }
 }
