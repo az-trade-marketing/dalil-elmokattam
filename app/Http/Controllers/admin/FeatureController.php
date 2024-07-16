@@ -57,7 +57,8 @@ class FeatureController extends Controller
 
     $feature = Feature::create($validatedData);
        session()->flash('success', 'تم تحديث بيانات المنطقه بنجاح');
-       return back();
+       return response()->json(["message" => "success"], 200);
+
    }
 
    /**
@@ -103,8 +104,9 @@ class FeatureController extends Controller
     }
        $feature = Feature::findOrFail($id);
        $feature->update($validator->validated());
-       session()->flash('success', 'تم تحديث بيانات المنطقه بنجاح');
-       return back();
+       session()->flash('success', 'تم تحديث بيانات القسم بنجاح');
+       return response()->json(["message" => "success"], 200);
+
    }
 
    /**

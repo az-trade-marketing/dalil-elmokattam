@@ -20,8 +20,9 @@ class SubscriptionController extends Controller
     }
     public function index()
     {
-        $features  = Feature::all();
-
+        $name = app()->getLocale() == "ar" ? "name_ar" : "name_en";
+        $featureNames = Feature::query()->pluck($name)->toArray();
+        $features = json_encode($featureNames);
         return view('admin.subscriptions.index',get_defined_vars());
     }
     public function data()
@@ -36,7 +37,7 @@ class SubscriptionController extends Controller
      */
     public function create()
     {
-        $features  = Feature::all();
+
 
         return view('admin.subscriptions.index',get_defined_vars());
 
@@ -48,6 +49,7 @@ class SubscriptionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -55,19 +57,26 @@ class SubscriptionController extends Controller
             'title_en' => 'required|string|max:255',
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
-            'type' => 'required|in:monthly,weekly,yearly',
+            // 'type' => 'required|in:monthly,weekly,yearly',
             'price' => 'required|numeric',
             'duration' => 'nullable|integer',
-            'features' => 'nullable|array',
-            'features.*' => 'exists:features,id'
+
         ]);
 
         $subscription = Subscription::create($validatedData);
-        if (!empty($request->features)) {
-            $subscription->features()->sync($request->features);
+        // dd($subscription);
+        $features = $request->features;
+
+        foreach (json_decode($features[0]) as $key => $value) {
+            $feature = Feature::where("name_ar", $value->value)->orWhere("name_en", $value->value)->first();
+            if ($feature) {
+                $subscription->features()->attach($feature->id);
+            }
         }
 
-        return response()->json($subscription, 201);
+
+        return response()->json("success",200);
+
     }
 
     /**
@@ -78,9 +87,12 @@ class SubscriptionController extends Controller
      */
     public function show($id)
     {
-        //
+        $subscription = Subscription::find($id);
+        $features = $subscription->features->map(function($feature) {
+            return app()->getLocale() == "ar" ? $feature->name_ar : $feature->name_en;
+        });
+        return response()->json(["features" => $features]);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -109,18 +121,21 @@ class SubscriptionController extends Controller
             'type' => 'required|in:monthly,weekly,yearly',
             'price' => 'required|numeric',
             'duration' => 'nullable|integer',
-
-            'features' => 'nullable|array',
-            'features.*' => 'exists:features,id'
         ]);
 
         $subscription = Subscription::findOrFail($id);
-        $subscription->update($validatedData);
-        if (!empty($request->features)) {
-            $subscription->features()->sync($request->features);
-        }
+           $features = $request->features;
+           $featuresIds = [];
+           foreach (json_decode($features[0]) as $key => $value) {
+               $feature = Feature::where("name_ar", $value->value)->orWhere("name_en", $value->value)->first();
+               if ($feature) {
+                   $featuresIds[] = $feature->id;
+               }
+           }
+           $subscription->features()->sync($featuresIds);
 
-        return response()->json($subscription);
+        return response()->json("success",200);
+
     }
     /**
      * Remove the specified resource from storage.
