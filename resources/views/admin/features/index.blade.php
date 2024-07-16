@@ -420,31 +420,27 @@
                 });
             });
 
-            function delete_item(item_id) {
-                console.log('Deleting item ID:', item_id); // للتحقق من ID العنصر المراد حذفه
-
-                $.ajax({
-                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    type: 'delete',
-                    dataType: 'text', // تغيير dataType إلى text
-                    url: "/admin/features/" + item_id,
-                    data: {
-                        id: item_id
-                    },
-                    success: function(response) {
-                        try {
-                            var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
-                            console.log('Delete Response:', jsonResponse); // تحقق من استجابة الحذف
+            $(document).on('click', '.deleteButton', function() {
+                var id = $(this).data('id');
+                if (confirm('Are you sure you want to delete this feature?')) {
+                    $.ajax({
+                        url: '/admin/subscription/' + id,
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            alert('Category deleted successfully!');
                             get_data();
-                        } catch (e) {
-                            console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
+                            // قم بتحديث البيانات في الجدول هنا إذا كنت تريد
+                            // مثلاً: location.reload();
+                        },
+                        error: function(xhr) {
+                            alert('An error occurred. Please try again.');
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Delete Error:', error); // التحقق من وجود أخطاء في الحذف
-                    }
-                });
-            }
+                    });
+                }
+            });
 
 
         });

@@ -15,7 +15,7 @@
                         <span class="bullet bg-gray-500 w-5px h-2px"></span>
                     </li>
                     <li class="breadcrumb-item text-muted">{{ __("admin.roles") }}</li>
-                   
+
                 </ul>
             </div>
         </div>
@@ -70,7 +70,7 @@
                                                 <!--begin::Card body-->
                                                 <div class="card-body pt-1">
                                                     <!--begin::Users-->
-                                                    <div class="fw-bold text-gray-600 mb-5"> {{__("admin.Total_users_with_this_role"). " ". @$result->admins->count() }}</div>
+                                                    <div class="fw-bold text-gray-600 mb-5"> {{__("admin.Total_users_with_this_role"). " ". @$result->admins?->count() }}</div>
                                                     <!--end::Users-->
                                                     <!--begin::Permissions-->
                                                     <div class="d-flex flex-column text-gray-600">
@@ -185,7 +185,7 @@
                                                                 <tbody class="text-gray-600 fw-semibold">
                                                                     <!--begin::Table row-->
                                                                     <tr>
-                                                                        <td class="text-gray-800">Administrator Access 
+                                                                        <td class="text-gray-800">Administrator Access
                                                                         <span class="ms-2" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-html="true" data-bs-content="Allows a full access to the system">
                                                                             <i class="ki-duotone ki-information fs-7">
                                                                                 <span class="path1"></span>
@@ -309,7 +309,7 @@
                                                             <tbody class="text-gray-600 fw-semibold">
                                                                 <!--begin::Table row-->
                                                                 <tr>
-                                                                    <td class="text-gray-800">Access 
+                                                                    <td class="text-gray-800">Access
                                                                     <span class="ms-2" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-html="true" data-bs-content="Allows a full access to the system">
                                                                         <i class="ki-duotone ki-information fs-7">
                                                                             <span class="path1"></span>
@@ -393,7 +393,7 @@
 
 @section("js")
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <script>
         $(document).ready(function() {
             $(document).on('click', '.editButton', function() {
@@ -408,7 +408,7 @@
                 $('#editCatNameAr').val(catNameAr);
                 $('#ediCatNameEn').val(catNameEn);
                 $('#kt_modal_edit_user').modal('show');
-            });    
+            });
 
             // تعريف الحدث عند الضغط على زر التعديل
             $(document).on('click', '.edit-role-btn', function() {
@@ -426,7 +426,7 @@
                             permissions: response.permissions
                         };
 
-                        openEditModal(roleData); 
+                        openEditModal(roleData);
                     },
                     error: function(xhr) {
                         console.log('Failed to retrieve role data.');
@@ -503,7 +503,7 @@
                         get_data();
                     },
                     error: function(xhr) {
-                        if (xhr.status === 422) { 
+                        if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
                             for (var field in errors) {
                                 $('#error-' + field).text(errors[field][0]).show();
@@ -525,7 +525,7 @@
                 $('.permission-checkbox:checked').each(function() {
                     selectedPermissions.push($(this).val());
                 });
-                
+
                 // إضافة القيم المحددة إلى formData
                 formData.append('selected_permissions', selectedPermissions.join(','));
 
@@ -567,7 +567,7 @@
                         get_data();
                     },
                     error: function(xhr) {
-                        if (xhr.status === 422) { 
+                        if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
                             for (var field in errors) {
                                 $('#error-' + field).text(errors[field][0]).show();
@@ -588,7 +588,7 @@
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'get',
-                    dataType: 'text', 
+                    dataType: 'text',
                     url: "/admin/roles/" + item_id,
                     success: function(response) {
                         try {
@@ -685,6 +685,6 @@
         });
     </script>
 
-    
+
 @endsection
 @endsection

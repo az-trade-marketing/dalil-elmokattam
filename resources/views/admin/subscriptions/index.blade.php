@@ -55,8 +55,7 @@
                                             <h2 class="fw-bold">{{ __('admin.add') . ' ' . __('admin.category') }}</h2>
                                             <!--end::Modal title-->
                                             <!--begin::Close-->
-                                            <div class="btn btn-icon btn-sm btn-active-icon-primary"
-                                                data-kt-users-modal-action="close">
+                                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal" aria-label="Close">
                                                 <i class="ki-duotone ki-cross fs-1">
                                                     <span class="path1"></span>
                                                     <span class="path2"></span>
@@ -117,9 +116,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row g-9 mb-8">
-                                                        <label
-                                                            class="col-lg-4 col-form-label required fw-bold fs-6">@lang('admin.type')</label>
-                                                        <div class=" fv-row fv-plugins-icon-container">
+
                                                             <select id="business-type-select-activity"
                                                                 class="form-select activity form-select-solid"
                                                                 data-hide-search="true" data-placeholder="@lang('admin.type')"
@@ -133,29 +130,12 @@
 
                                                             <div class="fv-plugins-message-container invalid-feedback">
                                                             </div>
-                                                        </div>
+                                                    </div>
                                                     </div>
 
                                                     <div class="fv-row mb-7">
-                                                        <label
-                                                            class="col-lg-4 col-form-label required fw-bold fs-6">@lang('admin.features')</label>
-                                                        <div id="business-tags-container">
-                                                            <select id="business-tags-select"
-                                                                class="form-select form-select-solid" dir="rtl"
-                                                                name="features[]" data-control="select2"
-                                                                data-close-on-select="false"
-                                                                data-placeholder="@lang('admin.features')"
-                                                                data-allow-clear="true" multiple="multiple">
-
-                                                                @foreach ($features as $feature)
-                                                                    <option value="{{ $feature->id }}">
-                                                                        {{ $feature->name_ar }}
-                                                                    </option>
-                                                                @endforeach
-
-
-                                                            </select>
-                                                        </div>
+                                                        <label class="form-label d-block">{{ __("admin.feature") }}</label>
+                                                        <input id="kt_ecommerce_add_product_features" name="feature[]" class="form-control mb-2" value="" />
                                                     </div>
                                                     <div class="row g-9 mb-8">
                                                         <div class="col-md-6 fv-row">
@@ -178,16 +158,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="text-center pt-10">
-                                                    <button type="reset" class="btn btn-light me-3"
-                                                        data-kt-users-modal-action="cancel">{{ __('admin.discard') }}</button>
-                                                    <button type="button" id="submitButton" class="btn btn-primary"
-                                                        data-kt-users-modal-action="submit">
-                                                        <span class="indicator-label">{{ __('admin.save') }}</span>
+                                                    <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
+                                                    <button type="button" id="submitButton" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                                        <span class="indicator-label">{{ __("admin.save") }}</span>
                                                         <span class="indicator-progress d-none">Please wait...
-                                                            <span
-                                                                class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                                         </span>
                                                     </button>
+
                                                 </div>
                                             </form>
 
@@ -214,8 +192,7 @@
                                             <h2 class="fw-bold">{{ __('admin.edit') . ' ' . __('admin.category') }}</h2>
                                             <!--end::Modal title-->
                                             <!--begin::Close-->
-                                            <div class="btn btn-icon btn-sm btn-active-icon-primary"
-                                                data-kt-users-modal-action="close">
+                                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal" aria-label="Close">
                                                 <i class="ki-duotone ki-cross fs-1">
                                                     <span class="path1"></span>
                                                     <span class="path2"></span>
@@ -282,9 +259,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row g-9 mb-8">
-                                                        <label
-                                                            class="col-lg-4 col-form-label required fw-bold fs-6">@lang('admin.type')</label>
-                                                        <div class="fv-row fv-plugins-icon-container">
+
                                                             <select id="editTypeSelect"
                                                                 class="form-select form-select-solid"
                                                                 data-hide-search="true"
@@ -297,24 +272,11 @@
                                                             </select>
                                                             <div class="fv-plugins-message-container invalid-feedback">
                                                             </div>
-                                                        </div>
+
                                                     </div>
                                                     <div class="fv-row mb-7">
-                                                        <label
-                                                            class="col-lg-4 col-form-label required fw-bold fs-6">@lang('admin.features')</label>
-                                                        <div id="editFeaturesContainer">
-                                                            <select id="editFeaturesSelect"
-                                                                class="form-select form-select-solid" dir="rtl"
-                                                                name="features[]" data-control="select2"
-                                                                data-close-on-select="false"
-                                                                data-placeholder="@lang('admin.features')"
-                                                                data-allow-clear="true" multiple="multiple">
-                                                                @foreach ($features as $feature)
-                                                                    <option value="{{ $feature->id }}">
-                                                                        {{ $feature->name_ar}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+                                                        <label class="form-label d-block">{{ __("admin.feature") }}</label>
+                                                        <input id="edit_features" name="feature[]" class="form-control mb-2" value="" />
                                                     </div>
                                                     <div class="row g-9 mb-8">
                                                         <div class="col-md-6 fv-row">
@@ -338,15 +300,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="text-center pt-10">
-                                                    <button type="reset" class="btn btn-light me-3"
-                                                        data-kt-users-modal-action="cancel">{{ __('admin.discard') }}</button>
-                                                    <button type="button" id="editSubmitButton" class="btn btn-primary"
-                                                        data-kt-users-modal-action="submit">
-                                                        <span class="indicator-label">{{ __('admin.save') }}</span>
+                                                    <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
+                                                    <button type="button" id="submitButton" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                                        <span class="indicator-label">{{ __("admin.save") }}</span>
                                                         <span class="indicator-progress d-none">Please wait...
-                                                            <span
-                                                                class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                                         </span>
+                                                    </button>
                                                     </button>
                                                 </div>
                                             </form>
@@ -404,6 +364,18 @@
             get_data();
 
             function get_data() {
+                const t = document.getElementById("kt_ecommerce_add_product_features");
+                if (t) {
+                    new Tagify(t, {
+                        whitelist: <?php echo $features ?> ,
+                        dropdown: {
+                            maxItems: 20,
+                            classname: "tagify__inline__suggestions",
+                            enabled: 0,
+                            closeOnSelect: false
+                        }
+                    });
+                }
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -416,6 +388,7 @@
                         $('#myTable').DataTable().destroy();
                         $('#myTable tbody').empty();
                         $.each(response, function(key, item) {
+                            console.log(item);
                             var title_ar = item.title_ar ?? '';
                             var title_en = item.title_en ?? '';
                             var description_ar = item.description_ar ?? '';
@@ -465,30 +438,78 @@
                     }
                 });
             }
-
             $(document).on('click', '.editButton', function() {
-                var id = $(this).data('id');
-                var titleAr = $(this).data('title_ar');
-                var titleEn = $(this).data('title_en');
-                var descriptionAr = $(this).data('description_ar');
-                var descriptionEn = $(this).data('description_en');
-                var type = $(this).data('type');
-                var features = $(this).data('features');
-                var price = $(this).data('price');
-                var duration = $(this).data('duration');
+    var id = $(this).data('id');
+    var titleAr = $(this).data('title_ar');
+    var titleEn = $(this).data('title_en');
+    var descriptionAr = $(this).data('description_ar');
+    var descriptionEn = $(this).data('description_en');
+    var type = $(this).data('type');
+    var price = $(this).data('price');
+    var duration = $(this).data('duration');
 
-                $('#editId').val(id);
-                $('#editNameAr').val(titleAr);
-                $('#editNameEn').val(titleEn);
-                $('#editDescriptionAr').val(descriptionAr);
-                $('#editDescriptionEn').val(descriptionEn);
-                $('#editTypeSelect').val(type).trigger('change');
-                $('#editFeaturesSelect').val(features).trigger('change');
-                $('#editPrice').val(price);
-                $('#editDuration').val(duration);
+    $.ajax({
+        url: '/admin/subscription/' + id,
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            var selectedfeatures = response.features;
+            // Here is where the code you referenced goes
+            $('#editId').val(id);
+            $('#editNameAr').val(titleAr);
+            $('#editNameEn').val(titleEn);
+            $('#editDescriptionAr').val(descriptionAr);
+            $('#editDescriptionEn').val(descriptionEn);
+            $('#editTypeSelect').val(type).trigger('change');
+            $('#editPrice').val(price);
+            $('#editDuration').val(duration);
+            const t = document.getElementById("edit_features");
+            if (t) {
+                var tagify = new Tagify(t, {
+                    whitelist: <?php echo $features ?>,
+                    dropdown: {
+                        maxItems: 20,
+                        classname: "tagify__inline__suggestions",
+                        enabled: 0,
+                        closeOnSelect: false
+                    }
+                });
+                tagify.addTags(selectedfeatures); // Make sure this uses the correct variable
+            }
 
-                $('#kt_modal_edit_user').modal('show');
-            });
+            $('#kt_modal_edit_user').modal('show');
+        },
+        error: function(xhr) {
+            alert('An error occurred. Please try again.');
+        }
+    });
+});
+
+            // $(document).on('click', '.editButton', function() {
+            //     var id = $(this).data('id');
+            //     var titleAr = $(this).data('title_ar');
+            //     var titleEn = $(this).data('title_en');
+            //     var descriptionAr = $(this).data('description_ar');
+            //     var descriptionEn = $(this).data('description_en');
+            //     var type = $(this).data('type');
+            //     var features = $(this).data('features');
+            //     var price = $(this).data('price');
+            //     var duration = $(this).data('duration');
+
+            //     $('#editId').val(id);
+            //     $('#editNameAr').val(titleAr);
+            //     $('#editNameEn').val(titleEn);
+            //     $('#editDescriptionAr').val(descriptionAr);
+            //     $('#editDescriptionEn').val(descriptionEn);
+            //     $('#editTypeSelect').val(type).trigger('change');
+
+            //     $('#editPrice').val(price);
+            //     $('#editDuration').val(duration);
+
+            //     $('#kt_modal_edit_user').modal('show');
+            // });
 
             $('#editSubmitButton').on('click', function(e) {
                 e.preventDefault();
@@ -506,33 +527,25 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        $('#kt_modal_edit_user').modal('hide');
-                        if (response.message == 'success') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: "{{ __('admin.updatedSuccessfully') }}",
-                                text: '{{ __('admin.updatemes') }}',
-                                timer: 1500,
-                                showConfirmButton: false
+                        var selectedTags = response.features;
+                        const t = document.getElementById("edit_features");
+                        if (t) {
+                            var tagify = new Tagify(t, {
+                                whitelist: <?php echo $features ?> ,
+                                dropdown: {
+                                    maxItems: 20,
+                                    classname: "tagify__inline__suggestions",
+                                    enabled: 0,
+                                    closeOnSelect: false
+                                }
                             });
-                            get_data();
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.message,
-                            });
+
+                            // إضافة العلامات المحددة
+                            tagify.addTags(selectedTags);
                         }
                     },
                     error: function(xhr) {
-                        if (xhr.status === 422) {
-                            var errors = xhr.responseJSON.errors;
-                            for (var field in errors) {
-                                $('#error-edit-' + field).text(errors[field][0]).show();
-                            }
-                        } else {
-                            alert('An error occurred. Please try again.');
-                        }
+                        alert('An error occurred. Please try again.');
                     }
                 });
             });
@@ -595,99 +608,28 @@
             });
 
             $(document).on('click', '.deleteButton', function() {
-                var item_id = $(this).data('id');
-
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: 'get',
-                    dataType: 'text',
-                    url: "/admin/subscription/" + item_id,
-                    success: function(response) {
-                        try {
-                            var jsonResponse = JSON.parse(response);
-
-                            if (jsonResponse.status == 404) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Sorry',
-                                    text: jsonResponse.message,
-                                });
-                            } else {
-                                const swalWithBootstrapButtons = Swal.mixin({
-                                    customClass: {
-                                        confirmButton: 'btn btn-primary',
-                                        cancelButton: 'btn btn-danger'
-                                    },
-                                    buttonsStyling: false
-                                });
-
-                                swalWithBootstrapButtons.fire({
-                                    title: '{{ __('admin.isDelete') }} ' + jsonResponse
-                                        .title_en + ' !!?',
-                                    text: '{{ __('admin.revet') }}',
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonText: '{{ __('admin.yes') }}',
-                                    cancelButtonText: '{{ __('admin.no') }}',
-                                    reverseButtons: true
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        delete_item(jsonResponse.id);
-                                        swalWithBootstrapButtons.fire(
-                                            '{{ __('admin.delete') }}',
-                                            '{{ __('admin.fileDeleted') }}',
-                                            'success'
-                                        );
-                                    } else if (result.dismiss === Swal.DismissReason
-                                        .cancel) {
-                                        swalWithBootstrapButtons.fire(
-                                            '{{ __('admin.cancelled') }}',
-                                            '{{ __('admin.fileSave') }}',
-                                            'error'
-                                        );
-                                    }
-                                });
-                            }
-                        } catch (e) {
-                            console.error('Parsing Error:',
-                                e); // التحقق من وجود أخطاء في التحليل
+                var id = $(this).data('id');
+                if (confirm('Are you sure you want to delete this subscription?')) {
+                    $.ajax({
+                        url: '/admin/subscription/' + id,
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            alert('Category deleted successfully!');
+                            get_data();
+                            // قم بتحديث البيانات في الجدول هنا إذا كنت تريد
+                            // مثلاً: location.reload();
+                        },
+                        error: function(xhr) {
+                            alert('An error occurred. Please try again.');
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error); // التحقق من وجود أخطاء
-                    }
-                });
+                    });
+                }
             });
 
-            function delete_item(item_id) {
-                console.log('Deleting item ID:', item_id); // للتحقق من ID العنصر المراد حذفه
 
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: 'delete',
-                    dataType: 'text', // تغيير dataType إلى text
-                    url: "/admin/subscription/" + item_id,
-                    data: {
-                        id: item_id
-                    },
-                    success: function(response) {
-                        try {
-                            var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
-                            console.log('Delete Response:', jsonResponse); // تحقق من استجابة الحذف
-                            get_data();
-                        } catch (e) {
-                            console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Delete Error:', error); // التحقق من وجود أخطاء في الحذف
-                    }
-                });
-            }
 
 
         });
