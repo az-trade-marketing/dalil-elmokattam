@@ -74,6 +74,8 @@ return [
     'management' => 'التحكم',
     'authentication' => 'المصادقة',
     'chooose'=>'اختر',
-    'statistics' => 'احصائيات'
+    'statistics' => 'احصائيات',
+    'stores' => 'المتاجر',
+    'add_stores' => 'إضافة متجر',
 
 ];

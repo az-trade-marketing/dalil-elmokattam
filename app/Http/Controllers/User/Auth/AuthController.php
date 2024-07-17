@@ -152,12 +152,9 @@ class AuthController extends Controller
                 'message' => 'We can\'t find a user with that e-mail address.'
             ], 404);
         }
-        $user->update([
-            'password' => Hash::make($request->newPassword)
-        ]);
-
+        $user->password = Hash::make($request->newPassword);
+        $user->save();
         $passwordReset->delete();
-
         return response()->json([
             'message' => 'Your password has been reset successfully.'
         ]);

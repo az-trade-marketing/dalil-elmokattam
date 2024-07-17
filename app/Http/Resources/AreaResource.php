@@ -16,7 +16,7 @@ class AreaResource extends JsonResource
     {
         return array_merge(parent::toArray($request), [
 
-            "image"=> asset('uploads/category/' . $this->image),
+            "image"=> asset('images/' . $this->image),
 
         ]);
     }

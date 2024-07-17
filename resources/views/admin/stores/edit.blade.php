@@ -84,19 +84,45 @@
                         </div>
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.area') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.zones') }}</label>
                             </div>
                             <div class="col-lg-9">
-                                <select id="business-type-select-activity" class="form-select activity form-select-solid" data-hide-search="area_id" data-placeholder="@lang('admin.area')" name="area_id" required>
-                                    <option value="">{{ __('admin.choose') }}</option>
-                                    @foreach ($areas as $area)
-                                        <option value="{{ $area->id }}" {{ $area->id == $store->area_id ? 'selected' : '' }}>
-                                            {{ $area->{'name_' . app()->getLocale()} }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <!--begin::Input-->
+                            <select id="business-type-select-activity"
+                                class="form-select activity form-select-solid"
+                                data-hide-search="zone_id" data-placeholder="@lang('admin.zones')"
+                                name="zone_id" required>
+                                <option value="">{{ __( 'admin.chooose' ) }}</option>
+                                @foreach ($zones as $zone)
+                                <option value="{{ $zone->id }}" {{ $zone->id  == $store->zone_id ? 'selected' : '' }}>
+                                    {{ $zone->{'name_' . lang()} }}</option>
+                                @endforeach
+                            </select>
                             </div>
                         </div>
+                        <div class="form-group mb-3 d-none">
+                            <label class="input-label" for="exampleFormControlInput1">{{ __('Coordinates') }}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{__('messages.draw_your_zone_on_the_map')}}">{{__('messages.draw_your_zone_on_the_map')}}</span></label>
+                            <textarea type="text" rows="8" name="coordinates" id="coordinates" class="form-control" readonly></textarea>
+                        </div>
+                        <div class="row mb-10">
+                            <div class="col-md-3">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.subscriptions') }}</label>
+                            </div>
+                            <div class="col-lg-9">
+                            <!--begin::Input-->
+                            <select id="business-type-select-activity"
+                                class="form-select activity form-select-solid"
+                                data-hide-search="subscription_id" data-placeholder="@lang('admin.subscriptions')"
+                                name="subscription_id" required>
+                                <option value="">{{ __( 'admin.chooose' ) }}</option>
+                                @foreach ($subscriptions as $subscription)
+                                <option value="{{ $subscription->id }}" {{ $subscription->id  == $store->subscription_id ? 'selected' : '' }}>
+                                    {{ $subscription->{'title_' . lang()} }}</option>
+                                @endforeach
+                            </select>
+                            </div>
+                        </div>
+
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.upload') }}</label>

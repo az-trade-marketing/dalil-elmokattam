@@ -75,5 +75,8 @@ return [
      'chooose'=>'chooose',
      'add_store'=>'Add Store',
     'statistics' => 'Statistics',
+    'stores'=>'stores',
+    'add_stores'=>'Add Stores',
+
 
 ];
