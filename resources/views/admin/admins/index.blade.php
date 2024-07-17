@@ -15,13 +15,11 @@
                         <span class="bullet bg-gray-500 w-5px h-2px"></span>
                     </li>
                     <li class="breadcrumb-item text-muted">{{ __("admin.admins") }}</li>
-                   
+
                 </ul>
             </div>
         </div>
     </div>
-
-
     <!--begin::Content-->
     <div id="kt_app_content" class="app-content flex-column-fluid">
         <!--begin::Content container-->
@@ -41,7 +39,7 @@
                             <!--end::Add user-->
                             @endcan
                         </div>
-                       
+
                         {{-- modal for adding  --}}
                         <div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true">
                             <!--begin::Modal dialog-->
@@ -86,7 +84,7 @@
                                                             <input type="password" name="password" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.password") }}" />
                                                             <div class="invalid-feedback text-danger" id="error-password"></div>
                                                         </div>
-                                                       
+
                                                         <div class="col-md-6 fv-row">
                                                             <label class="required fw-semibold fs-6 mb-2">{{ __("admin.mobile") }}</label>
                                                             <input type="text" name="mobile"  class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.mobile") }}" />
@@ -146,10 +144,10 @@
                                                 </button>
                                             </div>
                                         </form>
-                                        
+
                                         <!--end::Form-->
                                     </div>
-                                    
+
                                     <!--end::Modal body-->
                                 </div>
                                 <!--end::Modal content-->
@@ -254,9 +252,9 @@
                                                         </span>
                                                     </button>
                                                 </div>
-                                              
+
                                             </form>
-                                            
+
                                             <!--end::Form-->
                                         </div>
                                         <!--end::Modal body-->
@@ -285,7 +283,7 @@
                           </tr>
                         </thead>
                         <tbody class="list country_table">
-                
+
                         </tbody>
                       </table>
                     <!--end::Table-->
@@ -302,7 +300,7 @@
 
 @section("js")
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <script>
         $(document).ready(function() {
 
@@ -395,7 +393,7 @@
                 });
             });
 
-            
+
 
             $('#editSubmitButton').on('click', function(e) {
                 e.preventDefault();
@@ -421,7 +419,7 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            get_data(); 
+                            get_data();
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -432,7 +430,7 @@
                         get_data();
                     },
                     error: function(xhr) {
-                        if (xhr.status === 422) { 
+                        if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
                             for (var field in errors) {
                                 $('#error-' + field).text(errors[field][0]).show();
@@ -477,7 +475,7 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            get_data(); 
+                            get_data();
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -488,7 +486,7 @@
                         get_data();
                     },
                     error: function(xhr) {
-                        if (xhr.status === 422) { 
+                        if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
                             for (var field in errors) {
                                 $('#error-' + field).text(errors[field][0]).show();
@@ -508,7 +506,7 @@
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'get',
-                    dataType: 'text', 
+                    dataType: 'text',
                     url: "/admin/admins/" + item_id,
                     success: function(response) {
                         try {
@@ -592,6 +590,6 @@
         });
     </script>
 
-    
+
 @endsection
 @endsection

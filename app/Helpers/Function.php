@@ -16,8 +16,9 @@ if (!function_exists('aurl')) {
 if (!function_exists('lang')) {
     function lang()
     {
-        $lang = session()->get('lang') ?? 'ar';
-        return $lang;
+        return  app()->getLocale() ;
+        // $lang = session()->get('lang') ?? 'ar';
+        // return $lang;
     }
 }
 

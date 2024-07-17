@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
+use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\Admin\ZonesController;
 
 //================== Route Login Admin =========================
@@ -65,6 +66,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::resource('subscription', SubscriptionController::class);
     Route::get('subscription-get-data', [SubscriptionController::class, 'data']);
     // ==============================  ====================
+    // ============================== stores ====================
+    Route::resource('stores', StoreController::class);
     Route::get("view-test", function () {
         $script_datatable = true;
         return view("admin.categories.index", compact('script_datatable'));

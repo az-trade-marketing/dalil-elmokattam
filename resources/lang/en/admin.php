@@ -72,5 +72,6 @@ return [
     'appName' => 'Dalil Almokattam',
     'management' => 'Management',
     'authentication' => 'Authentication',
-
+     'chooose'=>'chooose',
+     'add_store'=>'Add Store',
 ];
