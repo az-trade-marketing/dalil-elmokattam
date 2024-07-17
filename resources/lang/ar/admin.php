@@ -73,6 +73,7 @@ return [
     'appName' => 'دليل المقطم',
     'management' => 'التحكم',
     'authentication' => 'المصادقة',
-    'chooose'=>'اختر'
+    'chooose'=>'اختر',
+    'statistics' => 'احصائيات'
 
 ];

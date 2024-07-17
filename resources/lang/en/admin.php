@@ -74,4 +74,6 @@ return [
     'authentication' => 'Authentication',
      'chooose'=>'chooose',
      'add_store'=>'Add Store',
+    'statistics' => 'Statistics',
+
 ];
