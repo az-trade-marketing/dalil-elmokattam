@@ -60,6 +60,8 @@
                         $.each(response ,function(key , item){
                                 var name_ar = item.name_ar ?? '';
                                 var name_en = item.name_en ?? '';
+                                var description_en = item.description_en ?? '';
+                                var description_ar = item.description_ar ?? '';
                                 var country_img = item.image ?  item.image : '{{asset("/assets/img/user.png")}}' ;
                                 $('.country_table').append('<tr>\
                                         <td class=" text-center pt-4">\
@@ -70,6 +72,12 @@
                                         </td>\
                                         <td class="align-middle name text-nowrap ">\
                                             <h6 class="m-0 p-0">'+name_en+' </h6>  \
+                                        </td>\
+                                          <td class="align-middle name text-nowrap ">\
+                                            <h6 class="m-0 p-0">'+description_ar+' </h6>  \
+                                        </td>\
+                                        <td class="align-middle name text-nowrap ">\
+                                            <h6 class="m-0 p-0">'+description_en+' </h6>  \
                                         </td>\
                                         <td class="text-center min-w-100">\
                                             <div class="avatar avatar-3xl">\
@@ -91,6 +99,27 @@
                     }
                 })
             }
+            $(document).on('click', '.deleteButton', function() {
+                var id = $(this).data('id');
+                if (confirm('Are you sure you want to delete this Store?')) {
+                    $.ajax({
+                        url: '/admin/stores/' + id,
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            alert('Store deleted successfully!');
+                            get_data();
+                            // قم بتحديث البيانات في الجدول هنا إذا كنت تريد
+                            // مثلاً: location.reload();
+                        },
+                        error: function(xhr) {
+                            alert('An error occurred. Please try again.');
+                        }
+                    });
+                }
+            });
         });
  </script>
 @endsection
