@@ -5,7 +5,7 @@
         <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
 
             <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.add_store") }}</h1>
+                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.stores") }}</h1>
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                     <li class="breadcrumb-item text-muted">
                         <a href="index.html" class="text-muted text-hover-primary">{{ __("admin.home") }}</a>
@@ -13,7 +13,7 @@
                     <li class="breadcrumb-item">
                         <span class="bullet bg-gray-500 w-5px h-2px"></span>
                     </li>
-                    <li class="breadcrumb-item text-muted">{{ __("admin.create") }}</li>
+                    <li class="breadcrumb-item text-muted">{{ __("admin.index") }}</li>
 
                 </ul>
             </div>
@@ -34,7 +34,6 @@
               </tr>
             </thead>
             <tbody class="list country_table">
-
             </tbody>
           </table>
         <!--end::Table-->
@@ -45,7 +44,54 @@
 <script src="{{ asset("admin/assets/js/custom/apps/ecommerce/catalog/save-product.js") }}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        $(document).ready(function() {
+            get_data()
+            function get_data(){
+                $.ajax({
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    type:'GET',
+                    dataType :'json',
+                    url :"/admin/features-get-data",
+                    success:function(response){
+                        $('.country_table').html('');
+                        $('#myTable').DataTable().destroy();
+                        $('#myTable tbody').empty();
+                        var select_type = $('.level_select option:selected').val();
+                        $.each(response ,function(key , item){
+                                var name_ar = item.name_ar ?? '';
+                                var name_en = item.name_en ?? '';
+                                var country_img = item.image ?  item.image : '{{asset("/assets/img/user.png")}}' ;
+                                $('.country_table').append('<tr>\
+                                        <td class=" text-center pt-4">\
+                                            <h6>#'+item.id+'</h6> \
+                                        </td>\
+                                        <td class="align-middle name text-nowrap ">\
+                                            <h6 class="m-0 p-0">'+name_ar+' </h6>  \
+                                        </td>\
+                                        <td class="align-middle name text-nowrap ">\
+                                            <h6 class="m-0 p-0">'+name_en+' </h6>  \
+                                        </td>\
+                                        <td class="text-center min-w-100">\
+                                            <div class="avatar avatar-3xl">\
+                                                <img src="{{ image_path()."/" }}'+country_img+'" alt="" height="100" width="100"/>\
+                                            </div>\
+                                        </td>\
+                                        <td class="min-w-100 pt-3">\
+                                            <div class="d-flex">\
+                                                <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'" >{{ __("admin.edit") }}</a>\
+                                                <a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="'+ item.id +'"  value="'+item.id+'">{{ __("admin.delete") }}</a>\
+                                            </div>\
+                                        </td>\
+                                    </tr>\
+                                ')
+                            // }
+                        });
+
+                        let table = new DataTable('#myTable');
+                    }
+                })
+            }
+        });
  </script>
-
-
+@endsection
 @endsection

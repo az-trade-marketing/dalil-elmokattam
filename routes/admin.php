@@ -65,9 +65,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
     // ============================== subscription ====================
     Route::resource('subscription', SubscriptionController::class);
     Route::get('subscription-get-data', [SubscriptionController::class, 'data']);
-    // ==============================  ====================
     // ============================== stores ====================
     Route::resource('stores', StoreController::class);
+    Route::get('stores-get-data', [StoreController::class, 'data']);
     Route::get("view-test", function () {
         $script_datatable = true;
         return view("admin.categories.index", compact('script_datatable'));
