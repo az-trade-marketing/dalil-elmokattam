@@ -64,7 +64,7 @@
                     var name_en = item.name_en ?? '';
                     var description_en = item.description_en ?? '';
                     var description_ar = item.description_ar ?? '';
-                    var country_img = item.image ? item.image : '{{asset("/assets/img/user.png")}}';
+                    var country_img = item.image ? '{{asset("/images/")}}' + item.image : '{{asset("/assets/img/user.png")}}';
                     $('.country_table').append('<tr>\
                         <td class=" text-center pt-4">\
                             <h6>#' + item.id + '</h6> \
