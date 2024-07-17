@@ -78,5 +78,10 @@ return [
     'stores'=>'stores',
     'add_stores'=>'Add Stores',
 
+    'zones' => 'zones',
+    'zone' => 'zone',
+    'map' => 'map',
+    'seaarch_hear' => 'seaarch hear',
+    'zone_added_successfully' => 'zone added successfully',
 
 ];
