@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Tag;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -89,7 +90,7 @@ class CategoryController extends Controller
         $tags = $category->tags->map(function($tag) {
             return app()->getLocale() == "ar" ? $tag->name_ar : $tag->name_en;
         });
-        return response()->json(["tags" => $tags]);
+        return response()->json(["tags" => $tags,'category'=>$category]);
     }
 
     /**
@@ -154,13 +155,27 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
-
-        if ($category->image && Storage::exists('uploads/category/' . $category->image)) {
-            Storage::delete('uploads/category/' . $category->image);
+        try {
+            $category = Category::findOrFail($id);
+    
+            // Check if the category has an associated foreign key
+            if ($category->foreign_key) {
+                return response()->json(['error' => 'Category cannot be deleted because it is referenced by a foreign key.'], 400);
+            }
+    
+            // Check and delete the category image from storage if exists
+            if ($category->image && Storage::exists('uploads/category/' . $category->image)) {
+                Storage::delete('uploads/category/' . $category->image);
+            }
+    
+            $category->delete();
+            return response()->json(['message' => 'Category deleted successfully.']);
+        } catch (QueryException $e) {
+            // Handle specific SQL error - foreign key constraint violation
+            return response()->json(['error' => 'Category cannot be deleted because it is referenced by a foreign key.','status' => 400], 400);
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            return response()->json(['error' => 'Failed to delete category.'], 500);
         }
-        $category->delete();
-
-        return response()->json(['message' => 'Category deleted successfully.']);
     }
 }

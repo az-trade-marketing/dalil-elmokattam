@@ -459,9 +459,14 @@
                     },
                     success: function(response) {
                         try {
-                            var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
-                            console.log('Delete Response:', jsonResponse); // تحقق من استجابة الحذف
-                            get_data();
+                            if (response.status == "200") {
+                                var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
+                                get_data();
+                            }elseif(response.status == "400"){
+                                alert(response.error);
+                            }elseif(response.status == "500"){
+                                alert(response.error);
+                            }
                         } catch (e) {
                             console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
                         }

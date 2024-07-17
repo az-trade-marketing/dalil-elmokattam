@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use MatanYadaev\EloquentSpatial\Objects\LineString;
+use MatanYadaev\EloquentSpatial\Objects\Point;
+use MatanYadaev\EloquentSpatial\Objects\Polygon;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -50,7 +54,8 @@ class ZonesController extends Controller
      */
     public function create()
     {
-        return view('admin.zones.create');
+        $zones = [];
+        return view('admin.zones.create',compact("zones"));
     }
 
     /**
@@ -62,27 +67,49 @@ class ZonesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name_ar' => 'required|unique:roles,name_ar',
-            'name_en' => 'required|unique:roles,name_en',
+            'name_ar' => 'required|unique:zones,name_ar',
+            'name_en' => 'required|unique:zones,name_en',
+            'coordinates' => 'required',
 
-            // 'permission' => 'required',
         ]);
-        $role = Role::create(['name_ar' => $request->input('name_ar'), 'name_en' => $request->input('name_en'), 'guard_name' => 'admin']);
-        // Sync the permissions with the role
-        $permissions = explode(",",$request->input('selected_permissions'));
-        $selectedPermissions = [];
+        $data = $this->getAddData(request: $request);
+        $zone = $this->add(data: $data);
 
-        // Find and add the selected permissions to the role
-        foreach ($permissions as $permissionId) {
-            $permission = Permission::where('id', $permissionId)->first();
-            if ($permission) {
-                $selectedPermissions[] = $permission;
-            }
-        }
-        // Sync the permissions with the role
-        $role->syncPermissions($selectedPermissions);
         return response()->json(["message" => "success"], 200);
     }
+
+    public function add(array $data): string|object
+    {
+        $zone = new Zone();
+        foreach ($data as $key => $column) {
+            if ($key == "coordinates") {
+            }
+            $zone[$key] = $column;
+        }
+        $zone->save();
+        return $zone;
+    } 
+
+    public function getAddData(Object $request): array
+    {
+        $value = $request['coordinates'];
+
+        foreach(explode('),(',trim($value,'()')) as $index=>$single_array){
+            if($index == 0)
+            {
+                $lastCord = explode(',',$single_array);
+            }
+            $coords = explode(',',$single_array);
+            $polygon[] = new Point($coords[0], $coords[1]);
+        }
+        $polygon[] = new Point($lastCord[0], $lastCord[1]);
+        return [
+            'name_en' => $request->name_en,
+            'name_ar' => $request->name_ar,
+            'coordinates' => new Polygon([new LineString($polygon)]),
+        ];   
+    }
+    
 
     /**
      * Display the specified resource.

@@ -13,6 +13,7 @@
         "laravel/socialite": "^5.15",
         "laravel/tinker": "^2.7",
         "spatie/laravel-permission": "^6.9",
+        "matanyadaev/laravel-eloquent-spatial": "^2.1",
         "tymon/jwt-auth": "^2.1"
     },
     "require-dev": {
