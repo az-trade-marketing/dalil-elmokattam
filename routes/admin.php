@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
    Route::get('tags-get-data', [TagsController::class, 'data']);
     // =====================zones==========================
     Route::resource('zones', ZonesController::class);
-
+    Route::get('zones-get-data', [ZonesController::class, 'data']);
     // ============================== roles ====================
     Route::resource('users', UserController::class);
     Route::resource('roles', RolesController::class);

@@ -5,7 +5,7 @@
     <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
             <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.add").' '. __("admin.role") }}</h1>
+                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.edit").' '. __("admin.zone") }}</h1>
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                     <li class="breadcrumb-item text-muted">
                         <a href="index.html" class="text-muted text-hover-primary">{{ __("admin.home") }}</a>
@@ -13,7 +13,7 @@
                     <li class="breadcrumb-item">
                         <span class="bullet bg-gray-500 w-5px h-2px"></span>
                     </li>
-                    <li class="breadcrumb-item text-muted">{{ __("admin.roles") }}</li>
+                    <li class="breadcrumb-item text-muted">{{ __("admin.zones") }}</li>
                 </ul>
             </div>
         </div>
@@ -44,17 +44,19 @@
 
                 <div class="card-body py-4">
                     <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                        <form action="javascript:" method="post" id="zone_form">
+                        <form action="{{route('zones.update', $zone->id)}}" method="post" id="zone_form" class="shadow--card">
+                            @csrf
+                            @method("PUT")
                             <div class="row g-9 mb-8">
                                 <div class="col-md-6 fv-row">
                                     <label class="required fs-6 fw-semibold mb-2">{{ __("admin.name_ar") }}</label>
-                                    <input type="text" class="form-control form-control-solid" placeholder="{{ __("admin.name_ar") }}" name="name_ar" />
-                                    <div class="invalid-feedback text-danger" id="error-name_ar" style="display: none;"></div>
+                                    <input type="text" class="form-control form-control-solid" placeholder="{{ __("admin.name_ar") }}" name="name_ar" value="{{ @$zone->name_ar }}" />
+                                    @error("name_ar") <div class="invalid-feedback text-danger"> {{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-6 fv-row">
                                     <label class="required fs-6 fw-semibold mb-2">{{ __("admin.name_en") }}</label>
-                                    <input type="text" class="form-control form-control-solid" placeholder="{{ __("admin.name_en") }}" name="name_en" />
-                                    <div class="invalid-feedback text-danger" id="error-name_en" style="display: none;"></div>
+                                    <input type="text" class="form-control form-control-solid" placeholder="{{ __("admin.name_en") }}" name="name_en"  value="{{ @$zone->name_en }}" />
+                                    @error("name_en") <div class="invalid-feedback text-danger"> {{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="d-flex flex-stack" style="justify-content: flex-start!important;">
@@ -90,17 +92,26 @@
 </div>
 
 @section("js")
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCI03Vsc4rF9UjIAQkpD0oOSv40Zm_6S-Y&callback=initialize&libraries=drawing,places&v=3.49"></script>
-
+<script src="https://maps.googleapis.com/maps/api/js?v=3.45.8&key=AIzaSyCI03Vsc4rF9UjIAQkpD0oOSv40Zm_6S-Y&libraries=drawing,places"></script>
 <script>
-"use strict";
+    "use strict";
+    auto_grow();
+    function auto_grow() {
+        let element = document.getElementById("coordinates");
+        element.style.height = "5px";
+        element.style.height = (element.scrollHeight)+"px";
+    }
 
-let map;
-let drawingManager;
-let lastpolygon = null;
-let polygons = [];
+    let map; // Global declaration of the map
+    let lat_longs = new Array();
+    let drawingManager;
+    let lastpolygon = null;
+    let bounds = new google.maps.LatLngBounds();
+    let polygons = [];
+
 
     function resetMap(controlDiv) {
+        // Set CSS for the control border.
         const controlUI = document.createElement("div");
         controlUI.style.backgroundColor = "#fff";
         controlUI.style.border = "2px solid #fff";
@@ -112,7 +123,7 @@ let polygons = [];
         controlUI.style.textAlign = "center";
         controlUI.title = "Reset map";
         controlDiv.appendChild(controlUI);
-
+        // Set CSS for the control interior.
         const controlText = document.createElement("div");
         controlText.style.color = "rgb(25,25,25)";
         controlText.style.fontFamily = "Roboto,Arial,sans-serif";
@@ -122,18 +133,16 @@ let polygons = [];
         controlText.style.paddingRight = "2px";
         controlText.innerHTML = "X";
         controlUI.appendChild(controlText);
-
+        // Setup the click event listeners: simply set the map to Chicago.
         controlUI.addEventListener("click", () => {
-            if (lastpolygon) {
-                lastpolygon.setMap(null);
-            }
+            lastpolygon.setMap(null);
             $('#coordinates').val('');
+
         });
     }
 
     function initialize() {
-        @php($default_location = json_decode('{"lat":"30.012179702023793","lng":"31.321902566160922"}', true));
-        let myLatlng = { lat: {{ $default_location ? $default_location['lat'] : '23.757989' }}, lng: {{ $default_location ? $default_location['lng'] : '90.360587' }} };
+        let myLatlng = new google.maps.LatLng({{trim(explode(' ',$zone->center)[1], 'POINT()')}}, {{trim(explode(' ',$zone->center)[0], 'POINT()')}});
 
         let myOptions = {
             zoom: 13,
@@ -141,6 +150,30 @@ let polygons = [];
             mapTypeId: google.maps.MapTypeId.ROADMAP
         }
         map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+
+        const polygonCoords = [
+            @foreach($area['coordinates'] as $coords)
+            { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
+            @endforeach
+        ];
+
+        let zonePolygon = new google.maps.Polygon({
+            paths: polygonCoords,
+            strokeColor: "#050df2",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillOpacity: 0,
+        });
+
+        zonePolygon.setMap(map);
+
+        zonePolygon.getPaths().forEach(function(path) {
+            path.forEach(function(latlng) {
+                bounds.extend(latlng);
+                map.fitBounds(bounds);
+            });
+        });
+
         drawingManager = new google.maps.drawing.DrawingManager({
             drawingMode: google.maps.drawing.OverlayType.POLYGON,
             drawingControl: true,
@@ -233,68 +266,45 @@ let polygons = [];
             map.fitBounds(bounds);
         });
     }
+    google.maps.event.addDomListener(window, 'load', initialize);
 
-    function auto_grow() {
-        document.getElementById("coordinates").style.height = "5px";
-        document.getElementById("coordinates").style.height = (document.getElementById("coordinates").scrollHeight) + "px";
-    }
+    function set_all_zones()
+    {
+        $.get({
+            url: '{{url("admin/zone/")}}/{{$zone->id}}',
+            dataType: 'json',
+            success: function (data) {
 
-    
-    $('#zone_form').on('submit', function () {
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                console.log(data);
+                for(let i=0; i<data.length;i++)
+                {
+                    polygons.push(new google.maps.Polygon({
+                        paths: data[i],
+                        strokeColor: "#FF0000",
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: "#FF0000",
+                        fillOpacity: 0.1,
+                    }));
+                    polygons[i].setMap(map);
                 }
-            });
-            $.post({
-                url: '/admin/zones',
-                method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    if(data.errors){
-                        $.each(data.errors, function(index, value){
-                            toastr.error(value.message);
-                        });
-                    }
-                    else{
-                        $('.tab-content').find('input:text').val('');
-                        $('input[name="name"]').val(null);
-                        lastpolygon.setMap(null);
-                        $('#coordinates').val(null);
-                        toastr.success("{{ __('admin.zone_added_successfully') }}", {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                            location.reload();
-                    }
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) { 
-                        var errors = xhr.responseJSON.errors;
-                        for (var field in errors) {
 
-                            $('#error-' + field).text(errors[field][0]).show();
-                        }
-                    } else {
-                        alert('An error occurred. Please try again.');
-                    }
-
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
+            },
         });
+    }
+    $(document).on('ready', function(){
+        set_all_zones();
+        $("#zone_form").on('keydown', function(e){
+            if (e.keyCode === 13) {
+                e.preventDefault();
+            }
+        })
+    });
+
+    $('#reset_btn').click(function(){
+        location.reload(true);
+    })
+
 </script>
 @endsection
 @endsection

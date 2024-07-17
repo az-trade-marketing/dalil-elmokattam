@@ -11,6 +11,8 @@ use MatanYadaev\EloquentSpatial\Objects\Point;
 use MatanYadaev\EloquentSpatial\Objects\Polygon;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use geoPHP\geoPHP;
+use Brian2694\Toastr\Facades\Toastr;
 
 class ZonesController extends Controller
 {
@@ -21,26 +23,15 @@ class ZonesController extends Controller
 
     public function index()
     {
-        $results = Role::get();
-        $locale = app()->getLocale();
-        $catNameColumn = $locale === 'ar' ? 'cat_name_ar' : 'cat_name_en';
-        $nameColumn = $locale === 'ar' ? 'name_ar' : 'name_en';
-
-        $permissions = DB::table('permissions')
-        ->select('id','name_ar', 'name_en', $catNameColumn)
-        ->orderBy($catNameColumn)
-        ->get();
-        $groupedPermissions = $permissions->groupBy($catNameColumn);
-
-        return view('admin.roles.index',get_defined_vars(),compact("results","groupedPermissions"));
+        return view('admin.zones.index');
     }
 
     public function data()
     {
-        $results = Role::query()->orderByDesc("id")->get();
+        $results = Zone::query()->orderByDesc("id")->get();
         $permissions = [
-            'canCreate' => auth()->user()->can('roles Create'),
-            'canDelete' => auth()->user()->can('roles Delete')
+            'canCreate' => auth()->user()->can('Zone Create'),
+            'canDelete' => auth()->user()->can('Zone Delete')
         ];
         return response()->json([
             'data' => $results,
@@ -119,15 +110,8 @@ class ZonesController extends Controller
      */
     public function show($id)
     {
-        $data = Role::findOrFail($id);
-        $permissions = DB::table('permissions')
-        ->count();
-        $allP=false;
-        if ($permissions == count($data->permissions)) {
-            $allP=true;
-        }
-        $result = ['id' => $data->id, 'name_ar' => $data->name_ar ,"name_en" =>$data->name_en,'allP' =>$allP, "permissions" => $data->permissions ];
-        return response()->json($result);
+        $data = Zone::findOrFail($id);
+        return response()->json($data);
     }
 
     /**
@@ -138,7 +122,9 @@ class ZonesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $zone = Zone::withoutGlobalScopes()->selectRaw("*,ST_AsText(ST_Centroid(`coordinates`)) as center")->where("id",$id)->first();
+        $area = json_decode($zone['coordinates'][0]->toJson(),true);
+        return view('admin.zones.edit',compact("zone","area"));
     }
 
     /**
@@ -153,23 +139,21 @@ class ZonesController extends Controller
         $this->validate($request, [
             'name_ar' => 'required',
             'name_en' => 'required',
+            'coordinates' => 'required',
         ]);
-        $role = Role::find($id);
-        $role->name_en = $request->input('name_en');
-        $role->name_ar = $request->input('name_ar');
-        $role->save();
-        // Find and add the selected permissions to the role
-        if(count($request->permissions) > 0){
-            foreach ($request->permissions as $permissionId) {
-                $permission = Permission::where('id', $permissionId)->first();
-                if ($permission) {
-                    $selectedPermissions[] = $permission;
-                }
-            }
+        $zone = $this->updateData(id: $id ,data: $this->getAddData(request: $request));
+        flash()->success('Updated successfully');
+        return back();
+    }
+
+    public function updateData(string $id, array $data): bool|string|object
+    {
+        $zone = Zone::find($id);
+        foreach ($data as $key => $column) {
+            $zone[$key] = $column;
         }
-        // Sync the permissions with the role
-        $role->syncPermissions($selectedPermissions);
-        return response()->json(["message" => "success"], 200);
+        $zone->save();
+        return $zone;
     }
 
     /**
@@ -180,6 +164,14 @@ class ZonesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $permission = Zone::findOrFail($id);
+            $permission->delete();
+            return response()->json(["message" => "success"], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(["error" => "Permission not found"], 404);
+        } catch (\Exception $e) {
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
     }
 }

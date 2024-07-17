@@ -77,5 +77,10 @@ return [
     'statistics' => 'احصائيات',
     'stores' => 'المتاجر',
     'add_stores' => 'إضافة متجر',
+    'zone' => 'منطقه',
+    'zones' => 'المناطق',
+    'map' => 'الخريطه',
+    'zone_added_successfully' => 'تمت اضافه المنطقه بنجاح',
+    'seaarch_hear' => 'ابحث من هنا',
 
 ];

@@ -22,6 +22,7 @@ class PermisionsSeeder extends Seeder
             'settings' => ['en' => 'Settings', 'ar' => 'الإعدادات'],
             'roles' => ['en' => 'roles', 'ar' => 'القواعد'],
             'features' => ['en' => 'subscription', 'ar' => 'اشتراك'],
+            'zones' => ['en' => 'Zone', 'ar' => 'المناطق'],
 
         ];
 
