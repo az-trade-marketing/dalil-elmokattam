@@ -64,10 +64,9 @@ class SubscriptionController extends Controller
         ]);
 
         $subscription = Subscription::create($validatedData);
-        // dd($subscription);
-        $features = $request->features;
-
+        $features = $request->feature;
         foreach (json_decode($features[0]) as $key => $value) {
+            // dd($value);
             $feature = Feature::where("name_ar", $value->value)->orWhere("name_en", $value->value)->first();
             if ($feature) {
                 $subscription->features()->attach($feature->id);
@@ -75,8 +74,7 @@ class SubscriptionController extends Controller
         }
 
 
-        return response()->json("success",200);
-
+        return response()->json(["message" => "success"], 200);
     }
 
     /**
@@ -124,7 +122,7 @@ class SubscriptionController extends Controller
         ]);
 
         $subscription = Subscription::findOrFail($id);
-           $features = $request->features;
+           $features = $request->feature;
            $featuresIds = [];
            foreach (json_decode($features[0]) as $key => $value) {
                $feature = Feature::where("name_ar", $value->value)->orWhere("name_en", $value->value)->first();
@@ -134,7 +132,7 @@ class SubscriptionController extends Controller
            }
            $subscription->features()->sync($featuresIds);
 
-        return response()->json("success",200);
+           return response()->json(["message" => "success"], 200);
 
     }
     /**

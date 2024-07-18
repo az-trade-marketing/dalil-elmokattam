@@ -128,10 +128,11 @@
                             </select>
                             </div>
                         </div>
-                        <div class="form-group mb-3 d-none">
-                            <label class="input-label" for="exampleFormControlInput1">{{ __('Coordinates') }}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{__('messages.draw_your_zone_on_the_map')}}">{{__('messages.draw_your_zone_on_the_map')}}</span></label>
+                        <div class="form-group mb-3 ">
+                            <label class="input-label" for="exampleFormControlInput1">{{ __('Coordinates') }}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{__('messages.selec_the_map')}}">{{__('messages.select__on_the_map')}}</span></label>
                             <textarea type="text" rows="8" name="coordinates" id="coordinates" class="form-control" readonly></textarea>
-                        </div>
+                            <div id="map" style="height: 400px;"></div>
+                          </div>
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.subscriptions') }}</label>
@@ -226,25 +227,29 @@
     </div>
     <!--end::Basic info-->
     <script src="{{ asset('assets/admin/js/flatpickr.min.js') }}"></script>
-    <script>
 
-        // $(document).ready(function() {
-    //  const lang = "{{ app()->getLocale() }}"
-    // $('#category').on('change', function() {
-    //     var category = $(this).val();
-    //     $.ajax({
-    //         url: '/admin/subcategories/' + category,
-    //         type: 'GET',
-    //         success: function(response) {
-    //             var subcategorySelect = $('#subcategory');
-    //             subcategorySelect.empty();
-    //             $.each(response, function(index,value) {
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUjD7EkftJkwxFvxrF5U2AXO2Wds6Yorw"></script>
+<script>
+  var map;
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: 0, lng: 0 },
+      zoom: 13
+    });
 
-    //                 subcategorySelect.append('<option value="' + index + '">' + value+ '</option>');
-    //             });
-    //         }
-    //     });
-    // });
-//});
-    </script>
+    var marker = new google.maps.Marker({
+      position: { lat: 0, lng: 0 },
+      map: map,
+      draggable: true
+    });
+
+    google.maps.event.addListener(marker, 'position_changed', function() {
+      var lat = marker.getPosition().lat();
+      var lng = marker.getPosition().lng();
+      $('#coordinates').val(lat + ', ' + lng);
+    });
+  }
+
+  initMap();
+</script>
 @endsection

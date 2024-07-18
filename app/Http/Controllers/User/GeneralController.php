@@ -28,6 +28,12 @@ class GeneralController extends Controller
        $areas= Area::with('stores')->get();
       return response()->json(['isSuccess' => true, 'data' =>AreaResource::collection($areas)], 200);
     }
+    public function  storesByCat(Request $request)
+    {
+        $stores= Store::with('category','area','reviews','subscription')->where('category_id',$request->category_id)->get();
+        return response()->json(['isSuccess' => true, 'data' =>StoreResource::collection($stores)], 200);
+
+    }
     public function all_stores()
     {
        $stores= Store::with('category','area','reviews','subscription')->get();

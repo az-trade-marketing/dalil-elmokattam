@@ -62,4 +62,4 @@ Route::get('categories', [GeneralController::class, 'all_categories']);
 Route::get('areas', [GeneralController::class, 'all_areas']);
 ///stores
 Route::get('stores', [GeneralController::class, 'all_stores']);
-
+Route::post('stores-cat', [GeneralController::class, 'storesByCat']);
