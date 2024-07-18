@@ -86,6 +86,18 @@ return [
     'create'=>'اضافه',
     'edit'=>'تعديل',
     'upload'=>'رفع صور',
-    'subscriptions' =>'اشتراكات'
+    'subscriptions' =>'اشتراكات',
+
+    'zone_added_successfully' => 'تمت اضافه المنطقه بنجاح',
+    'latitude' => 'latitude',
+    'longitude' => 'longitude',
+    'search_your_location_here' => 'ابحث عن موقعك هنا',
+    'store_lat_lng_warning' => 'تحذير حفظ ال lat,long',
+    'Ex:' => 'مثال',
+    'select_zone_for_map' => 'اختر منطقه من الخريطه',
+    'select_zone' => 'اختر منطقه',
+    'search_here' => 'ابحث هنا',
+    'subscriptions' => 'الاشتراكات',
+    'upload' => 'تحميل صوره',
 
 ];

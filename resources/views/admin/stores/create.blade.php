@@ -14,7 +14,7 @@
         <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
 
             <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.add_store") }}</h1>
+                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.add") .' '.__("admin.store") }}</h1>
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                     <li class="breadcrumb-item text-muted">
                         <a href="index.html" class="text-muted text-hover-primary">{{ __("admin.home") }}</a>
@@ -22,7 +22,7 @@
                     <li class="breadcrumb-item">
                         <span class="bullet bg-gray-500 w-5px h-2px"></span>
                     </li>
-                    <li class="breadcrumb-item text-muted">{{ __("admin.create") }}</li>
+                    <li class="breadcrumb-item text-muted">{{ __("admin.store") }}</li>
 
                 </ul>
             </div>
@@ -73,83 +73,95 @@
 
                             </div>
                         </div>
-                        {{-- <div class="row mb-10">
-                            <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.admin') }}</label>
+                      
+                        <div class="row mb-10">
+                            <div class="col-md-6">
+                                <div class="col-md-3">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.category') }}</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    <!--begin::Input-->
+                                    <select id="business-type-select-activity"
+                                        class="form-select activity form-select-solid"
+                                        data-hide-search="category_id" data-placeholder="@lang('admin.admin_id')"
+                                        name="category_id" required>
+                                        <option value="">{{ __( 'admin.chooose' ) }}</option>
+                                        @foreach ($categoreis as $category)
+                                        <option value="{{ $category->id }}">
+                                            {{ $category->{'name_' . lang()} }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-lg-9">
-
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.subscriptions') }}</label>
+                                </div>
+                                <div class="col-lg-9">
+                                <!--begin::Input-->
                                 <select id="business-type-select-activity"
-                                class="form-select activity form-select-solid"
-                                data-hide-search="admin_id" data-placeholder="@lang('admin.admin_id')"
-                                name="admin_id" required>
-                                @foreach ($admins as $admin)
-                                <option value="{{ $admin->id }}">
-                                    {{ $admin->name }}</option>
-                                @endforeach
-                            </select>
-                            <!--begin::Input-->
+                                    class="form-select activity form-select-solid"
+                                    data-hide-search="subscription_id" data-placeholder="@lang('admin.subscriptions')"
+                                    name="subscription_id" required>
+                                    <option value="">{{ __( 'admin.chooose' ) }}</option>
+                                    @foreach ($subscriptions as $subscription)
+                                    <option value="{{ $subscription->id }}">
+                                        {{ $subscription->{'title_' . lang()} }}</option>
+                                    @endforeach
+                                </select>
+                                </div>
                             </div>
-                        </div> --}}
-                        <div class="row mb-10">
-                            <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.category') }}</label>
-                            </div>
-                            <div class="col-lg-9">
-                            <!--begin::Input-->
-                            <select id="business-type-select-activity"
-                                class="form-select activity form-select-solid"
-                                data-hide-search="category_id" data-placeholder="@lang('admin.admin_id')"
-                                name="category_id" required>
-                                <option value="">{{ __( 'admin.chooose' ) }}</option>
-                                @foreach ($categoreis as $category)
-                                <option value="{{ $category->id }}">
-                                    {{ $category->{'name_' . lang()} }}</option>
-                                @endforeach
-                            </select>
 
-                            </div>
                         </div>
+                       
                         <div class="row mb-10">
-                            <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.zones') }}</label>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="input-label required" for="choice_zones">{{__('admin.zone')}}<span
+                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                                data-original-title="{{__('admin.select_zone_for_map')}}"></span></label>
+                                    <select name="zone_id" id="choice_zones" required
+                                            class="form-control js-select2-custom"  data-placeholder="{{__('admin.select_zone')}}">
+                                            <option value="" selected disabled>{{__('admin.select_zone')}}</option>
+                                        @foreach(\App\Models\Zone::get() as $zone)
+                                            @if(isset(auth('admin')->user()->zone_id))
+                                                @if(auth('admin')->user()->zone_id == $zone->id)
+                                                    <option value="{{$zone->id}}">{{$zone->name_en}}</option>
+                                                @endif
+                                            @else
+                                            <option value="{{$zone->id}}">{{$zone->name_en}}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="input-label required" for="lat">{{__('admin.lat')}}<span
+                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                    data-original-title="{{__('admin.store_lat_lng_warning')}}"></span></label>
+                                    <input type="text" id="lat"
+                                            name="lat" class="form-control"
+                                            placeholder="{{ __('admin.Ex:') }} -94.22213" value="{{old('lat')}}" required readonly>
+                                </div>
+                                <div class="form-group mb-5">
+                                    <label class="input-label required" for="lon">{{__('admin.lon')}}<span
+                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                    data-original-title="{{__('admin.store_lat_lng_warning')}}"></span></label>
+                                    <input type="text"
+                                            name="lon" class="form-control"
+                                            placeholder="{{ __('admin.Ex:') }} 103.344322" id="lon" value="{{old('lon')}}" required readonly>
+                                </div>
                             </div>
-                            <div class="col-lg-9">
-                            <!--begin::Input-->
-                            <select id="business-type-select-activity"
-                                class="form-select activity form-select-solid"
-                                data-hide-search="zone_id" data-placeholder="@lang('admin.zones')"
-                                name="zone_id" required>
-                                <option value="">{{ __( 'admin.chooose' ) }}</option>
-                                @foreach ($zones as $zone)
-                                <option value="{{ $zone->id }}">
-                                    {{ $zone->{'name_' . lang()} }}</option>
-                                @endforeach
-                            </select>
+
+                            <div class="col-lg-8">
+                                <input id="pac-input" class="controls rounded"
+                                    data-toggle="tooltip" data-placement="right" data-original-title="{{ __('admin.search_your_location_here') }}" type="text" placeholder="{{ __('admin.search_here') }}" />
+                                <div id="map" style="    position: relative;
+                                overflow: hidden;
+                                width: 100%;
+                                height: 100%;"></div>
                             </div>
                         </div>
-                        <div class="form-group mb-3 ">
-                            <textarea type="text" rows="2" name="coordinates" id="coordinates" class="form-control" readonly></textarea>
-                            <div id="map" style="height: 400px;"></div>
-                          </div>
-                        <div class="row mb-10">
-                            <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.subscriptions') }}</label>
-                            </div>
-                            <div class="col-lg-9">
-                            <!--begin::Input-->
-                            <select id="business-type-select-activity"
-                                class="form-select activity form-select-solid"
-                                data-hide-search="subscription_id" data-placeholder="@lang('admin.subscriptions')"
-                                name="subscription_id" required>
-                                <option value="">{{ __( 'admin.chooose' ) }}</option>
-                                @foreach ($subscriptions as $subscription)
-                                <option value="{{ $subscription->id }}">
-                                    {{ $subscription->{'title_' . lang()} }}</option>
-                                @endforeach
-                            </select>
-                            </div>
-                        </div>
+                      
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.upload') }}</label>
@@ -224,31 +236,226 @@
     </div>
     <!--end::Content-->
     </div>
-    <!--end::Basic info-->
-    <script src="{{ asset('assets/admin/js/flatpickr.min.js') }}"></script>
+@endsection
+@section("js")
+<!--end::Basic info-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCI03Vsc4rF9UjIAQkpD0oOSv40Zm_6S-Y&libraries=places&callback=initMap&v=3.45.8"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUjD7EkftJkwxFvxrF5U2AXO2Wds6Yorw"></script>
 <script>
-  var map;
-  function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 0, lng: 0 },
-      zoom: 13
+"use strict";
+
+$(document).on('ready', function () {
+        $('.offcanvas').on('click', function(){
+            $('.offcanvas, .floating--date').removeClass('active')
+        })
+        $('.floating-date-toggler').on('click', function(){
+            $('.offcanvas, .floating--date').toggleClass('active')
+        })
+});
+
+function readURL(input, viewer) {
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#'+viewer).attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#customFileEg1").change(function () {
+        readURL(this, 'viewer');
     });
 
-    var marker = new google.maps.Marker({
-      position: { lat: 0, lng: 0 },
-      map: map,
-      draggable: true
+    $("#coverImageUpload").change(function () {
+        readURL(this, 'coverImageViewer');
+    });
+  
+
+@php($default_location = json_decode('{"lat":"30.012179702023793","lng":"31.321902566160922"}', true));
+    let myLatlng = { lat: {{$default_location?$default_location['lat']:'23.757989'}}, lng: {{$default_location?$default_location['lng']:'90.360587'}} };
+    let map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 13,
+            center: myLatlng,
+        });
+    let zonePolygon = null;
+    let infoWindow = new google.maps.InfoWindow({
+            content: "Click the map to get Lat/Lng!",
+            position: myLatlng,
+        });
+    let bounds = new google.maps.LatLngBounds();
+    function initMap() {
+        // Create the initial InfoWindow.
+        infoWindow.open(map);
+         //get current location block
+         infoWindow = new google.maps.InfoWindow();
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                myLatlng = {
+                    lat: position.coords.lat,
+                    lng: position.coords.lon,
+                };
+                infoWindow.setPosition(myLatlng);
+                infoWindow.setContent("Location found.");
+                infoWindow.open(map);
+                map.setCenter(myLatlng);
+            },
+            () => {
+                handleLocationError(true, infoWindow, map.getCenter());
+                }
+            );
+        } else {
+        // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+        }
+        //-----end block------
+        const input = document.getElementById("pac-input");
+        const searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+        let markers = [];
+        searchBox.addListener("places_changed", () => {
+            const places = searchBox.getPlaces();
+
+            if (places.length == 0) {
+            return;
+            }
+            // Clear out the old markers.
+            markers.forEach((marker) => {
+            marker.setMap(null);
+            });
+            markers = [];
+            // For each place, get the icon, name and location.
+            const bounds = new google.maps.LatLngBounds();
+            places.forEach((place) => {
+                document.getElementById('lat').value = place.geometry.location.lat();
+                document.getElementById('lon').value = place.geometry.location.lng();
+                if (!place.geometry || !place.geometry.location) {
+                    console.log("Returned place contains no geometry");
+                    return;
+                }
+                const icon = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25),
+                };
+                // Create a marker for each place.
+                markers.push(
+                    new google.maps.Marker({
+                    map,
+                    icon,
+                    title: place.name,
+                    position: place.geometry.location,
+                    })
+                );
+
+                if (place.geometry.viewport) {
+                    // Only geocodes have viewport.
+                    bounds.union(place.geometry.viewport);
+                } else {
+                    bounds.extend(place.geometry.location);
+                }
+            });
+            map.fitBounds(bounds);
+        });
+    }
+    initMap();
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(
+            browserHasGeolocation
+            ? "Error: The Geolocation service failed."
+            : "Error: Your browser doesn't support geolocation."
+        );
+        infoWindow.open(map);
+    }
+
+    $('#choice_zones').on('change', function(){
+        let id = $(this).val();
+        $.get({
+            url: `{{ url('admin/get-zone-Coordinate') }}/${id}`, 
+            dataType: 'json',
+            success: function (data) {
+                
+                if(zonePolygon)
+                {
+                    zonePolygon.setMap(null);
+                }
+                zonePolygon = new google.maps.Polygon({
+                    paths: data.coordinates,
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: 'white',
+                    fillOpacity: 0,
+                });
+                zonePolygon.setMap(map);
+                zonePolygon.getPaths().forEach(function(path) {
+                    path.forEach(function(latlng) {
+                        bounds.extend(latlng);
+                        map.fitBounds(bounds);
+                    });
+                });
+                map.setCenter(data.center);
+                google.maps.event.addListener(zonePolygon, 'click', function (mapsMouseEvent) {
+                    infoWindow.close();
+                    // Create a new InfoWindow.
+                    infoWindow = new google.maps.InfoWindow({
+                    position: mapsMouseEvent.latLng,
+                    content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
+                    });
+                    let coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
+                    coordinates = JSON.parse(coordinates);
+                    document.getElementById('lat').value = coordinates['lat'];
+                    document.getElementById('lon').value = coordinates['lng'];
+                    infoWindow.open(map);
+                });
+            },
+        });
     });
 
-    google.maps.event.addListener(marker, 'position_changed', function() {
-      var lat = marker.getPosition().lat();
-      var lng = marker.getPosition().lng();
-      $('#coordinates').val(lat + ', ' + lng);
-    });
-  }
+    $("#vendor_form").on('keydown', function(e){
+        if (e.keyCode === 13) {
+            e.preventDefault();
+        }
+    })
 
-  initMap();
+  
+    $('#reset_btn').click(function(){
+            $('#viewer').attr('src', "{{ asset('public/assets/admin/img/upload.png') }}");
+            $('#customFileEg1').val(null);
+            $('#coverImageViewer').attr('src', "{{ asset('public/assets/admin/img/upload-img.png') }}");
+            $('#coverImageUpload').val(null);
+            $('#choice_zones').val(null).trigger('change');
+            $('#module_id').val(null).trigger('change');
+            zonePolygon.setMap(null);
+            $('#coordinates').val(null);
+            $('#lat').val(null);
+            $('#lon').val(null);
+        })
+
+        let zone_id = 0;
+        $('#choice_zones').on('change', function() {
+            if($(this).val())
+        {
+            zone_id = $(this).val();
+        }
+        });
+
+
+$('.delivery-time').on('click',function (){
+    let min = $("#minimum_delivery_time").val();
+    let max = $("#maximum_delivery_time").val();
+    let type = $("#delivery_time_type").val();
+    $("#floating--date").removeClass('active');
+    $("#time_view").val(min+' to '+max+' '+type);
+
+})
 </script>
 @endsection
