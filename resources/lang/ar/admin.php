@@ -82,5 +82,10 @@ return [
     'map' => 'الخريطه',
     'zone_added_successfully' => 'تمت اضافه المنطقه بنجاح',
     'seaarch_hear' => 'ابحث من هنا',
+    'index' => 'عرض',
+    'create'=>'اضافه',
+    'edit'=>'تعديل',
+    'upload'=>'رفع صور',
+    'subscriptions' =>'اشتراكات'
 
 ];

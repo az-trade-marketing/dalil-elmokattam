@@ -83,5 +83,9 @@ return [
     'map' => 'map',
     'seaarch_hear' => 'seaarch hear',
     'zone_added_successfully' => 'zone added successfully',
-
+    'index' => 'index',
+    'create'=>'create',
+    'edit'=>'edit',
+    'upload'=>'upload',
+    'subscriptions' =>'subscriptions'
 ];
