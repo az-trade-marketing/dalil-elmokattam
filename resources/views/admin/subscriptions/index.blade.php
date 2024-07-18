@@ -52,7 +52,7 @@
                                         <!--begin::Modal header-->
                                         <div class="modal-header" id="kt_modal_add_user_header">
                                             <!--begin::Modal title-->
-                                            <h2 class="fw-bold">{{ __('admin.add') . ' ' . __('admin.category') }}</h2>
+                                            <h2 class="fw-bold">{{ __('admin.add') . ' ' . __('admin.subscription') }}</h2>
                                             <!--end::Modal title-->
                                             <!--begin::Close-->
                                             <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal"
@@ -132,32 +132,34 @@
                                                         <div class="fv-plugins-message-container invalid-feedback">
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                <div class="fv-row mb-7">
-                                                    <label class="form-label d-block">{{ __('admin.feature') }}</label>
-                                                    <input id="kt_ecommerce_add_product_features" name="feature[]"
-                                                        class="form-control mb-2" value="" />
-                                                </div>
-                                                <div class="row g-9 mb-8">
-                                                    <div class="col-md-6 fv-row">
+                                                    <div class="fv-row mb-7">
                                                         <label
-                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.price') }}</label>
-                                                        <input type="number" name="price"
-                                                            class="form-control form-control-solid mb-3 mb-lg-0"
-                                                            placeholder="{{ __('admin.price') }}" />
-                                                        <div class="text-danger" id="error-price"></div>
+                                                            class="form-label d-block">{{ __('admin.features') }}</label>
+                                                        <input id="kt_ecommerce_add_product_features" name="feature[]"
+                                                            class="form-control mb-2" value="" />
                                                     </div>
-                                                    <div class="col-md-6 fv-row">
-                                                        <label
-                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.duration') }}</label>
-                                                        <input type="number" name="duration"
-                                                            class="form-control form-control-solid mb-3 mb-lg-0"
-                                                            placeholder="{{ __('admin.duration') }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-duration">
+                                                    <div class="row g-9 mb-8">
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.price') }}</label>
+                                                            <input type="number" name="price"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.price') }}" />
+                                                            <div class="text-danger" id="error-price"></div>
+                                                        </div>
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.duration') }}</label>
+                                                            <input type="number" name="duration"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.duration') }}" />
+                                                            <div class="invalid-feedback text-danger" id="error-duration">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
+
                                         </div>
                                         <div class="text-center pt-10">
                                             <button type="reset" class="btn btn-light me-3"
@@ -194,7 +196,7 @@
                                     <!--begin::Modal header-->
                                     <div class="modal-header" id="kt_modal_edit_user_header">
                                         <!--begin::Modal title-->
-                                        <h2 class="fw-bold">{{ __('admin.edit') . ' ' . __('admin.category') }}</h2>
+                                        <h2 class="fw-bold">{{ __('admin.edit') . ' ' . __('admin.subscription') }}</h2>
                                         <!--end::Modal title-->
                                         <!--begin::Close-->
                                         <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal"
@@ -276,33 +278,34 @@
                                                     </select>
                                                     <div class="fv-plugins-message-container invalid-feedback">
                                                     </div>
+                                                    <div class="fv-row mb-7">
+                                                        <label
+                                                            class="form-label d-block">{{ __('admin.features') }}</label>
+                                                        <input id="edit_features" name="feature[]"
+                                                            class="form-control mb-2" value="" />
+                                                    </div>
+                                                    <div class="row g-9 mb-8">
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.price') }}</label>
+                                                            <input type="number" name="price" id="editPrice"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.price') }}" />
+                                                            <div class="invalid-feedback text-danger"
+                                                                id="error-edit-price" style="display: none;"></div>
+                                                        </div>
+                                                        <div class="col-md-6 fv-row">
+                                                            <label
+                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.duration') }}</label>
+                                                            <input type="number" name="duration" id="editDuration"
+                                                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                                                placeholder="{{ __('admin.duration') }}" />
+                                                            <div class="invalid-feedback text-danger"
+                                                                id="error-edit-duration" style="display: none;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                                </div>
-                                                <div class="fv-row mb-7">
-                                                    <label class="form-label d-block">{{ __('admin.feature') }}</label>
-                                                    <input id="edit_features" name="feature[]" class="form-control mb-2"
-                                                        value="" />
-                                                </div>
-                                                <div class="row g-9 mb-8">
-                                                    <div class="col-md-6 fv-row">
-                                                        <label
-                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.price') }}</label>
-                                                        <input type="number" name="price" id="editPrice"
-                                                            class="form-control form-control-solid mb-3 mb-lg-0"
-                                                            placeholder="{{ __('admin.price') }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-price"
-                                                            style="display: none;"></div>
-                                                    </div>
-                                                    <div class="col-md-6 fv-row">
-                                                        <label
-                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.duration') }}</label>
-                                                        <input type="number" name="duration" id="editDuration"
-                                                            class="form-control form-control-solid mb-3 mb-lg-0"
-                                                            placeholder="{{ __('admin.duration') }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-duration"
-                                                            style="display: none;"></div>
-                                                    </div>
-                                                </div>
                                             </div>
                                             <div class="text-center pt-10">
                                                 <button type="reset" class="btn btn-light me-3"
@@ -485,7 +488,7 @@
                                 }
                             });
                             tagify.addTags(
-                            selectedfeatures); // Make sure this uses the correct variable
+                                selectedfeatures); // Make sure this uses the correct variable
                         }
 
                         $('#kt_modal_edit_user').modal('show');
@@ -594,9 +597,104 @@
             });
 
 
+            $(document).on('click', '.deleteButton', function() {
+                var item_id = $(this).data('id');
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'get', // This should be 'DELETE'
+                    dataType: 'json',
+                    url: "/admin/subscription/" + item_id,
+                    success: function(response) {
+                        try {
+                            if (response.status == 404) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Sorry',
+                                    text: response.message,
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: '{{ __('admin.isDelete') }} ' + response
+                                        .category.name_en + ' !!?',
+                                    text: '{{ __('admin.revet') }}',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: '{{ __('admin.yes') }}',
+                                    cancelButtonText: '{{ __('admin.no') }}',
+                                    reverseButtons: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        delete_item(response.category.id);
+                                    } else if (result.dismiss === Swal.DismissReason
+                                        .cancel) {
+                                        Swal.fire(
+                                            '{{ __('admin.cancelled') }}',
+                                            '{{ __('admin.fileSave') }}',
+                                            'error'
+                                        );
+                                    }
+                                });
+                            }
+                        } catch (e) {
+                            console.error('Parsing Error:', e);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
 
 
+            function delete_item(item_id) {
+                console.log('Deleting item ID:', item_id);
 
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'delete',
+                    dataType: 'json',
+                    url: "/admin/subscription/" + item_id,
+                    success: function(response) {
+                        try {
+                            if (response.status == 200) {
+                                Swal.fire(
+                                    '{{ __('admin.delete') }}',
+                                    '{{ __('admin.fileDeleted') }}',
+                                    'success'
+                                );
+                                get_data();
+                            } else {
+                                // Handle other statuses if needed
+                            }
+                        } catch (e) {
+                            console.error('Parsing Error:', e);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Delete Error:', error);
+
+                        if (xhr.status === 400) {
+                            var errorResponse = JSON.parse(xhr.responseText);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: errorResponse.error,
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'An error occurred. Please try again.',
+                            });
+                        }
+                    }
+                });
+            }
 
         });
     </script>

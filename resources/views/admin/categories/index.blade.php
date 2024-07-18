@@ -103,9 +103,9 @@
                                                     <label class="form-label d-block">{{ __("admin.tags") }}</label>
                                                     <input id="kt_ecommerce_add_product_tagss" name="tags[]" class="form-control mb-2" value="" />
                                                 </div>
-                                                  
+
                                             </div>
-                                         
+
                                             <div class="text-center pt-10">
                                                 <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
                                                 <button type="button" id="submitButton" class="btn btn-primary" data-kt-users-modal-action="submit">
@@ -371,7 +371,7 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            get_data(); 
+                            get_data();
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -382,7 +382,7 @@
                         get_data();
                     },
                     error: function(xhr) {
-                        if (xhr.status === 422) { 
+                        if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
                             for (var field in errors) {
                                 $('#error-' + field).text(errors[field][0]).show();
@@ -426,7 +426,7 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            get_data(); 
+                            get_data();
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -437,7 +437,7 @@
                         get_data();
                     },
                     error: function(xhr) {
-                        if (xhr.status === 422) { 
+                        if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
                             for (var field in errors) {
                                 $('#error-' + field).text(errors[field][0]).show();
@@ -457,7 +457,7 @@
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'get',
-                    dataType: 'text', 
+                    dataType: 'text',
                     url: "/admin/categories/" + item_id,
                     success: function(response) {
                         try {
@@ -513,31 +513,58 @@
                 });
             });
 
-            function delete_item(item_id) {
-                console.log('Deleting item ID:', item_id); // للتحقق من ID العنصر المراد حذفه
+     function delete_item(item_id) {
+    console.log('Deleting item ID:', item_id); // للتحقق من ID العنصر المراد حذفه
 
-                $.ajax({
-                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    type: 'delete',
-                    dataType: 'text', // تغيير dataType إلى text
-                    url: "/admin/categories/" + item_id,
-                    data: {
-                        id: item_id
-                    },
-                    success: function(response) {
-                        try {
-                            var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
-                            console.log('Delete Response:', jsonResponse); // تحقق من استجابة الحذف
-                            get_data();
-                        } catch (e) {
-                            console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Delete Error:', error); // التحقق من وجود أخطاء في الحذف
-                    }
+    $.ajax({
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        type: 'delete',
+        dataType: 'text',
+        url: "/admin/categories/" + item_id,
+        data: {
+            id: item_id
+        },
+        success: function(response) {
+            try {
+                var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
+                console.log('Delete Response:', jsonResponse); // تحقق من استجابة الحذف
+
+                if (jsonResponse.status == 200) {
+                    Swal.fire(
+                        '{{__('admin.delete')}}',
+                        '{{__('admin.fileDeleted')}}',
+                        'success'
+                    );
+                    get_data();
+                } else {
+                    // Handle other statuses if needed
+                }
+            } catch (e) {
+                console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Delete Error:', error); // التحقق من وجود أخطاء في الحذف
+
+            // Handle specific error messages based on the status code
+            if (xhr.status === 400) {
+                var errorResponse = JSON.parse(xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorResponse.error,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred. Please try again.',
                 });
             }
+        }
+    });
+}
+
         });
     </script>
 

@@ -17,12 +17,12 @@ class PermisionsSeeder extends Seeder
             'categories' => ['en' => 'categories', 'ar' => 'الفئات'],
             'areas' => ['en' => 'areas', 'ar' => 'المناطق'],
             'features' => ['en' => 'features', 'ar' => 'الميزات'],
-            'activeStore' => ['en' => 'Active Store', 'ar' => 'المتاجر النشطه'],
-            'joinedStore' => ['en' => 'Joined Store', 'ar' => 'المتاجر المنضمه'],
             'settings' => ['en' => 'Settings', 'ar' => 'الإعدادات'],
             'roles' => ['en' => 'roles', 'ar' => 'القواعد'],
-            'features' => ['en' => 'subscription', 'ar' => 'اشتراك'],
+            'subscription' => ['en' => 'subscription', 'ar' => 'اشتراك'],
             'zones' => ['en' => 'Zone', 'ar' => 'المناطق'],
+            'stores' => ['en' => 'stores', 'ar' => 'المتاجر'],
+
 
         ];
 
