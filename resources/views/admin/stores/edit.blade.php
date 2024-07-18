@@ -129,7 +129,14 @@
                             </div>
                             <div class="col-lg-9">
                                 <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({{ asset('assets/media/avatars/blank.png') }})">
-                                    <div class="image-input-wrapper w-250px h-300px" id="logo_img" style="background-image: url('{{ asset($store->image) }}');"></div>
+                                    @if (!empty($store->image))
+                                    <div class="image-input-wrapper w-125px h-125px"
+                                        style="background-image: url('{{ asset('images/' . $store->image) }}')"></div>
+                                @else
+                                    <div class="image-input-wrapper w-125px h-125px"
+                                        style="background-image: url(assets/media/avatars/150-26.jpg)"></div>
+                                @endif
+                                    {{-- <div class="image-input-wrapper w-250px h-300px" id="logo_img" style="background-image: url('{{ asset($store->image) }}');"></div> --}}
                                     <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
                                         <i class="bi bi-pencil-fill fs-7"></i>
                                         <input type="file" name="image" accept=".png, .jpg, .jpeg" />

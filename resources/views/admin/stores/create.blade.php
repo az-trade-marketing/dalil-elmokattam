@@ -129,8 +129,7 @@
                             </div>
                         </div>
                         <div class="form-group mb-3 ">
-                            <label class="input-label" for="exampleFormControlInput1">{{ __('Coordinates') }}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{__('messages.selec_the_map')}}">{{__('messages.select__on_the_map')}}</span></label>
-                            <textarea type="text" rows="8" name="coordinates" id="coordinates" class="form-control" readonly></textarea>
+                            <textarea type="text" rows="2" name="coordinates" id="coordinates" class="form-control" readonly></textarea>
                             <div id="map" style="height: 400px;"></div>
                           </div>
                         <div class="row mb-10">
