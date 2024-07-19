@@ -6,6 +6,7 @@ use App\Models\Feature;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
 
 class SubscriptionController extends Controller
 {
@@ -144,15 +145,21 @@ class SubscriptionController extends Controller
     public function destroy($id)
     {
         try {
-        $subscription = Subscription::findOrFail($id);
-        $subscription->features()->detach();
-        $subscription->delete();
-        return response()->json(["message" => "success"], 200);
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return response()->json(["error" => "Permission not found"], 404);
-    } catch (\Exception $e) {
-        return response()->json(["error" => $e->getMessage()], 500);
+            $subscription = Subscription::findOrFail($id);
+
+            if ($subscription->foreign_key) {
+                return response()->json(['error' => 'Subscription cannot be deleted because it is referenced by a foreign key.'], 400);
+            }
+
+            $subscription->features()->detach();
+            $subscription->delete();
+
+            return response()->json(['message' => 'Subscription deleted successfully.'], 200);
+        } catch (QueryException $e) {
+            return response()->json(['error' => 'Subscription cannot be deleted because it is referenced by a foreign key in feature', 'status' => 400], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to delete Subscription.'], 500);
+        }
     }
 
-   }
 }

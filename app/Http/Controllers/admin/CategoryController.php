@@ -64,17 +64,17 @@ class CategoryController extends Controller
             $image = upload($avatar);
             $validatedData['image'] = $image;
         }
-        
+
         $category = Category::create($validatedData);
         $tags = $request->tags;
-        
+
         foreach (json_decode($tags[0]) as $key => $value) {
             $tag = Tag::where("name_ar", $value->value)->orWhere("name_en", $value->value)->first();
             if ($tag) {
                 $category->tags()->attach($tag->id);
             }
         }
-        
+
         return response()->json(["message" => "success"], 200);
     }
 
@@ -121,27 +121,27 @@ class CategoryController extends Controller
             $image = upload($avatar);
             $validatedData['image'] = $image;
         }
-    
+
         // العثور على الفئة وتحديثها
         $category = Category::findOrFail($id);
         $category->update($validatedData);
-    
+
         // تحديث العلامات المرتبطة
         $tags = $request->tags;
-    
+
         // إنشاء مصفوفة لتخزين معرفات العلامات
         $tagIds = [];
-    
+
         foreach (json_decode($tags[0]) as $key => $value) {
             $tag = Tag::where("name_ar", $value->value)->orWhere("name_en", $value->value)->first();
             if ($tag) {
                 $tagIds[] = $tag->id;
             }
         }
-    
+
         // مزامنة العلامات المرتبطة بالفئة
         $category->tags()->sync($tagIds);
-    
+
         // استجابة JSON
         return response()->json(["message" => "success"], 200);
 
@@ -155,24 +155,25 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
+
         try {
             $category = Category::findOrFail($id);
-    
+
             // Check if the category has an associated foreign key
             if ($category->foreign_key) {
                 return response()->json(['error' => 'Category cannot be deleted because it is referenced by a foreign key.'], 400);
             }
-    
+
             // Check and delete the category image from storage if exists
-            if ($category->image && Storage::exists('uploads/category/' . $category->image)) {
-                Storage::delete('uploads/category/' . $category->image);
+            if ($category->image && Storage::exists('images/' . $category->image)) {
+                Storage::delete('images/' . $category->image);
             }
-    
+
             $category->delete();
             return response()->json(['message' => 'Category deleted successfully.']);
         } catch (QueryException $e) {
             // Handle specific SQL error - foreign key constraint violation
-            return response()->json(['error' => 'Category cannot be deleted because it is referenced by a foreign key.','status' => 400], 400);
+            return response()->json(['error' => 'Category cannot be deleted because it is referenced by a foreign key in tags','status' => 400], 400);
         } catch (\Exception $e) {
             // Handle other exceptions
             return response()->json(['error' => 'Failed to delete category.'], 500);

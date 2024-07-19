@@ -98,11 +98,11 @@ class AdminController extends Controller
             unset($password);
         }
         if (request()->hasFile('photo') && request('photo') != '') {
-            if ($admin->photo && Storage::exists('uploads/admin/' . $admin->photo)) {
-                Storage::delete('uploads/admin/' . $admin->photo);
+            if ($admin->photo && Storage::exists('images/' . $admin->photo)) {
+                Storage::delete('images/' . $admin->photo);
             }
             $avatar = $request->file('photo');
-            $photo = upload($avatar, 'uploads/admin');
+            $photo = upload($avatar);
             $admin->photo = $photo;
         } else {
             $admin->photo = $admin->photo;
@@ -121,8 +121,8 @@ class AdminController extends Controller
     public function delete($id)
     {
         $admin = Admin::find($id);
-        if ($admin->photo && Storage::exists('uploads/admin/' . $admin->photo)) {
-            Storage::delete('uploads/admin/' . $admin->photo);
+        if ($admin->photo && Storage::exists('images/' . $admin->photo)) {
+            Storage::delete('images/' . $admin->photo);
         }
         $admin->delete();
         session()->flash('success', 'تم حذف الحساب بنجاح');

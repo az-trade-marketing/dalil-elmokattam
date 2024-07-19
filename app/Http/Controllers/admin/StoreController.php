@@ -52,6 +52,7 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
+
         // التحقق من صحة البيانات
         $validatedData = $request->validate([
             'name_en' => 'required|string|max:255',
