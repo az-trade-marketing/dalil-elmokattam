@@ -13,7 +13,7 @@
     <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
         <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
             <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.edit_store") }}</h1>
+                <h1 class="page-heading d-flex text-gray-900 fw-bold fs-3 flex-column justify-content-center my-0">{{ __("admin.edit").' '.__("admin.store") }}</h1>
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                     <li class="breadcrumb-item text-muted">
                         <a href="index.html" class="text-muted text-hover-primary">{{ __("admin.home") }}</a>
@@ -83,25 +83,54 @@
                             </div>
                         </div>
                         <div class="row mb-10">
-                            <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.zones') }}</label>
+                           
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="input-label required" for="choice_zones">{{__('admin.zone')}}<span
+                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+    data-original-title="{{__('admin.select_zone_for_map')}}"></span></label>
+                                    <select name="zone_id" id="choice_zones" data-placeholder="{{__('admin.select_zone')}}"
+                                            class="form-control js-select2-custom get_zone_data">
+                                        @foreach(\App\Models\Zone::get() as $zone)
+                                            @if(isset(auth('admin')->user()->zone_id))
+                                                @if(auth('admin')->user()->zone_id == $zone->id)
+                                                    <option value="{{$zone->id}}" {{$store->zone_id == $zone->id? 'selected': ''}}>{{$zone->name_en}}</option>
+                                                @endif
+                                            @else
+                                                <option value="{{$zone->id}}" {{$store->zone_id == $zone->id? 'selected': ''}}>{{$zone->name_en}}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="input-label required" for="lat">{{__('admin.lat')}}<span
+                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+    data-original-title="{{__('admin.store_lat_lng_warning')}}"></span></label>
+                                    <input type="text" id="lat"
+                                            name="lat" class="form-control"
+                                            placeholder="{{ __('admin.Ex:') }} -94.22213" value="{{$store->lat}}" required readonly>
+                                </div>
+                                <div class="form-group mb-5">
+                                    <label class="input-label required" for="lon">{{__('admin.lon')}}<span
+                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+    data-original-title="{{__('admin.store_lat_lng_warning')}}"></span></label>
+                                    <input type="text"
+                                            name="lon" class="form-control"
+                                            placeholder="{{ __('admin.Ex:') }} 103.344322" id="lon" value="{{$store->lon}}" required readonly>
+                                </div>
                             </div>
-                            <div class="col-lg-9">
-                            <!--begin::Input-->
-                            <select id="business-type-select-activity"
-                                class="form-select activity form-select-solid"
-                                data-hide-search="zone_id" data-placeholder="@lang('admin.zones')"
-                                name="zone_id" required>
-                                <option value="">{{ __( 'admin.chooose' ) }}</option>
-                                @foreach ($zones as $zone)
-                                <option value="{{ $zone->id }}" {{ $zone->id  == $store->zone_id ? 'selected' : '' }}>
-                                    {{ $zone->{'name_' . lang()} }}</option>
-                                @endforeach
-                            </select>
+                            <div class="col-lg-8">
+                                <input id="pac-input" class="controls rounded"
+                                    data-toggle="tooltip" data-placement="right" data-original-title="{{ __('messages.search_your_location_here') }}" type="text" placeholder="{{ __('messages.search_here') }}" />
+                                <div id="map" style="    position: relative;
+                                overflow: hidden;
+                                width: 100%;
+                                height: 100%;"></div>
                             </div>
+
                         </div>
                         <div class="form-group mb-3 d-none">
-                            <label class="input-label" for="exampleFormControlInput1">{{ __('Coordinates') }}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{__('messages.draw_your_zone_on_the_map')}}">{{__('messages.draw_your_zone_on_the_map')}}</span></label>
+                            <label class="input-label" for="exampleFormControlInput1">{{ __('Coordinates') }}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{__('admin.draw_your_zone_on_the_map')}}">{{__('admin.draw_your_zone_on_the_map')}}</span></label>
                             <textarea type="text" rows="8" name="coordinates" id="coordinates" class="form-control" readonly></textarea>
                         </div>
                         <div class="row mb-10">
@@ -129,14 +158,7 @@
                             </div>
                             <div class="col-lg-9">
                                 <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({{ asset('assets/media/avatars/blank.png') }})">
-                                    @if (!empty($store->image))
-                                    <div class="image-input-wrapper w-125px h-125px"
-                                        style="background-image: url('{{ asset('images/' . $store->image) }}')"></div>
-                                @else
-                                    <div class="image-input-wrapper w-125px h-125px"
-                                        style="background-image: url(assets/media/avatars/150-26.jpg)"></div>
-                                @endif
-                                    {{-- <div class="image-input-wrapper w-250px h-300px" id="logo_img" style="background-image: url('{{ asset($store->image) }}');"></div> --}}
+                                    <div class="image-input-wrapper w-250px h-300px" id="logo_img" style="background-image: url('{{ asset($store->image) }}');"></div>
                                     <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
                                         <i class="bi bi-pencil-fill fs-7"></i>
                                         <input type="file" name="image" accept=".png, .jpg, .jpeg" />
@@ -165,5 +187,289 @@
     <!--end::Content-->
 </div>
 <!--end::Basic info-->
-<script src="{{ asset('assets/admin/js/flatpickr.min.js') }}"></script>
+@endsection
+@section('js')
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCI03Vsc4rF9UjIAQkpD0oOSv40Zm_6S-Y&libraries=places&callback=initMap&v=3.45.8"></script>
+<script>
+    "use strict";
+  $(document).on('ready', function () {
+        $('.offcanvas').on('click', function(){
+            $('.offcanvas, .floating--date').removeClass('active')
+        })
+        $('.floating-date-toggler').on('click', function(){
+            $('.offcanvas, .floating--date').toggleClass('active')
+        })
+    @if (isset(auth('admin')->user()->zone_id))
+        $('#choice_zones').trigger('change');
+    @endif
+});
+
+    function readURL(input, viewer) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#'+viewer).attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#customFileEg1").change(function () {
+        readURL(this, 'viewer');
+    });
+
+    $("#coverImageUpload").change(function () {
+        readURL(this, 'coverImageViewer');
+    });
+   
+
+    $(function () {
+        $("#coba").spartanMultiImagePicker({
+            fieldName: 'identity_image[]',
+            maxCount: 5,
+            rowHeight: '120px',
+            groupClassName: 'col-lg-2 col-md-4 col-sm-4 col-6',
+            maxFileSize: '',
+            placeholderImage: {
+                image: '{{asset('public/assets/admin/img/400x400/img2.jpg')}}',
+                width: '100%'
+            },
+            dropFileLabel: "Drop Here",
+            onAddRow: function (index, file) {
+
+            },
+            onRenderedPreview: function (index) {
+
+            },
+            onRemoveRow: function (index) {
+
+            },
+            onExtensionErr: function (index, file) {
+                toastr.error('{{__('admin.please_only_input_png_or_jpg_type_file')}}', {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+            },
+            onSizeErr: function (index, file) {
+                toastr.error('{{__('admin.file_size_too_big')}}', {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+            }
+        });
+    });
+
+    let myLatlng = { lat: {{$store->lat}}, lng: {{$store->lon}} };
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 13,
+        center: myLatlng,
+    });
+    let zonePolygon = null;
+    let infoWindow = new google.maps.InfoWindow({
+            content: "Click the map to get Lat/Lng!",
+            position: myLatlng,
+        });
+    let bounds = new google.maps.LatLngBounds();
+    function initMap() {
+        // Create the initial InfoWindow.
+        new google.maps.Marker({
+            position: { lat: {{$store->lat}}, lng: {{$store->lon}} },
+            map,
+            title: "{{$store->name}}",
+        });
+        infoWindow.open(map);
+        const input = document.getElementById("pac-input");
+        const searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+        let markers = [];
+        searchBox.addListener("places_changed", () => {
+            const places = searchBox.getPlaces();
+            if (places.length == 0) {
+            return;
+            }
+            // Clear out the old markers.
+            markers.forEach((marker) => {
+            marker.setMap(null);
+            });
+            markers = [];
+            // For each place, get the icon, name and location.
+            const bounds = new google.maps.LatLngBounds();
+            places.forEach((place) => {
+                document.getElementById('lat').value = place.geometry.location.lat();
+                document.getElementById('lon').value = place.geometry.location.lng();
+                if (!place.geometry || !place.geometry.location) {
+                    console.log("Returned place contains no geometry");
+                    return;
+                }
+                const icon = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25),
+                };
+                // Create a marker for each place.
+                markers.push(
+                    new google.maps.Marker({
+                    map,
+                    icon,
+                    title: place.name,
+                    position: place.geometry.location,
+                    })
+                );
+
+                if (place.geometry.viewport) {
+                    // Only geocodes have viewport.
+                    bounds.union(place.geometry.viewport);
+                } else {
+                    bounds.extend(place.geometry.location);
+                }
+            });
+            map.fitBounds(bounds);
+        });
+    }
+    initMap();
+    $('.get_zone_data').on('click',function (){
+        let id = $(this).val();
+        $.get({
+            url: `{{ url('admin/get-zone-Coordinate') }}/${id}`, 
+            dataType: 'json',
+            success: function (data) {
+                if(zonePolygon)
+                {
+                    zonePolygon.setMap(null);
+                }
+                zonePolygon = new google.maps.Polygon({
+                    paths: data.coordinates,
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: 'white',
+                    fillOpacity: 0,
+                });
+                zonePolygon.setMap(map);
+                map.setCenter(data.center);
+                google.maps.event.addListener(zonePolygon, 'click', function (mapsMouseEvent) {
+                    infoWindow.close();
+                    // Create a new InfoWindow.
+                    infoWindow = new google.maps.InfoWindow({
+                    position: mapsMouseEvent.latLng,
+                    content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
+                    });
+                    let coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
+                    coordinates = JSON.parse(coordinates);
+
+                    document.getElementById('lat').value = coordinates['lat'];
+                    document.getElementById('lon').value = coordinates['lng'];
+                    infoWindow.open(map);
+                });
+            },
+        });
+    })
+    $(document).on('ready', function (){
+        let id = $('#choice_zones').val();
+        console.log("dddddddddddddd");
+        $.get({
+            url: `{{ url('admin/get-zone-Coordinate') }}/${id}`, 
+            dataType: 'json',
+            success: function (data) {
+                if(zonePolygon)
+                {
+                    zonePolygon.setMap(null);
+                }
+                zonePolygon = new google.maps.Polygon({
+                    paths: data.coordinates,
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: 'white',
+                    fillOpacity: 0,
+                });
+                zonePolygon.setMap(map);
+                zonePolygon.getPaths().forEach(function(path) {
+                    path.forEach(function(latlng) {
+                        bounds.extend(latlng);
+                        map.fitBounds(bounds);
+                    });
+                });
+                map.setCenter(data.center);
+                google.maps.event.addListener(zonePolygon, 'click', function (mapsMouseEvent) {
+                    infoWindow.close();
+                    // Create a new InfoWindow.
+                    infoWindow = new google.maps.InfoWindow({
+                    position: mapsMouseEvent.latLng,
+                    content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
+                    });
+                    let coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
+                    coordinates = JSON.parse(coordinates);
+
+                    document.getElementById('lat').value = coordinates['lat'];
+                    document.getElementById('lon').value = coordinates['lng'];
+                    infoWindow.open(map);
+                });
+            },
+        });
+    });
+
+$('#reset_btn').click(function(){
+    $('#viewer').attr('src', "{{ asset('public/assets/admin/img/upload.png') }}");
+    $('#customFileEg1').val(null);
+    $('#coverImageViewer').attr('src', "{{ asset('public/assets/admin/img/upload-img.png') }}");
+    $('#coverImageUpload').val(null);
+    $('#choice_zones').val(null).trigger('change');
+    $('#module_id').val(null).trigger('change');
+    zonePolygon.setMap(null);
+    $('#coordinates').val(null);
+    $('#lat').val(null);
+    $('#lon').val(null);
+})
+
+let zone_id = 0;
+$('#choice_zones').on('change', function() {
+    if($(this).val())
+{
+    zone_id = $(this).val();
+}
+});
+
+
+
+$('#module_id').select2({
+        ajax: {
+             url: '{{url('/')}}/store/get-all-modules',
+            data: function (params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page,
+                    zone_id: zone_id
+                };
+            },
+            processResults: function (data) {
+                return {
+                results: data
+                };
+            },
+            __port: function (params, success, failure) {
+                let $request = $.ajax(params);
+
+                $request.then(success);
+                $request.fail(failure);
+
+                return $request;
+            }
+        }
+    });
+
+
+$('.delivery-time').on('click',function (){
+    let min = $("#minimum_delivery_time").val();
+    let max = $("#maximum_delivery_time").val();
+    let type = $("#delivery_time_type").val();
+    $("#floating--date").removeClass('active');
+    $("#time_view").val(min+' to '+max+' '+type);
+
+})
+</script>
 @endsection

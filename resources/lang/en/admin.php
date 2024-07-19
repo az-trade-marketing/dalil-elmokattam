@@ -81,11 +81,21 @@ return [
     'zones' => 'zones',
     'zone' => 'zone',
     'map' => 'map',
-    'seaarch_hear' => 'seaarch hear',
+    'search_hear' => 'search hear',
     'zone_added_successfully' => 'zone added successfully',
     'index' => 'index',
     'create'=>'create',
     'edit'=>'edit',
     'upload'=>'upload',
-    'subscriptions' =>'subscriptions'
+    'subscriptions' =>'subscriptions',
+    'latitude' => 'latitude',
+    'longitude' => 'longitude',
+    'search_your_location_here' => 'search your location here',
+    'store_lat_lng_warning' => 'store lat lng warning',
+    'Ex:' => 'Ex',
+    'select_zone_for_map' => 'select zone for map',
+    'select_zone' => 'select zone',
+    'search_here' => 'search here',
+    'upload' => 'upload img',
+
 ];

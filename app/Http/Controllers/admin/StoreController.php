@@ -13,6 +13,7 @@ use App\Http\Requests\StoreRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\JsonResponse;
 
 class StoreController extends Controller
 {
@@ -29,6 +30,24 @@ class StoreController extends Controller
     {
         $stores = Store::query()->orderByDesc("id")->get();
         return response()->json($stores);
+    }
+
+    public function getCoordinates($id): JsonResponse
+    {
+        $zone = Zone::selectRaw("*,ST_AsText(ST_Centroid(`coordinates`)) as center")->find($id);
+        $area = json_decode($zone['coordinates'][0]->toJson(),true);
+        $data = $this->formatCoordinates(coordinates: $area['coordinates']);
+        $center = (object)['lat'=>(float)trim(explode(' ',$zone['center'])[1], 'POINT()'), 'lng'=>(float)trim(explode(' ',$zone['center'])[0], 'POINT()')];
+        return response()->json(['coordinates'=>$data, 'center'=>$center]);
+    }
+
+    public function formatCoordinates(array $coordinates): array
+    {
+        $data = [];
+        foreach ($coordinates as $coordinate) {
+            $data[] = (object)['lat' => $coordinate[1], 'lng' => $coordinate[0]];
+        }
+        return $data;
     }
     /**
      * Show the form for creating a new resource.
@@ -63,6 +82,8 @@ class StoreController extends Controller
             'subscription_id' => 'required|integer|exists:subscriptions,id',
             'zone_id' => 'required|integer|exists:zones,id',
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            "lat" => 'required',
+            "lon" => 'required',
         ]);
         $validatedData['admin_id'] = Auth::guard('admin')->user()->id;
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -84,7 +105,8 @@ class StoreController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Store::findOrFail($id);
+        return response()->json($data);
     }
 
     /**
