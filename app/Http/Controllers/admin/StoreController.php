@@ -9,11 +9,12 @@ use App\Models\Store;
 use App\Models\Category;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\JsonResponse;
 
 class StoreController extends Controller
 {
@@ -92,7 +93,7 @@ class StoreController extends Controller
             $validatedData['image'] = $image;
         }
         $store = Store::create($validatedData);
-        session()->flash('success', 'تم تحديث بيانات المتجر بنجاح');
+        Session::flash('success', 'Store created successfully');
         return back();
     }
 
@@ -151,7 +152,7 @@ class StoreController extends Controller
             $validatedData['image'] = $image;
         }
         $store->update($validatedData);
-        session()->flash('success', 'تم تحديث بيانات المنطقه بنجاح');
+        Session::flash('success', 'Updated successfully');
         return back();
     }
 

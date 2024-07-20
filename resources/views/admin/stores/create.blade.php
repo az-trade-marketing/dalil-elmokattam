@@ -73,7 +73,7 @@
 
                             </div>
                         </div>
-                      
+
                         <div class="row mb-10">
                             <div class="col-md-6">
                                 <div class="col-md-3">
@@ -113,7 +113,7 @@
                             </div>
 
                         </div>
-                       
+
                         <div class="row mb-10">
                             <div class="col-lg-4">
                                 <div class="form-group">
@@ -161,7 +161,7 @@
                                 height: 100%;"></div>
                             </div>
                         </div>
-                      
+
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.upload') }}</label>
@@ -273,7 +273,7 @@ $("#customFileEg1").change(function () {
     $("#coverImageUpload").change(function () {
         readURL(this, 'coverImageViewer');
     });
-  
+
 
 @php($default_location = json_decode('{"lat":"30.012179702023793","lng":"31.321902566160922"}', true));
     let myLatlng = { lat: {{$default_location?$default_location['lat']:'23.757989'}}, lng: {{$default_location?$default_location['lng']:'90.360587'}} };
@@ -379,10 +379,10 @@ $("#customFileEg1").change(function () {
     $('#choice_zones').on('change', function(){
         let id = $(this).val();
         $.get({
-            url: `{{ url('admin/get-zone-Coordinate') }}/${id}`, 
+            url: `{{ url('admin/get-zone-Coordinate') }}/${id}`,
             dataType: 'json',
             success: function (data) {
-                
+
                 if(zonePolygon)
                 {
                     zonePolygon.setMap(null);
@@ -426,7 +426,7 @@ $("#customFileEg1").change(function () {
         }
     })
 
-  
+
     $('#reset_btn').click(function(){
             $('#viewer').attr('src', "{{ asset('public/assets/admin/img/upload.png') }}");
             $('#customFileEg1').val(null);
@@ -457,5 +457,12 @@ $('.delivery-time').on('click',function (){
     $("#time_view").val(min+' to '+max+' '+type);
 
 })
+@if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
 </script>
 @endsection

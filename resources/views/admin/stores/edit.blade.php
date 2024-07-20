@@ -83,7 +83,7 @@
                             </div>
                         </div>
                         <div class="row mb-10">
-                           
+
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label class="input-label required" for="choice_zones">{{__('admin.zone')}}<span
@@ -223,7 +223,7 @@
     $("#coverImageUpload").change(function () {
         readURL(this, 'coverImageViewer');
     });
-   
+
 
     $(function () {
         $("#coba").spartanMultiImagePicker({
@@ -334,7 +334,7 @@
     $('.get_zone_data').on('click',function (){
         let id = $(this).val();
         $.get({
-            url: `{{ url('admin/get-zone-Coordinate') }}/${id}`, 
+            url: `{{ url('admin/get-zone-Coordinate') }}/${id}`,
             dataType: 'json',
             success: function (data) {
                 if(zonePolygon)
@@ -372,7 +372,7 @@
         let id = $('#choice_zones').val();
         console.log("dddddddddddddd");
         $.get({
-            url: `{{ url('admin/get-zone-Coordinate') }}/${id}`, 
+            url: `{{ url('admin/get-zone-Coordinate') }}/${id}`,
             dataType: 'json',
             success: function (data) {
                 if(zonePolygon)
@@ -471,5 +471,13 @@ $('.delivery-time').on('click',function (){
     $("#time_view").val(min+' to '+max+' '+type);
 
 })
+
+@if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
 </script>
 @endsection
