@@ -55,7 +55,7 @@ class UserController extends Controller
             return response()->json(['status' => false, 'message' => 'User not found'], 310);
         }
         if (request()->hasFile('photo') && request('photo') != '') {
-            if ($user->photo && Storage::exists('uploads/user/' . $user->photo)) {
+            if ($user->photo && Storage::exists('images/' . $user->photo)) {
                 Storage::delete('images/' . $user->photo);
             }
             $avatar = $request->file('photo');

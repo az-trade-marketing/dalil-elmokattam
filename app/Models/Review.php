@@ -12,4 +12,7 @@ class Review extends Model
     public function store() {
         return $this->belongsTo(Store::class);
     }
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }
