@@ -44,7 +44,6 @@ class ReviewController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'store_id' => 'required|exists:stores,id',
-            'title' => 'required|string',
             'descriptions' => 'nullable|string',
             'rating' => 'required|numeric|min:0|max:10',
         ]);
@@ -85,7 +84,6 @@ class ReviewController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'store_id' => 'required|exists:stores,id',
-            'title' => 'required|string',
             'descriptions' => 'nullable|string',
             'rating' => 'required|numeric|min:0|max:10',
         ]);
