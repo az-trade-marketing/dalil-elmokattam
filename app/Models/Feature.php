@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Feature extends Model
 {
     use HasFactory;
-    protected $fillable = ['name_en','name_ar'];
-    public function subscriptions() {
-        return $this->belongsToMany(Subscription::class);
+    protected $fillable = ['name_en','name_ar','type'];
+    public function subscriptions()
+    {
+        return $this->belongsToMany(Subscription::class,'feature_subscriptions');
     }
 }

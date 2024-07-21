@@ -49,7 +49,7 @@
                                     <!--begin::Modal header-->
                                     <div class="modal-header" id="kt_modal_add_user_header">
                                         <!--begin::Modal title-->
-                                        <h2 class="fw-bold">{{  __("admin.add").' '. __("admin.category") }}</h2>
+                                        <h2 class="fw-bold">{{  __("admin.add").' '. __("admin.features") }}</h2>
                                         <!--end::Modal title-->
                                         <!--begin::Close-->
                                         <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal" aria-label="Close">

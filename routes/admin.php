@@ -65,7 +65,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     // ============================== subscription ====================
     Route::resource('subscription', SubscriptionController::class);
     Route::get('subscription-get-data', [SubscriptionController::class, 'data']);
-    // Route::delete('/subscription/{id}', [SubscriptionController::class, 'destroy']);
+    Route::get('/subscription/{id}/features', [SubscriptionController::class, 'getFeatures']);
+
 
     // ============================== stores ====================
     Route::resource('stores', StoreController::class);
@@ -75,6 +76,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
         $script_datatable = true;
         return view("admin.categories.index", compact('script_datatable'));
     });
+
     // ============================== lang ====================
 
     Route::post('/user/language', [AdminController::class, 'updateLanguage'])->name('user.language.update');

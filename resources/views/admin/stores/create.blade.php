@@ -111,7 +111,9 @@
                                 </select>
                                 </div>
                             </div>
-
+                            <div id="features-container" class="row mb-10">
+                                <!-- Dynamic feature inputs will be loaded here -->
+                            </div>
                         </div>
 
                         <div class="row mb-10">
@@ -464,5 +466,58 @@ $('.delivery-time').on('click',function (){
     @if(session('error'))
         toastr.error("{{ session('error') }}");
     @endif
+
+    /////////////////////////
+    document.addEventListener('DOMContentLoaded', function() {
+    const subscriptionSelect = document.querySelector('select[name="subscription_id"]');
+
+    subscriptionSelect.addEventListener('change', function() {
+        const subscriptionId = this.value;
+          console.log(subscriptionId);
+        const featuresContainer = document.getElementById('features-container');
+        featuresContainer.innerHTML = '';
+
+        if (subscriptionId) {
+            fetch(`/admin/subscription/${subscriptionId}/features`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(features => {
+                    features.forEach(feature => {
+                        let inputElement;
+                        switch (feature.type) {
+                            case 'image':
+                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="image/*">`;
+                                break;
+                            case 'multiImage':
+                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="image/*" multiple>`;
+                                break;
+                            case 'video':
+                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="video/*">`;
+                                break;
+                            case 'text':
+                                inputElement = `<textarea name="features[${feature.id}][]"></textarea>`;
+                                break;
+                        }
+
+                        const featureElement = `
+                            <div class="form-group">
+                                <label>${feature.name_en}</label>
+                                ${inputElement}
+                            </div>
+                        `;
+                        featuresContainer.innerHTML += featureElement;
+                    });
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+    });
+});
+
 </script>
 @endsection
