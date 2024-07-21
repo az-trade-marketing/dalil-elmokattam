@@ -44,6 +44,7 @@ class FeatureController extends Controller
     $validator = Validator::make($request->all(), [
         'name_ar' => 'required|string|max:255',
         'name_en' => 'required|string|max:255',
+        'type'=>'required'
     ]);
 
     if ($validator->fails()) {
@@ -95,6 +96,7 @@ class FeatureController extends Controller
     $validator = Validator::make($request->all(), [
         'name_ar' => 'required|string|max:255',
         'name_en' => 'required|string|max:255',
+         'type'=>'required'
     ]);
     if ($validator->fails()) {
         return response()->json([

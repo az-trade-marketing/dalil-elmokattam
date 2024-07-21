@@ -100,4 +100,5 @@ return [
     'subscriptions' => 'الاشتراكات',
     'upload' => 'تحميل صوره',
 
+
 ];

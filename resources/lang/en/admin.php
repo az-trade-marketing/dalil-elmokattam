@@ -97,5 +97,8 @@ return [
     'select_zone' => 'select zone',
     'search_here' => 'search here',
     'upload' => 'upload img',
+    'multiImage'=> 'multi image',
+    'vidio'=>'vidio',
+    'text'=>'text',
 
 ];

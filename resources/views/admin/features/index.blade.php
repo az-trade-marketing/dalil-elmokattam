@@ -77,8 +77,24 @@
                                                     <input type="text" name="name_en" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.name_en") }}" />
                                                     <div class="invalid-feedback text-danger" id="error-name_en"></div>
                                                 </div>
+                                                <div class="row g-9 mb-8">
 
+                                                    <select id="business-type-select-activity"
+                                                        class="form-select activity form-select-solid"
+                                                        data-hide-search="true" data-placeholder="@lang('admin.type')"
+                                                        name="type" required>
+                                                        <option value="">@lang('admin.type')</option>
+                                                        <option value="image">@lang('admin.image')</option>
+                                                        <option value="multiImage">@lang('admin.multiImage')</option>
+                                                        <option value="vidio">@lang('admin.vidio')</option>
+                                                        <option value="text">@lang('admin.text')</option>
+                                                    </select>
+
+                                                    <div class="fv-plugins-message-container invalid-feedback">
+                                                    </div>
+                                                </div>
                                             </div>
+
                                             <div class="text-center pt-10">
                                                 <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
                                                 <button type="button" id="submitButton" class="btn btn-primary" data-kt-users-modal-action="submit">
@@ -136,7 +152,15 @@
                                                         <input type="text" name="name_en" id="editNameEn" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.name_en") }}" />
                                                         <div class="invalid-feedback text-danger" id="error-edit-name_en" style="display: none;"></div>
                                                     </div>
-
+                                                    <select id="editTypeSelect" class="form-select form-select-solid"
+                                                    data-hide-search="true" data-placeholder="@lang('admin.type')"
+                                                    name="type" required>
+                                                    <option value="">@lang('admin.type')</option>
+                                                        <option value="image">@lang('admin.image')</option>
+                                                        <option value="multiImage">@lang('admin.multiImage')</option>
+                                                        <option value="vidio">@lang('admin.vidio')</option>
+                                                        <option value="text">@lang('admin.text')</option>
+                                                </select>
                                                 </div>
                                                 <div class="text-center pt-10">
                                                     <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{ __("admin.discard") }}</button>
@@ -171,7 +195,9 @@
                             <th>#</th>
                             <th>{{__('admin.name_ar')}}</th>
                             <th>{{__('admin.name_en')}}</th>
+                            <th>{{ __('admin.type') }}</th>
                             <th>{{__('admin.action')}}</th>
+
                           </tr>
                         </thead>
                         <tbody class="list country_table">
@@ -211,6 +237,7 @@
                         $.each(response ,function(key , item){
                                 var name_ar = item.name_ar ?? '';
                                 var name_en = item.name_en ?? '';
+                                var type = item.type ?? '';
 
                                 $('.country_table').append('<tr>\
                                         <td class=" text-center pt-4">\
@@ -222,6 +249,9 @@
                                         <td class="align-middle name text-nowrap ">\
                                             <h6 class="m-0 p-0">'+name_en+' </h6>  \
                                         </td>\
+                                          <td class="align-middle type text-nowrap">\
+                                        <h6 class="m-0 p-0">'+type+'</h6>\
+                                       </td>\
                                         <td class="min-w-100 pt-3">\
                                             <div class="d-flex">\
                                                 <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'" >{{ __("admin.edit") }}</a>\
@@ -242,10 +272,12 @@
                 var id = $(this).data('id');
                 var nameAr =    $(this).data('name_ar');
                 var nameEn = $(this).data('name_en');
+                var type = $(this).data('type');
 
                 $('#editId').val(id);
                 $('#editNameAr').val(nameAr);
                 $('#editNameEn').val(nameEn);
+                $('#editTypeSelect').val(type).trigger('change');
 
                 $('#kt_modal_edit_user').modal('show');
             });

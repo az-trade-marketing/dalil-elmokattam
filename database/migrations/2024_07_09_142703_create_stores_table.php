@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->foreignId('admin_id')->references('id')->on('admins');
             $table->foreignId('category_id')->references('id')->on('categories');
-            $table->foreignId('area_id')->references('id')->on('areas');
             $table->foreignId('subscription_id')->references('id')->on('subscriptions');
             $table->boolean('status')->default(true);
             $table->json('boundaries')->nullable();
