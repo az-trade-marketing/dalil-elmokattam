@@ -73,7 +73,18 @@
 
                             </div>
                         </div>
+                        <div class="row mb-10">
+                            <div class="col-md-3">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">   {{ __('admin.contact') }}</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <div class="d-flex gap-3">
+                                        <input type="text" name="mobile" class="form-control form-control-solid"  placeholder="{{ __('admin.mobile') }}" />
+                                        <input type="text"name="email" class="form-control form-control-solid" placeholder="{{ __('admin.email') }}" />
+                                </div>
 
+                            </div>
+                        </div>
                         <div class="row mb-10">
                             <div class="col-md-6">
                                 <div class="col-md-3">

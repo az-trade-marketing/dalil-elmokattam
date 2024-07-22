@@ -85,7 +85,11 @@ class StoreController extends Controller
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             "lat" => 'required',
             "lon" => 'required',
+            "mobile" => 'required|unique:stores',
+            "email" => 'required|email|unique:stores',
+
         ]);
+
         $validatedData['admin_id'] = Auth::guard('admin')->user()->id;
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $avatar = $request->file('image');
@@ -144,6 +148,8 @@ class StoreController extends Controller
             'subscription_id' => 'required|integer|exists:subscriptions,id',
             'zone_id' => 'required|integer|exists:zones,id',
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            "mobile" => 'required|unique:stores,mobile,' . $id,
+            'email' => 'required|email|unique:stores,email,' . $id,
         ]);
          $store =  Store::find($id);
         if ($request->hasFile('image') && $request->file('image')->isValid()) {

@@ -24,7 +24,6 @@ return new class extends Migration
             $table->foreignId('category_id')->references('id')->on('categories');
             $table->foreignId('subscription_id')->references('id')->on('subscriptions');
             $table->boolean('status')->default(true);
-            $table->json('boundaries')->nullable();
             $table->string('lat')->nullable();
             $table->string('lon')->nullable();
             $table->timestamps();

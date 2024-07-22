@@ -27,6 +27,9 @@ class CategoryRequest extends FormRequest
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:max_width=3000,max_height=3000',
+            'description_en' => 'nullable|string',
+            'description_ar' => 'nullable|string',
+            'color' => 'nullable|string',
         ];
     }
 }

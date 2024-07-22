@@ -41,6 +41,7 @@ class FeatureController extends Controller
     */
    public function store(Request $request)
    {
+
     $validator = Validator::make($request->all(), [
         'name_ar' => 'required|string|max:255',
         'name_en' => 'required|string|max:255',
@@ -93,6 +94,7 @@ class FeatureController extends Controller
     */
    public function update(Request $request, $id)
    {
+
     $validator = Validator::make($request->all(), [
         'name_ar' => 'required|string|max:255',
         'name_en' => 'required|string|max:255',

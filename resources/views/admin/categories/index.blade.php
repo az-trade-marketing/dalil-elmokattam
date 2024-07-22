@@ -92,6 +92,29 @@
                                                         <!--end::Col-->
                                                     </div>
                                                 </div>
+                                                <div class="fv-row mb-10">
+                                                    <div class="row g-9 mb-8">
+                                                        <!--begin::Col-->
+                                                        <div class="col-md-6 fv-row">
+                                                            <label class="required fs-6 fw-semibold mb-2">{{ __("admin.description_ar") }}</label>
+                                                            <input type="text" class="form-control form-control-solid" placeholder="{{ __("admin.description_ar") }}" name="description_ar" />
+                                                            <div class="text-danger" id="error-description_ar"></div>
+                                                        </div>
+                                                        <!--end::Col-->
+                                                        <!--begin::Col-->
+                                                        <div class="col-md-6 fv-row">
+                                                            <label class="required fs-6 fw-semibold mb-2">{{ __("admin.description_en") }}</label>
+                                                            <input type="text" class="form-control form-control-solid" placeholder="{{ __("admin.description_en") }}" name="description_en" />
+                                                            <div class="text-danger" id="error-description_en"></div>
+                                                        </div>
+                                                        <!--end::Col-->
+                                                    </div>
+                                                </div>
+                                                <div class="fv-row mb-10">
+                                                    <label class="required fs-6 fw-semibold mb-2">{{ __("admin.color") }}</label>
+                                                    <input type="color" class="form-control form-control-solid" placeholder="{{ __("admin.color") }}" name="color" />
+                                                    <div class="text-danger" id="error-color"></div>
+                                                </div>
                                                 <!--end::Input group-->
                                                 <div class="fv-row mb-7">
                                                     <label class="required fw-semibold fs-6 mb-2">{{ __("admin.logo") }} </label>
@@ -162,6 +185,21 @@
                                                         <div class="invalid-feedback text-danger" id="error-edit-name_en" style="display: none;"></div>
                                                     </div>
                                                     <div class="fv-row mb-7">
+                                                        <label class="required fw-semibold fs-6 mb-2">{{ __("admin.description_ar") }}</label>
+                                                        <input type="text" name="description_ar" id="editdescriptionAr" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.description_ar") }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-description_ar" style="display: none;"></div>
+                                                    </div>
+                                                    <div class="fv-row mb-7">
+                                                        <label class="required fw-semibold fs-6 mb-2">{{ __("admin.description_en") }}</label>
+                                                        <input type="text" name="description_en" id="editdescriptionEn" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.description_en") }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-description_en" style="display: none;"></div>
+                                                    </div>
+                                                    <div class="fv-row mb-7">
+                                                        <label class="required fw-semibold fs-6 mb-2">{{ __("admin.color") }}</label>
+                                                        <input type="color" name="color" id="editColor" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.color") }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-color" style="display: none;"></div>
+                                                    </div>
+                                                    <div class="fv-row mb-7">
                                                         <label class="required fw-semibold fs-6 mb-2">{{ __("admin.logo") }}</label>
                                                         <input type="file" name="image" id="editImage" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.logo") }}" />
                                                         <div class="invalid-feedback text-danger" id="error-edit-logo" style="display: none;"></div>
@@ -209,6 +247,9 @@
                             <th>#</th>
                             <th>{{__('admin.name_ar')}}</th>
                             <th>{{__('admin.name_en')}}</th>
+                            <th>{{ __('admin.description_ar') }}</th>
+                            <th>{{ __('admin.description_en') }}</th>
+                            <th>{{__('admin.color')}}</th>
                             <th>{{__('admin.logo')}}</th>
                             <th>{{__('admin.action')}}</th>
                           </tr>
@@ -266,6 +307,9 @@
                             var country_img = item.image ?  item.image : '{{asset("/assets/img/user.png")}}' ;
                             var name_ar = item.name_ar ?? '';
                             var name_en = item.name_en ?? '';
+                            var description_ar = item.description_ar ?? '';
+                            var description_en = item.description_en ?? '';
+                            var color = item.color ?? '';
                             var actionButtons = '';
 
                             if (permissions.canCreate) {
@@ -284,6 +328,15 @@
                                 </td>\
                                 <td class="align-middle name text-nowrap">\
                                     <h6 class="m-0 p-0">'+name_en+'</h6>\
+                                </td>\
+                                 <td class="align-middle name text-nowrap">\
+                                    <h6 class="m-0 p-0">'+description_ar+'</h6>\
+                                </td>\
+                                <td class="align-middle name text-nowrap">\
+                                    <h6 class="m-0 p-0">'+description_en+'</h6>\
+                                </td>\
+                                 <td class="align-middle name text-nowrap">\
+                                    <h6 class="m-0 p-0">'+color+'</h6>\
                                 </td>\
                                 <td class="text-center min-w-100">\
                                     <div class="avatar avatar-3xl">\
@@ -307,6 +360,10 @@
                 var nameAr  = $(this).data('name_ar');
                 var nameEn  = $(this).data('name_en');
                 var logo    = $(this).data('logo');
+                var descriptionAr    = $(this).data('description_ar');
+                var descriptionEn    = $(this).data('description_en');
+                var color    = $(this).data('color');
+
 
                 $.ajax({
                     url: '/admin/categories/' + id,
@@ -340,6 +397,10 @@
                 $('#editId').val(id);
                 $('#editNameAr').val(nameAr);
                 $('#editNameEn').val(nameEn);
+                $('#editescriptionEn').val(descriptionEn);
+                $('#editdescriptionAr').val(descriptionAr);
+                $('#editColor').val(color);
+
                 $('#editImagePreview').attr('src', "{{ image_path() }}" + "/" + logo );
                 $('#kt_modal_edit_user').modal('show');
             });

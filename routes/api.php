@@ -63,3 +63,5 @@ Route::get('areas', [GeneralController::class, 'all_areas']);
 ///stores
 Route::get('stores', [GeneralController::class, 'all_stores']);
 Route::post('stores-cat', [GeneralController::class, 'storesByCat']);
+////////helps$support
+Route::post('contact-us', [GeneralController::class, 'ContactUs']);

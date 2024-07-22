@@ -4,12 +4,14 @@ namespace App\Http\Controllers\User;
 
 use App\Models\Area;
 use App\Models\Store;
+use App\Models\Contact;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AreaResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CategoryResource;
+use Illuminate\Support\Facades\Validator;
 
 class GeneralController extends Controller
 {
@@ -38,6 +40,23 @@ class GeneralController extends Controller
     {
        $stores= Store::with('category','area','reviews','subscription')->get();
       return response()->json(['isSuccess' => true, 'data' =>StoreResource::collection($stores)], 200);
+    }
+    public function ContactUs(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:contacts',
+            'phone' => 'required|string|max:20|unique:contacts',
+            'message' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['isSuccess' => false, 'message' => $validator->errors()], 422);
+        }
+
+        Contact::create($request->all());
+
+        return response()->json(['isSuccess' => true, 'message' => 'Sent successfully'], 200);
     }
     /**
      * Show the form for creating a new resource.

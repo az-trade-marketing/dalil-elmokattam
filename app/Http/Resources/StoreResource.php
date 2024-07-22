@@ -14,11 +14,13 @@ class StoreResource extends JsonResource
      */
     public function toArray($request)
     {
+        $ratingSum = $this->reviews->sum('rating');
         return array_merge(parent::toArray($request), [
             'id' => $this->id,
             'name' => $this->name,
             'reviews' => ReviewsResource::collection($this->reviews),
             'image' => asset('images/' . $this->image),
+            'rating' => $ratingSum,
         ]);
     }
 }

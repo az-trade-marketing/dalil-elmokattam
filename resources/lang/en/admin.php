@@ -100,5 +100,7 @@ return [
     'multiImage'=> 'multi image',
     'vidio'=>'vidio',
     'text'=>'text',
+    'contact'=>'contact',
+    'color'=>'color',
 
 ];

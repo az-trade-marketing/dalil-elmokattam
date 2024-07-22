@@ -161,5 +161,12 @@ class SubscriptionController extends Controller
             return response()->json(['error' => 'Failed to delete Subscription.'], 500);
         }
     }
+    public function getFeatures($id)
+    {
+        $features = Feature::whereHas('subscriptions', function($query) use ($id) {
+            $query->where('subscription_id', $id);
+        })->get();
 
+        return response()->json($features);
+    }
 }

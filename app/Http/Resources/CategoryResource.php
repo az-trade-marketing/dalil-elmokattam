@@ -16,7 +16,7 @@ class CategoryResource extends JsonResource
     {
         return array_merge(parent::toArray($request), [
 
-            'image'=> asset('images/' . $this->image),
+            'icon'=> asset('images/' . $this->image),
             'stores' => StoreResource::collection($this->stores),
         ]);
     }
