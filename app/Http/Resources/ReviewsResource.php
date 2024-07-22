@@ -20,7 +20,6 @@ class ReviewsResource extends JsonResource
             'firstname' => $this->user?->firstname ?? '',
             'lastname' => $this->user?->lastname ?? '',
             'photo' => $this->user?->photo ? asset('images/' . $this->user->photo) : '',
-
             'message' => $this->message,
             'rating' => $this->rating,
             'created_at' => $this->created_at
