@@ -14,7 +14,7 @@ class Store extends Model
     }
 
     public function zones() {
-        return $this->belongsTo(Zone::class);
+        return $this->belongsTo(Zone::class,'zone_id');
     }
     public function admin() {
         return $this->belongsTo(Admin::class);

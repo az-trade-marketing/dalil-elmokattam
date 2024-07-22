@@ -21,6 +21,7 @@ class StoreResource extends JsonResource
             'reviews' => ReviewsResource::collection($this->reviews),
             'image' => asset('images/' . $this->image),
             'rating' => $ratingSum,
+            'zones'=> $this->zones->name_en,
         ]);
     }
 }
