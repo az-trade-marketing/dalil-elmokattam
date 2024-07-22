@@ -57,11 +57,11 @@ Route::post('/favorit', [FavoriteController::class, 'store']);
 Route::post('/update-favorit', [FavoriteController::class, 'update']);
 Route::get('/user-favorits', [FavoriteController::class, 'index']);
 });
-////////categories
+////////categories&tags
 Route::get('categories', [GeneralController::class, 'all_categories']);
-Route::get('areas', [GeneralController::class, 'all_areas']);
+Route::get('tags', [GeneralController::class, 'all_tags']);
 ///stores
 Route::get('stores', [GeneralController::class, 'all_stores']);
-Route::post('stores-cat', [GeneralController::class, 'storesByCat']);
-////////helps$support
+Route::get('/stores/search', [GeneralController::class, 'search']);
+////////helps&support
 Route::post('contact-us', [GeneralController::class, 'ContactUs']);

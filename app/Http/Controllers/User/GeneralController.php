@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AreaResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CategoryResource;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Validator;
 
 class GeneralController extends Controller
@@ -25,20 +26,34 @@ class GeneralController extends Controller
        $cats= Category::with('stores')->get();
       return response()->json(['isSuccess' => true, 'data' =>CategoryResource::collection($cats)], 200);
     }
-    public function all_areas()
+    public function all_tags()
     {
-       $areas= Area::with('stores')->get();
-      return response()->json(['isSuccess' => true, 'data' =>AreaResource::collection($areas)], 200);
+       $tags= Tag::with('categories')->get();
+      return response()->json(['isSuccess' => true, 'data' =>$tags], 200);
     }
-    public function  storesByCat(Request $request)
-    {
-        $stores= Store::with('category','area','reviews','subscription')->where('category_id',$request->category_id)->get();
-        return response()->json(['isSuccess' => true, 'data' =>StoreResource::collection($stores)], 200);
 
+    public function search(Request $request)
+    {
+        $query = Store::query();
+        if ($request->has('categories') && !empty($request->categories)) {
+            $query->whereHas('categories', function($q) use ($request) {
+                $q->whereIn('categories.id', $request->categories);
+            });
+        }
+        if ($request->has('tags') && !empty($request->tags)) {
+            $query->whereHas('categories.tags', function($q) use ($request) {
+                $q->whereIn('tags.id', $request->tags);
+            });
+        }
+        $stores = $query->get();
+        return response()->json([
+            'isSuccess' => true,
+            'data' => $stores
+        ]);
     }
     public function all_stores()
     {
-       $stores= Store::with('category','area','reviews','subscription')->get();
+       $stores= Store::with('category','zones','reviews','subscription')->get();
       return response()->json(['isSuccess' => true, 'data' =>StoreResource::collection($stores)], 200);
     }
     public function ContactUs(Request $request)

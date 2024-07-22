@@ -13,8 +13,8 @@ class Store extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function area() {
-        return $this->belongsTo(Area::class);
+    public function zones() {
+        return $this->belongsTo(Zone::class);
     }
     public function admin() {
         return $this->belongsTo(Admin::class);
@@ -34,5 +34,9 @@ class Store extends Model
     }
     public function subscription() {
         return $this->belongsTo(Subscription::class);
+    }
+    public function tags()
+    {
+        return $this->hasManyThrough(Tag::class, 'category_tags', 'store_id', 'id', 'id', 'tag_id');
     }
 }
