@@ -8,6 +8,7 @@ use App\Http\Controllers\User\GeneralController;
 use App\Http\Controllers\User\FavoriteController;
 use App\Http\Controllers\User\Auth\AuthController;
 use App\Http\Controllers\User\Auth\SocialAuthController;
+use App\Http\Controllers\User\StoreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,22 +41,20 @@ Route::group([
     'middleware' => ['tokencheck'],
 ], function ($router) {
     Route::post('password/change', [AuthController::class, 'changePassword']);
-
     //////users
      Route::get('getUserProfile', [UserController::class, 'getUserProfile']);
     Route::post('editProfile', [UserController::class, 'editProfile']);
     Route::post('editProfileImage', [UserController::class, 'editProfileImage']);
     Route::delete('deleteAccount', [UserController::class, 'deleteAccount']);
-
    //reviews route
-Route::post('/review', [ReviewController::class, 'store']);
-Route::post('/review/{review}', [ReviewController::class, 'update']);
-Route::delete('/review/{review}', [ReviewController::class, 'destroy']);
-Route::get('/user-reviews', [ReviewController::class, 'index']);
-//wishlist route
-Route::post('/favorit', [FavoriteController::class, 'store']);
-Route::post('/update-favorit', [FavoriteController::class, 'update']);
-Route::get('/user-favorits', [FavoriteController::class, 'index']);
+    Route::post('/review', [ReviewController::class, 'store']);
+    Route::post('/review/{review}', [ReviewController::class, 'update']);
+    Route::delete('/review/{review}', [ReviewController::class, 'destroy']);
+    Route::get('/user-reviews', [ReviewController::class, 'index']);
+    //wishlist route
+    Route::post('/favorit', [FavoriteController::class, 'store']);
+    Route::post('/update-favorit', [FavoriteController::class, 'update']);
+    Route::get('/user-favorits', [FavoriteController::class, 'index']);
 });
 ////////categories&tags
 Route::get('categories', [GeneralController::class, 'all_categories']);
@@ -65,3 +64,5 @@ Route::get('stores', [GeneralController::class, 'all_stores']);
 Route::get('/stores/search', [GeneralController::class, 'search']);
 ////////helps&support
 Route::post('contact-us', [GeneralController::class, 'ContactUs']);
+////////add store
+Route::post('add-store', [StoreController::class, 'store']);

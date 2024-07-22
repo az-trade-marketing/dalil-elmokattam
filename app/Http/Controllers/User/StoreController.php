@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\AddStore;
 use Illuminate\Http\Request;
 
 class StoreController extends Controller
@@ -35,8 +36,23 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'store_name' => 'required|string|max:255',
+            'owner_name' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
+            'area' => 'required|string|max:255',
+            'comments' => 'nullable|string'
+        ]);
+
+        $store = AddStore::create($request->all());
+
+        return response()->json([
+            'isSuccess' => true,
+            'data' => $store,
+            'message' => 'Store created successfully'
+        ], 201);
     }
+
 
     /**
      * Display the specified resource.
