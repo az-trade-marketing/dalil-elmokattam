@@ -99,7 +99,13 @@ return [
     'search_here' => 'ابحث هنا',
     'subscriptions' => 'الاشتراكات',
     'upload' => 'تحميل صوره',
-
+    'multiImage'=> 'العديد من الصور',
+    'video'=>'مقطع فيديو',
+    'text'=>'نص',
+    'contact'=>'اتصال',
+    'color'=>'لون',
+    'lat' => 'latitude',
+    'lon' => 'longitude',
 
 
 ];

@@ -86,7 +86,7 @@
                                                         <option value="">@lang('admin.type')</option>
                                                         <option value="image">@lang('admin.image')</option>
                                                         <option value="multiImage">@lang('admin.multiImage')</option>
-                                                        <option value="vidio">@lang('admin.vidio')</option>
+                                                        <option value="vidio">@lang('admin.video')</option>
                                                         <option value="text">@lang('admin.text')</option>
                                                     </select>
 
@@ -158,7 +158,7 @@
                                                     <option value="">@lang('admin.type')</option>
                                                         <option value="image">@lang('admin.image')</option>
                                                         <option value="multiImage">@lang('admin.multiImage')</option>
-                                                        <option value="vidio">@lang('admin.vidio')</option>
+                                                        <option value="video">@lang('admin.video')</option>
                                                         <option value="text">@lang('admin.text')</option>
                                                 </select>
                                                 </div>

@@ -98,9 +98,10 @@ return [
     'search_here' => 'search here',
     'upload' => 'upload img',
     'multiImage'=> 'multi image',
-    'vidio'=>'vidio',
+    'video'=>'video',
     'text'=>'text',
     'contact'=>'contact',
     'color'=>'color',
-
+    'lat' => 'latitude',
+    'lon' => 'longitude',
 ];
