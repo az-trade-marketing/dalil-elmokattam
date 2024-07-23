@@ -77,7 +77,6 @@ return [
     'statistics' => 'Statistics',
     'stores'=>'stores',
     'add_stores'=>'Add Stores',
-
     'zones' => 'zones',
     'zone' => 'zone',
     'map' => 'map',
@@ -102,5 +101,8 @@ return [
     'text'=>'text',
     'contact'=>'contact',
     'color'=>'color',
+    'firstname'=>'firstname',
+    'lastname'=>'lastname',
+
 
 ];

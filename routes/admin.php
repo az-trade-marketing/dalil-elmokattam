@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::resource('zones', ZonesController::class);
     Route::get('zones-get-data', [ZonesController::class, 'data']);
     // ============================== roles ====================
-    Route::resource('users', UserController::class);
+    // Route::resource('users', UserController::class);
     Route::resource('roles', RolesController::class);
     Route::get('roles-get-data', [RolesController::class, 'data']);
     // ============================== permissions ====================
@@ -76,7 +76,10 @@ Route::group(['middleware' => 'auth:admin'], function () {
         $script_datatable = true;
         return view("admin.categories.index", compact('script_datatable'));
     });
+    // ============================== users ====================
 
+    Route::resource('users', UserController::class);
+    Route::get('users-get-data', [UserController::class, 'data']);
     // ============================== lang ====================
 
     Route::post('/user/language', [AdminController::class, 'updateLanguage'])->name('user.language.update');

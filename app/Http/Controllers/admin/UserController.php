@@ -2,83 +2,102 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
 
-        public function index()
-        {
-            $users = User::all();
+    public function index()
+    {
 
-            return view('admin.users.index', compact('users'));
+        return view('admin.users.index');
+    }
+    public function data()
+    {
+        $results = User::orderByDesc("id")->get();
+        $permissions = [
+            'canCreate' => auth()->user()->can('user Create'),
+            'canDelete' => auth()->user()->can('user Delete')
+        ];
+        return response()->json([
+            'data' => $results,
+            'permissions' => $permissions
+        ]);
+    }
+    public function create()
+    {
+        return view('admin.users.index');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+            'phone' => 'required|unique:users',
+
+        ]);
+
+        $user = new User([
+            'firstname' => $request->get('firstname'),
+            'lastname' => $request->get('lastname'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+            'phone' => $request->phone,
+            'gender' => $request->gender,
+            'date_of_birth' => $request->date_of_birth,
+        ]);
+
+        if ($request->hasFile('photo') && $request->file('photo') != '') {
+            $avatar = $request->file('photo');
+            $photo = upload($avatar);
+            $user->photo = $photo;
         }
+        $user->save();
+        return response()->json(["message" => "success"], 200);
+    }
 
-        public function create()
-        {
-            return view('admin.users.create');
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json($user);
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+        ]);
+        $user = User::findOrFail($id);
+        $user->update([
+            'firstname' => $request->get('firstname'),
+            'lastname' => $request->get('lastname'),
+            'email' => $request->get('email'),
+            'phone' => $request->phone,
+            'gender' => $request->gender,
+            'date_of_birth' => $request->date_of_birth,
+        ]);
+        if ($request->filled('password')) {
+            $user->password =  Hash::make($request->get('password'));
         }
+        $user->save();
+        return response()->json(["message" => "success"], 200);
+    }
 
-        public function store(Request $request)
-        {
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|min:6'
-            ]);
-
-            $user = new User([
-                'name' => $request->get('name'),
-                'email' => $request->get('email'),
-                'password' => Hash::make($request->get('password'))
-            ]);
-
-            $user->save();
-            return redirect('/users')->with('success', 'User has been added');
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->photo && Storage::exists('images/' . $user->photo)) {
+            Storage::delete('images/' . $user->photo);
         }
-
-        public function show($id)
-        {
-            $user = User::findOrFail($id);
-            return view('admin.users.show', compact('user'));
-        }
-
-        public function edit($id)
-        {
-            $user = User::findOrFail($id);
-            return view('admin.users.edit', compact('user'));
-        }
-
-        public function update(Request $request, $id)
-        {
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email,' . $id,
-                'password' => 'nullable|min:6'
-            ]);
-
-            $user = User::findOrFail($id);
-            $user->name = $request->get('name');
-            $user->email = $request->get('email');
-
-            if ($request->filled('password')) {
-                $user->password =  Hash::make($request->get('password'));
-
-            }
-
-            $user->save();
-            return redirect('/users')->with('success', 'User has been updated');
-        }
-
-        public function destroy($id)
-        {
-            $user = User::findOrFail($id);
-            $user->delete();
-
-            return redirect('/users')->with('success', 'User has been deleted');
-        }
-
+        $user->delete();
+        session()->flash('success', 'تم حذف الحساب بنجاح');
+        return back();
+    }
 }

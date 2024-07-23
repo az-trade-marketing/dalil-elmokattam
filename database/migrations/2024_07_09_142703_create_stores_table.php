@@ -19,13 +19,17 @@ return new class extends Migration
             $table->string('name_ar');
             $table->text('description_en')->nullable();
             $table->text('description_ar')->nullable();
-            $table->string('image')->nullable();
             $table->foreignId('admin_id')->references('id')->on('admins');
             $table->foreignId('category_id')->references('id')->on('categories');
             $table->foreignId('subscription_id')->references('id')->on('subscriptions');
             $table->boolean('status')->default(true);
             $table->string('lat')->nullable();
             $table->string('lon')->nullable();
+            $table->string('mobile')->nullable()->nullable();
+            $table->string('phone')->unique()->nullable();
+            $table->string('image')->nullable();
+            $table->string('vidio')->nullable();
+            $table->string('contacts')->nullable();
             $table->timestamps();
         });
     }
