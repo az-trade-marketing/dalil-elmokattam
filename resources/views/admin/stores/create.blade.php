@@ -122,6 +122,8 @@
                                 </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-6">
                             <div id="features-container" class="row mb-10">
                                 <!-- Dynamic feature inputs will be loaded here -->
                             </div>
@@ -498,30 +500,38 @@ $('.delivery-time').on('click',function (){
                 })
                 .then(features => {
                     features.forEach(feature => {
+                        console.log(feature.type);
                         let inputElement;
                         switch (feature.type) {
                             case 'image':
-                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="image/*">`;
+                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="image/*" class="form-control form-control-solid">`;
                                 break;
                             case 'multiImage':
-                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="image/*" multiple>`;
+                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="image/*" multiple class="form-control form-control-solid">`;
                                 break;
-                            case 'video':
-                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="video/*">`;
+                            case 'vidio':
+                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="video/*" class="form-control form-control-solid">`;
                                 break;
                             case 'text':
-                                inputElement = `<textarea name="features[${feature.id}][]"></textarea>`;
+                                inputElement = `<textarea name="features[${feature.id}][]" class="form-control form-control-solid"></textarea>`;
                                 break;
                         }
 
                         const featureElement = `
-                            <div class="form-group">
-                                <label>${feature.name_en}</label>
-                                ${inputElement}
+                            <div class="row mb-10">
+                                <div class="col-md-3">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">${feature.name_en}</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    <div class="d-flex gap-3">
+                                        ${inputElement}
+                                    </div>
+                                </div>
                             </div>
                         `;
                         featuresContainer.innerHTML += featureElement;
                     });
+
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);

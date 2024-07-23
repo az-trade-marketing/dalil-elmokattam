@@ -72,6 +72,12 @@ class CategoryController extends Controller
             $tag = Tag::where("name_ar", $value->value)->orWhere("name_en", $value->value)->first();
             if ($tag) {
                 $category->tags()->attach($tag->id);
+            }else{
+                $tag = Tag::create([
+                    "name_ar" => $value->value,
+                    "name_en" => $value->value,
+                ]);
+                $category->tags()->attach($tag->id);
             }
         }
 
