@@ -53,9 +53,6 @@ Route::group(['middleware' => 'auth:admin'], function () {
     // ============================== categories ====================
     Route::resource('categories', CategoryController::class);
     Route::get('cat-data', [CategoryController::class, 'cat_cat']);
-    // ============================== areas ====================
-    Route::resource('areas', AreaController::class);
-    Route::get('get-data', [AreaController::class, 'data']);
     // ============================== features ====================
     Route::resource('features', FeatureController::class);
     Route::get('features-get-data', [FeatureController::class, 'data']);
@@ -77,7 +74,6 @@ Route::group(['middleware' => 'auth:admin'], function () {
         return view("admin.categories.index", compact('script_datatable'));
     });
     // ============================== users ====================
-
     Route::resource('users', UserController::class);
     Route::get('users-get-data', [UserController::class, 'data']);
     // ============================== lang ====================

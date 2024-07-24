@@ -70,37 +70,60 @@ class StoreController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+public function store(Request $request)
+{
+    // Validate input data
+    $validatedData = $request->validate([
+        'name_en' => 'required|string|max:255',
+        'name_ar' => 'required|string|max:255',
+        'description_en' => 'nullable|string|max:255',
+        'description_ar' => 'nullable|string|max:255',
+        'category_id' => 'required|integer|exists:categories,id',
+        'subscription_id' => 'required|integer|exists:subscriptions,id',
+        'zone_id' => 'required|integer|exists:zones,id',
+        'lat' => 'required|numeric',
+        'lon' => 'required|numeric',
+        'mobile' => 'required|unique:stores',
+        'email' => 'required|email|unique:stores',
+    ]);
 
-        // التحقق من صحة البيانات
-        $validatedData = $request->validate([
-            'name_en' => 'required|string|max:255',
-            'name_ar' => 'required|string|max:255',
-            'description_en' => 'required|string|max:255',
-            'description_ar' => 'required|string|max:255',
-            'category_id' => 'required|integer|exists:categories,id',
-            'subscription_id' => 'required|integer|exists:subscriptions,id',
-            'zone_id' => 'required|integer|exists:zones,id',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            "lat" => 'required',
-            "lon" => 'required',
-            "mobile" => 'required|unique:stores',
-            "email" => 'required|email|unique:stores',
+    $validatedData['admin_id'] = Auth::guard('admin')->user()->id;
 
-        ]);
+    // Handle image upload
+    if ($request->hasFile('features.image')) {
+        $images = $request->file('features.image');
 
-        $validatedData['admin_id'] = Auth::guard('admin')->user()->id;
-        if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            $avatar = $request->file('image');
-            $image = upload($avatar);
-            $validatedData['image'] = $image;
-        }
-        $store = Store::create($validatedData);
-        Session::flash('success', 'Store created successfully');
-        return back();
+            $imagePath = upload($images);
+            $validatedData['image'] = $imagePath;
+
     }
 
+    // Handle text
+    if ($request->has('features.text')) {
+        $validatedData['contacts'] = $request->features['text']?? null;
+    }
+
+    // Handle video
+    if ($request->hasFile('features.video')) {
+        $video = $request->file('features.video');
+        $videoPath = upload($video);
+        $validatedData['video'] = $videoPath;
+    }
+
+    // Create the store record
+    $store = Store::create($validatedData);
+
+    // Handle multiple images
+    if ($request->hasFile('features.multiImage')) {
+        foreach ($request->file('features.multiImage') as $file) {
+            $path = upload($file);
+            $store->gallaries()->create(['image' => $path]);
+        }
+    }
+
+    Session::flash('success', 'Store created successfully');
+    return back();
+}
 
     /**
      * Display the specified resource.

@@ -18,6 +18,7 @@ class CategoryResource extends JsonResource
 
             'icon'=> asset('images/' . $this->image),
             'stores' => StoreResource::collection($this->stores),
+            'tags'=> $this->tags->name_en,
         ]);
     }
 }

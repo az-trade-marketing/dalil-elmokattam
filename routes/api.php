@@ -62,7 +62,9 @@ Route::get('tags', [GeneralController::class, 'all_tags']);
 ///stores
 Route::get('stores', [GeneralController::class, 'all_stores']);
 Route::get('/stores/search', [GeneralController::class, 'search']);
-////////helps&support
+////////helps&support //////contacts
 Route::post('contact-us', [GeneralController::class, 'ContactUs']);
+Route::post('help-support', [GeneralController::class, 'helpSupport']);
+
 ////////add store
 Route::post('add-store', [StoreController::class, 'store']);

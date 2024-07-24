@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AreaResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CategoryResource;
+use App\Models\HelpSupport;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,7 +24,7 @@ class GeneralController extends Controller
      */
     public function all_categories()
     {
-       $cats= Category::with('stores')->get();
+       $cats= Category::with('stores','tags')->get();
       return response()->json(['isSuccess' => true, 'data' =>CategoryResource::collection($cats)], 200);
     }
     public function all_tags()
@@ -59,6 +60,7 @@ class GeneralController extends Controller
     public function ContactUs(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'store_id' =>'required',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:contacts',
             'phone' => 'required|string|max:20|unique:contacts',
@@ -70,6 +72,24 @@ class GeneralController extends Controller
         }
 
         Contact::create($request->all());
+
+        return response()->json(['isSuccess' => true, 'message' => 'Sent successfully'], 200);
+    }
+    public function helpSupport(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:contacts',
+            'phone' => 'required|string|max:20|unique:contacts',
+            'message' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['isSuccess' => false, 'message' => $validator->errors()], 422);
+        }
+
+        HelpSupport::create($request->all());
 
         return response()->json(['isSuccess' => true, 'message' => 'Sent successfully'], 200);
     }
