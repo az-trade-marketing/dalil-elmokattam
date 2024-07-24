@@ -31,6 +31,7 @@ if (!function_exists('upload')) {
         return $imageName;
     }
 }
+
 /////////////function to location
 function pointStringToCoordinates($pointString)
 {

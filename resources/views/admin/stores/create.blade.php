@@ -32,7 +32,15 @@
     <div class="card mb-5 mb-xl-10">
         <!--begin::Card body-->
         <div class="card-body border-top p-9">
-
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
             <div class="kt_account_profile_details" class="collapse show">
                 <form action="{{ route('stores.store') }}" method="POST"
                     enctype="multipart/form-data" id="create">
@@ -504,16 +512,16 @@ $('.delivery-time').on('click',function (){
                         let inputElement;
                         switch (feature.type) {
                             case 'image':
-                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="image/*" class="form-control form-control-solid">`;
+                                inputElement = `<input type="file" name="features[${feature.type}]" accept="image/*" class="form-control form-control-solid">`;
                                 break;
                             case 'multiImage':
-                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="image/*" multiple class="form-control form-control-solid">`;
+                                inputElement = `<input type="file" name="features[${feature.type}][]" accept="image/*" multiple class="form-control form-control-solid">`;
                                 break;
                             case 'vidio':
-                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="video/*" class="form-control form-control-solid">`;
+                                inputElement = `<input type="file" name="features[${feature.type}]" accept="video/*" class="form-control form-control-solid">`;
                                 break;
                             case 'text':
-                                inputElement = `<textarea name="features[${feature.id}][]" class="form-control form-control-solid"></textarea>`;
+                                inputElement = `<textarea name="features[${feature.type}]" class="form-control form-control-solid"></textarea>`;
                                 break;
                         }
 

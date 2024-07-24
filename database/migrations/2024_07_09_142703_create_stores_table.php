@@ -25,11 +25,8 @@ return new class extends Migration
             $table->boolean('status')->default(true);
             $table->string('lat')->nullable();
             $table->string('lon')->nullable();
-            $table->string('mobile')->nullable()->nullable();
-            $table->string('phone')->unique()->nullable();
-            $table->string('image')->nullable();
-            $table->string('vidio')->nullable();
-            $table->string('contacts')->nullable();
+            $table->string('mobile')->unique()->nullable();
+            $table->string('email')->unique()->nullable();
             $table->timestamps();
         });
     }

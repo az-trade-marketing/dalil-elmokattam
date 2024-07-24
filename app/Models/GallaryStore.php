@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class GallaryStore extends Model
 {
     use HasFactory;
-    protected $guarde = [];
+    protected $guarded = ['id'];
 
 }
