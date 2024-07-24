@@ -185,7 +185,7 @@
                             </div>
                         </div>
 
-                        <div class="row mb-10">
+                        {{-- <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.upload') }}</label>
                             </div>
@@ -236,7 +236,7 @@
 
                             <div class="form-text">{{ __( 'category.allowed_file_types:_png,_jpg,_jpeg.' ) }}</div>
                             </div>
-                        </div>
+                        </div> --}}
 
 
 
