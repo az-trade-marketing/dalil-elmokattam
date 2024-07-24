@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('store_name');
             $table->string('owner_name');
             $table->string('phone_number');
-            $table->string('area');
+            $table->foreignId('zone_id')->references('id')->on('zones');
             $table->text('comments')->nullable();
             $table->timestamps();
         });

@@ -59,6 +59,7 @@ Route::group([
 ////////categories&tags
 Route::get('categories', [GeneralController::class, 'all_categories']);
 Route::get('tags', [GeneralController::class, 'all_tags']);
+Route::get('zones', [GeneralController::class, 'all_zones']);
 ///stores
 Route::get('stores', [GeneralController::class, 'all_stores']);
 Route::get('/stores/search', [GeneralController::class, 'search']);

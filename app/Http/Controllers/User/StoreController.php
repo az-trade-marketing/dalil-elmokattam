@@ -40,7 +40,7 @@ class StoreController extends Controller
             'store_name' => 'required|string|max:255',
             'owner_name' => 'required|string|max:255',
             'phone_number' => 'required|string|max:20',
-            'area' => 'required|string|max:255',
+            'zone_id' => 'required',
             'comments' => 'nullable|string'
         ]);
 

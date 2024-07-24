@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Tag;
 use App\Models\Area;
+use App\Models\Zone;
 use App\Models\Store;
 use App\Models\Contact;
 use App\Models\Category;
+use App\Models\HelpSupport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AreaResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CategoryResource;
-use App\Models\HelpSupport;
-use App\Models\Tag;
 use Illuminate\Support\Facades\Validator;
 
 class GeneralController extends Controller
@@ -32,7 +33,11 @@ class GeneralController extends Controller
        $tags= Tag::with('categories')->get();
       return response()->json(['isSuccess' => true, 'data' =>$tags], 200);
     }
-
+    public function all_zones()
+    {
+       $zones= Zone::all();
+      return response()->json(['isSuccess' => true, 'data' =>$zones], 200);
+    }
     public function search(Request $request)
     {
         $query = Store::query();
@@ -62,7 +67,7 @@ class GeneralController extends Controller
         $validator = Validator::make($request->all(), [
             'store_id' =>'required',
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:contacts',
+            'email' => 'required|string|max:255|unique:contacts',
             'phone' => 'required|string|max:20|unique:contacts',
             'message' => 'nullable|string',
         ]);
@@ -80,8 +85,8 @@ class GeneralController extends Controller
         $validator = Validator::make($request->all(), [
 
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:contacts',
-            'phone' => 'required|string|max:20|unique:contacts',
+            'email' => 'required|string|max:255|unique:help_supports',
+            'phone' => 'required|string|max:20|unique:help_supports',
             'message' => 'nullable|string',
         ]);
 
