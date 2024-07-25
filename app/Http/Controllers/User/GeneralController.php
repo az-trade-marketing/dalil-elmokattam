@@ -41,23 +41,21 @@ class GeneralController extends Controller
     public function search(Request $request)
     {
         $query = Store::query();
+        $searchTerm = $request->input('key');
 
-        // Check if 'name' search term is provided
-        if ($request->has('name')) {
-            $query->where('name', 'like', '%' . $request->input('name') . '%');
-        }
+        // Check if the 'key' search term is provided
+        if ($searchTerm) {
+            // Search in store name
+            $query->orWhere('name', 'like', '%' . $searchTerm . '%');
 
-        // Check if 'category' search term is provided
-        if ($request->has('category')) {
-            $query->whereHas('category', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->input('category') . '%');
+            // Search in category name
+            $query->orWhereHas('category', function ($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%');
             });
-        }
 
-        // Check if 'tag' search term is provided
-        if ($request->has('tag')) {
-            $query->whereHas('tags', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->input('tag') . '%');
+            // Search in tag names
+            $query->orWhereHas('tags', function ($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%');
             });
         }
 
