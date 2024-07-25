@@ -41,6 +41,36 @@ class GeneralController extends Controller
     public function search(Request $request)
     {
         $query = Store::query();
+
+        // Check if 'name' search term is provided
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+
+        // Check if 'category' search term is provided
+        if ($request->has('category')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->input('category') . '%');
+            });
+        }
+
+        // Check if 'tag' search term is provided
+        if ($request->has('tag')) {
+            $query->whereHas('tags', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->input('tag') . '%');
+            });
+        }
+
+        $stores = $query->get();
+
+        return response()->json([
+            'isSuccess' => true,
+            'data' => $stores
+        ]);
+    }
+    public function filter(Request $request)
+    {
+        $query = Store::query();
         if ($request->has('categories') && !empty($request->categories)) {
             $query->whereHas('categories', function($q) use ($request) {
                 $q->whereIn('categories.id', $request->categories);

@@ -12,7 +12,10 @@ class Store extends Model
     public function category() {
         return $this->belongsTo(Category::class);
     }
-
+    public function tags()
+    {
+        return $this->hasManyThrough(Tag::class, 'category_tags', 'store_id', 'id', 'id', 'tag_id');
+    }
     public function zones() {
         return $this->belongsTo(Zone::class,'zone_id');
     }
@@ -35,8 +38,5 @@ class Store extends Model
     public function subscription() {
         return $this->belongsTo(Subscription::class);
     }
-    public function tags()
-    {
-        return $this->hasManyThrough(Tag::class, 'category_tags', 'store_id', 'id', 'id', 'tag_id');
-    }
+
 }

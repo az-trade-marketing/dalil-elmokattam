@@ -63,6 +63,7 @@ Route::get('zones', [GeneralController::class, 'all_zones']);
 ///stores
 Route::get('stores', [GeneralController::class, 'all_stores']);
 Route::get('/stores/search', [GeneralController::class, 'search']);
+Route::get('/stores/filter', [GeneralController::class, 'filter']);
 ////////helps&support //////contacts
 Route::post('contact-us', [GeneralController::class, 'ContactUs']);
 Route::post('help-support', [GeneralController::class, 'helpSupport']);

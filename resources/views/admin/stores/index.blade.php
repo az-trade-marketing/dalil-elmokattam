@@ -14,7 +14,7 @@
                         <span class="bullet bg-gray-500 w-5px h-2px"></span>
                     </li>
                     <li class="breadcrumb-item text-muted">{{ __("admin.stores") }}</li>
-                   
+
                 </ul>
             </div>
         </div>
@@ -37,7 +37,7 @@
                             <a href="{{ url("admin/stores/create") }}" class="btn btn-primary"> <i class="ki-duotone ki-plus fs-2"></i>{{ __("admin.add") . ' '.__("admin.stores") }} </a>
                             <!--end::Add user-->
                         </div>
-                       
+
                         {{-- modal for adding  --}}
                         <div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true">
                             <!--begin::Modal dialog-->
@@ -86,10 +86,10 @@
                                                 </button>
                                             </div>
                                         </form>
-                                        
+
                                         <!--end::Form-->
                                     </div>
-                                    
+
                                     <!--end::Modal body-->
                                 </div>
                                 <!--end::Modal content-->
@@ -115,7 +115,7 @@
                           </tr>
                         </thead>
                         <tbody class="list country_table">
-                
+
                         </tbody>
                       </table>
                     <!--end::Table-->
@@ -185,7 +185,7 @@
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'get',
-                    dataType: 'text', 
+                    dataType: 'text',
                     url: "/admin/stores/" + item_id,
                     success: function(response) {
                         try {
