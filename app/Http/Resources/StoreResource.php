@@ -14,15 +14,34 @@ class StoreResource extends JsonResource
      */
     public function toArray($request)
     {
-        $ratingSum = $this->reviews->sum('rating');
-        return array_merge(parent::toArray($request), [
-            'id' => $this->id,
-            'cat_name'=>app()->getLocale() == 'ar' ? $this->category->name_ar : $this->category->name_en,
-            'image' => asset('images/' . $this->image),
-            'rating' => $ratingSum,
-            'reviews' => ReviewsResource::collection($this->reviews),
-            'zone_name' => app()->getLocale() == 'ar' ? $this->zones->name_ar : $this->zones->name_en,
 
-        ]);
-    }
+            $ratingSum = $this->reviews->sum('rating');
+
+            $response = [
+                'id' => $this->id,
+                'cat_name' => app()->getLocale() == 'ar' ? $this->category->name_ar : $this->category->name_en,
+                'rating' => $ratingSum,
+                'reviews' => ReviewsResource::collection($this->reviews),
+                'zone_name' => app()->getLocale() == 'ar' ? $this->zones->name_ar : $this->zones->name_en,
+            ];
+
+            // Conditionally add keys if they are not null
+            if ($this->image) {
+                $response['image'] = asset('images/' . $this->image);
+            }
+
+            if ($this->gallaries->isNotEmpty()) {
+                $response['gallaries'] = $this->gallaries->map(function ($image) {
+                    return asset('images/' . $image->image);
+                })->toArray();
+            }
+
+            if ($this->vidio) {
+                $response['vidio'] = asset('images/' . $this->vidio);
+            }
+
+            return array_merge(parent::toArray($request), $response);
+        }
+
+
 }
