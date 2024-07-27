@@ -124,8 +124,8 @@ class GeneralController extends Controller
         $validator = Validator::make($request->all(), [
             'store_id' =>'required',
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255|unique:contacts',
-            'phone' => 'required|string|max:20|unique:contacts',
+            'email' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
             'message' => 'nullable|string',
         ]);
 
@@ -142,8 +142,8 @@ class GeneralController extends Controller
         $validator = Validator::make($request->all(), [
 
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255|unique:help_supports',
-            'phone' => 'required|string|max:20|unique:help_supports',
+            'email' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
             'message' => 'nullable|string',
         ]);
 
