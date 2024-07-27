@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GallaryStore extends Model
 {
     use HasFactory;
-    protected $guarded = ['id'];
+    protected $fillable = ['store_id', 'image'];
 
+    protected $table = 'gallary_stores'; //
 }

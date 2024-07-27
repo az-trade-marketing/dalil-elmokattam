@@ -215,9 +215,9 @@
                                     <div class="col-lg-9">
                                         <div class="mb-5">
                                             <input type="file" name="video" class="form-control form-control-solid" />
-                                            @if ($store->video)
+                                            @if ($store->vidio)
                                                 <video controls class="mt-2" style="max-width: 300px;">
-                                                    <source src="{{ asset('images/' . $store->video) }}" type="video/mp4">
+                                                    <source src="{{ asset('images/' . $store->vidio) }}" type="video/mp4">
                                                     Your browser does not support the video tag.
                                                 </video>
                                             @endif
@@ -233,7 +233,7 @@
                                             <input type="file" name="multiimage[]" class="form-control form-control-solid" multiple />
                                             @if ($store->gallaries)
                                                 @foreach ($store->gallaries as $image)
-                                                    <img src="{{ asset('images/' . $image) }}" alt="store multiimage"
+                                                    <img src="{{ asset('images/' .$image) }}" alt="store multiimage"
                                                         class="mt-2" style="max-width: 100px; margin-right: 10px;">
                                                 @endforeach
                                             @endif
