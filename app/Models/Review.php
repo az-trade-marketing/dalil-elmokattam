@@ -18,4 +18,5 @@ class Review extends Model
     protected $casts = [
         'id'=>'string',
     ];
+
 }

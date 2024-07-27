@@ -17,11 +17,12 @@ class StoreResource extends JsonResource
         $ratingSum = $this->reviews->sum('rating');
         return array_merge(parent::toArray($request), [
             'id' => $this->id,
-            'name' => $this->name,
-            'reviews' => ReviewsResource::collection($this->reviews),
+            'cat_name'=>app()->getLocale() == 'ar' ? $this->category->name_ar : $this->category->name_en,
             'image' => asset('images/' . $this->image),
             'rating' => $ratingSum,
-            'zones'=> $this->zones->name_en,
+            'reviews' => ReviewsResource::collection($this->reviews),
+            'zone_name' => app()->getLocale() == 'ar' ? $this->zones->name_ar : $this->zones->name_en,
+
         ]);
     }
 }

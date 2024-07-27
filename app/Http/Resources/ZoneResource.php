@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryResource extends JsonResource
+class ZoneResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,13 +14,15 @@ class CategoryResource extends JsonResource
      */
     public function toArray($request)
     {
-         $locale = app()->getLocale();
-        return array_merge(parent::toArray($request), [
-            'icon'=> asset('images/' . $this->image),
+        $locale = app()->getLocale();
+
+        $newAttributes = [
             'stores' => StoreResource::collection($this->stores),
-            'tags'=>$this->tags->map(function ($tag) use ($locale) {
-                return $locale == 'ar' ? $tag->name_ar : $tag->name_en;
-            }),
-        ]);
+        ];
+        $existingAttributes = parent::toArray($request);
+
+        unset($existingAttributes['name_en'], $existingAttributes['name_ar']);
+        return array_merge($existingAttributes,$newAttributes);
+
     }
 }

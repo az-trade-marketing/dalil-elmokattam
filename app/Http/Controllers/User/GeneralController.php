@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Models\Tag;
-use App\Models\Area;
-use App\Models\Zone;
-use App\Models\Store;
+use App\ModelApi\Tag;
+use App\ModelApi\Zone;
+use App\ModelApi\Store;
 use App\Models\Contact;
-use App\Models\Category;
+use App\ModelApi\Category;
 use App\Models\HelpSupport;
 use Illuminate\Http\Request;
+use App\Http\Resources\TagResource;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AreaResource;
+use App\Http\Resources\ZoneResource;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
@@ -31,31 +31,38 @@ class GeneralController extends Controller
     public function all_tags()
     {
        $tags= Tag::with('categories')->get();
-      return response()->json(['isSuccess' => true, 'data' =>$tags], 200);
+      return response()->json(['isSuccess' => true, 'data' =>TagResource::collection($tags)], 200);
     }
     public function all_zones()
     {
-       $zones= Zone::all();
-      return response()->json(['isSuccess' => true, 'data' =>$zones], 200);
+       $zones= Zone::with('stores')->get();
+      return response()->json(['isSuccess' => true, 'data' =>ZoneResource::collection($zones)], 200);
     }
     public function search(Request $request)
     {
         $query = Store::query();
-        $searchTerm = $request->input('key');
-
-        // Check if the 'key' search term is provided
+        $searchTerm = $request->input('key'); // The search term passed as a parameter
         if ($searchTerm) {
-            // Search in store name
-            $query->orWhere('name', 'like', '%' . $searchTerm . '%');
-
-            // Search in category name
-            $query->orWhereHas('category', function ($q) use ($searchTerm) {
-                $q->where('name', 'like', '%' . $searchTerm . '%');
+            // Search in store name (Arabic and English)
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name_ar', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('name_en', 'like', '%' . $searchTerm . '%');
             });
 
-            // Search in tag names
-            $query->orWhereHas('tags', function ($q) use ($searchTerm) {
-                $q->where('name', 'like', '%' . $searchTerm . '%');
+            // Search in category name (Arabic and English)
+            $query->orWhereHas('category', function ($q) use ($searchTerm) {
+                $q->where(function ($q) use ($searchTerm) {
+                    $q->where('name_ar', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('name_en', 'like', '%' . $searchTerm . '%');
+                });
+            });
+
+            // Search in tag names (Arabic and English)
+            $query->orWhereHas('category.tags', function ($q) use ($searchTerm) {
+                $q->where(function ($q) use ($searchTerm) {
+                    $q->where('name_ar', 'like', '%' . $searchTerm . '%')
+                      ->orWhere('name_en', 'like', '%' . $searchTerm . '%');
+                });
             });
         }
 
@@ -63,31 +70,53 @@ class GeneralController extends Controller
 
         return response()->json([
             'isSuccess' => true,
-            'data' => $stores
+            'data' => StoreResource::collection( $stores )
         ]);
     }
+
     public function filter(Request $request)
     {
         $query = Store::query();
+
+        // Filter by category names (Arabic and English)
         if ($request->has('categories') && !empty($request->categories)) {
-            $query->whereHas('categories', function($q) use ($request) {
-                $q->whereIn('categories.id', $request->categories);
+            $categories = $request->categories;
+            $query->whereHas('categories', function($q) use ($categories) {
+                $q->where(function($q) use ($categories) {
+                    foreach ($categories as $category) {
+                        $q->orWhere('categories.name_ar', 'like', '%' . $category . '%')
+                          ->orWhere('categories.name_en', 'like', '%' . $category . '%');
+                    }
+                });
             });
         }
+
+        // Filter by tag names (Arabic and English)
         if ($request->has('tags') && !empty($request->tags)) {
-            $query->whereHas('categories.tags', function($q) use ($request) {
-                $q->whereIn('tags.id', $request->tags);
+            $tags = $request->tags;
+            $query->whereHas('category.tags', function($q) use ($tags) {
+                $q->where(function($q) use ($tags) {
+                    foreach ($tags as $tag) {
+                        $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
+                          ->orWhere('tags.name_en', 'like', '%' . $tag . '%');
+                    }
+                });
             });
         }
+
+        // Retrieve the filtered stores
         $stores = $query->get();
+
+        // Return the response
         return response()->json([
             'isSuccess' => true,
-            'data' => $stores
+            'data' => StoreResource::collection( $stores )
         ]);
     }
+
     public function all_stores()
     {
-       $stores= Store::with('category','zones','reviews','subscription')->get();
+       $stores= Store::with('category','zones','reviews','subscription','category.tags')->get();
       return response()->json(['isSuccess' => true, 'data' =>StoreResource::collection($stores)], 200);
     }
     public function ContactUs(Request $request)

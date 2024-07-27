@@ -1,14 +1,21 @@
 <?php
 
-namespace App\Models;
+namespace App\ModelApi;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Admin;
+use App\Models\Report;
+use App\Models\Review;
+use App\Models\Favorite;
+use App\Models\GallaryStore;
+use App\Models\Subscription;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Store extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $appends = ['name'];
     public function category() {
         return $this->belongsTo(Category::class);
     }
@@ -43,4 +50,12 @@ class Store extends Model
         return $this->belongsTo(Subscription::class);
     }
 
+    public function  getNameAttribute()
+    {
+        if (app()->getLocale() == 'ar') {
+            return $this->name_ar;
+        } else {
+            return $this->name_en;
+        }
+    }
 }
