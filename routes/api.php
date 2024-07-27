@@ -55,6 +55,8 @@ Route::group([
     Route::post('/favorit', [FavoriteController::class, 'store']);
     Route::post('/update-favorit', [FavoriteController::class, 'update']);
     Route::get('/user-favorits', [FavoriteController::class, 'index']);
+    ////////////
+    Route::get('/get-near-stores', [GeneralController::class, 'getNearbyStores']);
 });
 ////////categories&tags
 Route::get('categories', [GeneralController::class, 'all_categories']);
@@ -64,6 +66,7 @@ Route::get('zones', [GeneralController::class, 'all_zones']);
 Route::get('stores', [GeneralController::class, 'all_stores']);
 Route::get('/stores/search', [GeneralController::class, 'search']);
 Route::get('/stores/filter', [GeneralController::class, 'filter']);
+
 ////////helps&support //////contacts
 Route::post('contact-us', [GeneralController::class, 'ContactUs']);
 Route::post('help-support', [GeneralController::class, 'helpSupport']);

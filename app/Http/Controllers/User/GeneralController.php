@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\TagResource;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ZoneResource;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
@@ -155,69 +156,14 @@ class GeneralController extends Controller
 
         return response()->json(['isSuccess' => true, 'message' => 'Sent successfully'], 200);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    public function getNearbyStores($radius = 10)
+{
+    $userLatitude =  Auth::guard('users')->user()->lat;
+    $userLongitude =  Auth::guard('users')->user()->lon;
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    return Store::selectRaw("*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance", [$userLatitude, $userLongitude, $userLatitude])
+        ->having('distance', '<=', $radius)
+        ->orderBy('distance')
+        ->get();
+}
 }
