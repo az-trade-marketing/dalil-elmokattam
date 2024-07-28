@@ -109,7 +109,7 @@
                             <!--end:Menu sub-->
                         </div>
 
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "categories" || Request::segment(2) == "features" || Request::segment(2) == "tags" || Request::segment(2) == "stores") ? "hover show" :""  }}">
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "categories" || Request::segment(2) == "features" || Request::segment(2) == "tags") ? "hover show" :""  }}">
                             <!--begin:Menu link-->
                             <span class="menu-link">
                                 <span class="menu-icon">
@@ -155,51 +155,50 @@
                                     </a>
                                 </div>
                                 @endcan
-                                <!-- Stores section -->
-                                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "stores" ) ? "hover show" :""  }}">
-                                    <!--begin:Menu link-->
-                                    <span class="menu-link">
-                                        <span class="menu-icon">
-                                            <i class="ki-duotone ki-address-book fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                            </i>
-                                        </span>
-                                        <span class="menu-title">{{ __("admin.stores") }}</span>
-                                        <span class="menu-arrow"></span>
-                                    </span>
-                                    <!--end:Menu link-->
-                                    <!--begin:Menu sub-->
-                                    <div class="menu-sub menu-sub-accordion">
-                                        <div class="menu-item">
-                                            <a class="menu-link {{ (Request::segment(2) == "stores" && !Request::is('admin/stores/create')) ? "active" :""  }}" href="{{ url("admin/stores") }}">
-                                                <span class="menu-bullet">
-                                                    <span class="bullet bullet-dot"></span>
-                                                </span>
-                                                <span class="menu-title">{{ __("admin.stores") }}</span>
-                                            </a>
-                                        </div>
-                                        @can("features Read")
-                                        <div class="menu-item">
-                                            <a class="menu-link {{ (Request::segment(2) == "stores" && Request::is('admin/stores/create')) ? "active" :""  }}" href="{{ url("admin/stores/create") }}">
-                                                <span class="menu-bullet">
-                                                    <span class="bullet bullet-dot"></span>
-                                                </span>
-                                                <span class="menu-title">{{ __("admin.add_stores") }}</span>
-                                            </a>
-                                        </div>
-                                        @endcan
-                                    </div>
-                                    <!--end:Menu sub-->
-                                </div>
-                                <!-- End Stores section -->
                             </div>
                             <!--end:Menu sub-->
 
                         </div>
 
 
+                        @can("Active Store Read")
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "stores" ) ? "hover show" :""  }}">
+                            <!--begin:Menu link-->
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-address-book fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">{{ __("admin.stores") }}</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <!--end:Menu link-->
+                            <!--begin:Menu sub-->
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <a class="menu-link {{ (Request::segment(2) == "stores" && !Request::is('admin/stores/create')) ? "active" :""  }}" href="{{ url("admin/stores") }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __("admin.stores") }}</span>
+                                    </a>
+                                </div>
+                                @can("Active Store Create")
+                                    <div class="menu-item">
+                                        <a class="menu-link {{ (Request::segment(2) == "stores" && Request::is('admin/stores/create')) ? "active" :""  }}" href="{{ url("admin/stores/create") }}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">{{ __("admin.add_stores") }}</span>
+                                        </a>
+                                    </div>
+                                @endcan
+                            </div>
+                        </div>
+                        @endcan
 
 
 

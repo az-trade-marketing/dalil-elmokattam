@@ -2,7 +2,7 @@
 <html class="h-full" data-theme="true" data-theme-mode="light" lang="en">
 <head><base href="../../../../">
     <title>
-        Metronic - Tailwind CSS Sign In
+        {{ __("admin.appName") }}
     </title>
     <meta charset="utf-8"/>
     <meta content="follow, index" name="robots"/>
@@ -12,20 +12,20 @@
     <meta content="@keenthemes" name="twitter:site"/>
     <meta content="@keenthemes" name="twitter:creator"/>
     <meta content="summary_large_image" name="twitter:card"/>
-    <meta content="Metronic - Tailwind CSS Sign In" name="twitter:title"/>
+    <meta content="{{ __("admin.appName") }}" name="twitter:title"/>
     <meta content="Sign in page using Tailwind CSS" name="twitter:description"/>
     <meta content="{{ asset('assets/media/app/og-image.png') }}" name="twitter:image"/>
     <meta content="https://keenthemes.com/metronic" property="og:url"/>
     <meta content="en_US" property="og:locale"/>
     <meta content="website" property="og:type"/>
     <meta content="@keenthemes" property="og:site_name"/>
-    <meta content="Metronic - Tailwind CSS Sign In" property="og:title"/>
+    <meta content="{{ __("admin.appName") }}" property="og:title"/>
     <meta content="Sign in page using Tailwind CSS" property="og:description"/>
     <meta content="{{ asset('assets/media/app/og-image.png') }}" property="og:image"/>
     <link href="{{ asset('assets/media/app/apple-touch-icon.png') }}" rel="apple-touch-icon" sizes="180x180"/>
-    <link href="{{ asset('assets/media/app/favicon-32x32.png') }}" rel="icon" sizes="32x32" type="image/png"/>
-    <link href="{{ asset('assets/media/app/favicon-16x16.png') }}" rel="icon" sizes="16x16" type="image/png"/>
-    <link href="{{ asset('assets/media/app/favicon.ico') }}" rel="shortcut icon"/>
+    <link href="{{ asset("images/Icon.png")}}" rel="icon" sizes="32x32" type="image/png"/>
+    <link href="{{ asset("images/Icon.png")}}" rel="icon" sizes="16x16" type="image/png"/>
+    <link href="{{ asset("images/Icon.png")}}" rel="shortcut icon"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
     <link href="{{ asset('assets/vendors/apexcharts/apexcharts.css') }}" rel="stylesheet"/>
     <link href="{{ asset('assets/vendors/keenicons/styles.bundle.css') }}" rel="stylesheet"/>
@@ -76,13 +76,18 @@
 
             </div>
 
-
             <div class="flex flex-col gap-1">
                 <label class="form-label text-gray-900">
                     Email
                 </label>
-                <input class="input" placeholder="email@email.com" type="email"  name="email" />
+                <input class="input @error('email') border-red-500 @enderror" placeholder="email@email.com" type="email" name="email" />
+                @error('email')
+                    <div class="text-red-500 text-xs mt-1" style="color: red;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
+            
             <div class="flex flex-col gap-1">
                 <div class="flex items-center justify-between gap-1">
                     <label class="form-label text-gray-900">
@@ -93,13 +98,19 @@
                     </a>
                 </div>
                 <label class="input" data-toggle-password="true">
-                    <input  placeholder="Enter Password" type="password" name="password"/>
-                    <button class="btn btn-icon" data-toggle-password-trigger="true">
+                    <input class="@error('password') border-red-500 @enderror" placeholder="Enter Password" type="password" name="password"/>
+                    <button type="button" class="btn btn-icon" data-toggle-password-trigger="true">
                         <i class="ki-filled ki-eye text-gray-500 toggle-password-active:hidden"></i>
                         <i class="ki-filled ki-eye-slash text-gray-500 hidden toggle-password-active:block"></i>
                     </button>
                 </label>
+                @error('password')
+                    <div class="text-red-500 text-xs mt-1" style="color: red;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
+            
             <label class="checkbox-group">
                 <input class="form-check-input" type="checkbox" id="remember-me" name="remember" />
                 <span class="checkbox-label">
