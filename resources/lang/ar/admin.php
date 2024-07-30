@@ -106,6 +106,8 @@ return [
     'color'=>'لون',
     'lat' => 'latitude',
     'lon' => 'longitude',
-
+    'firstname' => 'اسم أول',
+    'lastname' => 'اسم العائلة',
+    'phone' => 'الهاتف',
 
 ];

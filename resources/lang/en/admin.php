@@ -103,4 +103,7 @@ return [
     'color'=>'color',
     'lat' => 'latitude',
     'lon' => 'longitude',
+    'firstname'=>'firstname',
+    'lastname'=>'lastname',
+    'phone'=>'phone'
 ];

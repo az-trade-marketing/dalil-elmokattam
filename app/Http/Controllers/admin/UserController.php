@@ -20,8 +20,8 @@ class UserController extends Controller
     {
         $results = User::orderByDesc("id")->get();
         $permissions = [
-            'canCreate' => auth()->user()->can('user Create'),
-            'canDelete' => auth()->user()->can('user Delete')
+            'canCreate' => auth()->user()->can('admin Create'),
+            'canDelete' => auth()->user()->can('admin Delete')
         ];
         return response()->json([
             'data' => $results,
@@ -71,8 +71,11 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'required|min:6',
+            'phone' => 'required|unique:users,phone,' . $id,
         ]);
         $user = User::findOrFail($id);
         $user->update([
@@ -85,6 +88,13 @@ class UserController extends Controller
         ]);
         if ($request->filled('password')) {
             $user->password =  Hash::make($request->get('password'));
+        }
+        if ($request->hasFile('photo') && $request->file('photo') != '') {
+            $avatar = $request->file('photo');
+            $photo = upload($avatar);
+            $user->photo = $photo;
+        }else{
+            $user->photo = $user->photo;
         }
         $user->save();
         return response()->json(["message" => "success"], 200);

@@ -70,7 +70,7 @@ class FavoriteController extends Controller
             return response()->json(['success' => false, 'error' => 'Empty fields'],422);
         }
 
-        $favorit =  Favorite::where('user_id', Auth::guard('users')->user()->id)->first();
+        $favorit =  Favorite::where('user_id', Auth::guard('users')->user()->id)->where('store_id', $request->store_id)->first();
         if( $favorit){
             $favorit->delete();
         }else{

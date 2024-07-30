@@ -72,6 +72,7 @@ class StoreController extends Controller
      */
 public function store(Request $request)
 {
+    // dd($request->all());
     // Validate input data
     $validatedData = $request->validate([
         'name_en' => 'required|string|max:255',
@@ -104,10 +105,10 @@ public function store(Request $request)
     }
 
     // Handle video
-    if ($request->hasFile('features.video')) {
-        $video = $request->file('features.video');
+    if ($request->hasFile('features.vidio')) {
+        $video = $request->file('features.vidio');
         $videoPath = upload($video);
-        $validatedData['video'] = $videoPath;
+        $validatedData['vidio'] = $videoPath;
     }
 
     // Create the store record

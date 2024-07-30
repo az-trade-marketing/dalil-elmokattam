@@ -91,9 +91,9 @@
                                                         </div>
 
                                                         <div class="col-md-6 fv-row">
-                                                            <label class="required fw-semibold fs-6 mb-2">{{ __("admin.mobile") }}</label>
-                                                            <input type="text" name="mobile"  class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.mobile") }}" />
-                                                            <div class="invalid-feedback text-danger" id="error-mobile"></div>
+                                                            <label class="required fw-semibold fs-6 mb-2">{{ __("admin.phone") }}</label>
+                                                            <input type="text" name="phone"  class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.phone") }}" />
+                                                            <div class="invalid-feedback text-danger" id="error-phone"></div>
                                                         </div>
                                                         <div class="col-md-12 fv-row">
                                                             <label class="required fw-semibold fs-6 mb-2">{{ __("admin.photo") }}</label>
@@ -173,9 +173,9 @@
                                                         <div class="invalid-feedback text-danger" id="error-edit-password" style="display: none;"></div>
                                                     </div>
                                                     <div class="fv-row mb-7">
-                                                        <label class="required fw-semibold fs-6 mb-2">{{ __("admin.mobile") }}</label>
-                                                        <input type="text" name="mobile" id="editMobile" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.mobile") }}" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-mobile" style="display: none;"></div>
+                                                        <label class="required fw-semibold fs-6 mb-2">{{ __("admin.phone") }}</label>
+                                                        <input type="text" name="phone" id="editPhone" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.phone") }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-phone" style="display: none;"></div>
                                                     </div>
                                                     <div class="fv-row mb-7">
                                                         <label class="required fw-semibold fs-6 mb-2">{{ __("admin.photo") }}</label>
@@ -218,7 +218,7 @@
                             <th>#</th>
                             <th>{{__('admin.firstname')}}</th>
                             <th>{{__('admin.lastname')}}</th>
-                            <th>{{__('admin.mobile')}}</th>
+                            <th>{{__('admin.phone')}}</th>
                             <th>{{__('admin.email')}}</th>
                             <th>{{__('admin.action')}}</th>
                           </tr>
@@ -261,7 +261,7 @@
                         $.each(response.data, function(key, item) {
                             var firstname = item.firstname ?? '';
                             var lastname = item.lastname ?? '';
-                            var mobile = item.mobile ?? '';
+                            var phone = item.phone ?? '';
                             var email = item.email ?? '';
                             var actionButtons = '';
                             if (permissions.canCreate) {
@@ -282,7 +282,7 @@
                                     <h6 class="m-0 p-0">'+lastname+'</h6>\
                                 </td>\
                                 <td class="align-middle name text-nowrap">\
-                                    <h6 class="m-0 p-0">'+mobile+'</h6>\
+                                    <h6 class="m-0 p-0">'+phone+'</h6>\
                                 </td>\
                                 <td class="align-middle name text-nowrap">\
                                     <h6 class="m-0 p-0">'+email+'</h6>\
@@ -315,7 +315,7 @@
                         $('#editFirstName').val(response.firstname);
                         $('#editLastName').val(response.lastname);
                         $('#editEmail').val(response.email);
-                        $('#editMobile').val(response.mobile);
+                        $('#editPhone').val(response.phone);
                         // Clear previous selections
                         $('.permission-checkbox').prop('checked', false);
                         $('#kt_modal_edit_user').modal('show');
