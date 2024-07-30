@@ -12,7 +12,7 @@
 		<meta property="og:site_name" content="Metronic by Keenthemes" />
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 
-		<link rel="canonical" href="http://preview.keenthemes.comindex.html" />
+		<link rel="canonical" href="{{ asset("images/Icon.png")}}" />
 		<link rel="shortcut icon" href="{{ asset("images/Icon.png")}}" />
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		{{-- <link href="{{ asset("admin/assets/plugins/custom/datatables/datatables.bundle.css")}}" rel="stylesheet" type="text/css" /> --}}
