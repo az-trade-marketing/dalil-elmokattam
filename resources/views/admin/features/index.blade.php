@@ -220,262 +220,257 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+    $(document).ready(function() {
+    get_data();
 
-            get_data()
-            function get_data(){
-                $.ajax({
-                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    type:'GET',
-                    dataType :'json',
-                    url :"/admin/features-get-data",
-                    success:function(response){
-                        $('.country_table').html('');
-                        $('#myTable').DataTable().destroy();
-                        $('#myTable tbody').empty();
-                        var select_type = $('.level_select option:selected').val();
-                        $.each(response ,function(key , item){
-                                var name_ar = item.name_ar ?? '';
-                                var name_en = item.name_en ?? '';
-                                var type = item.type ?? '';
+    function get_data() {
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            type: 'GET',
+            dataType: 'json',
+            url: "/admin/features-get-data",
+            success: function(response) {
+                $('.country_table').html('');
+                $('#myTable').DataTable().destroy();
+                $('#myTable tbody').empty();
 
-                                $('.country_table').append('<tr>\
-                                        <td class=" text-center pt-4">\
-                                            <h6>#'+item.id+'</h6> \
-                                        </td>\
-                                        <td class="align-middle name text-nowrap ">\
-                                            <h6 class="m-0 p-0">'+name_ar+' </h6>  \
-                                        </td>\
-                                        <td class="align-middle name text-nowrap ">\
-                                            <h6 class="m-0 p-0">'+name_en+' </h6>  \
-                                        </td>\
-                                          <td class="align-middle type text-nowrap">\
-                                        <h6 class="m-0 p-0">'+type+'</h6>\
-                                       </td>\
-                                        <td class="min-w-100 pt-3">\
-                                            <div class="d-flex">\
-                                                <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'" >{{ __("admin.edit") }}</a>\
-                                                <a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="'+ item.id +'"  value="'+item.id+'">{{ __("admin.delete") }}</a>\
-                                            </div>\
-                                        </td>\
-                                    </tr>\
-                                ')
-                            // }
-                        });
+                $.each(response, function(key, item) {
+                    var name_ar = item.name_ar ?? '';
+                    var name_en = item.name_en ?? '';
+                    var type = item.type ?? '';
 
-                        let table = new DataTable('#myTable');
-                    }
-                })
+                    $('.country_table').append('<tr>\
+                        <td class="text-center pt-4">\
+                            <h6>#' + item.id + '</h6>\
+                        </td>\
+                        <td class="align-middle name text-nowrap">\
+                            <h6 class="m-0 p-0">' + name_ar + '</h6>\
+                        </td>\
+                        <td class="align-middle name text-nowrap">\
+                            <h6 class="m-0 p-0">' + name_en + '</h6>\
+                        </td>\
+                        <td class="align-middle type text-nowrap">\
+                            <h6 class="m-0 p-0">' + type + '</h6>\
+                        </td>\
+                        <td class="min-w-100 pt-3">\
+                            <div class="d-flex">\
+                                <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="' + item.id + '" data-name_ar="' + item.name_ar + '" data-name_en="' + item.name_en + '" data-type="' + item.type + '">{{ __("admin.edit") }}</a>\
+                                <a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="' + item.id + '" value="' + item.id + '">{{ __("admin.delete") }}</a>\
+                            </div>\
+                        </td>\
+                    </tr>');
+                });
+
+                let table = new DataTable('#myTable');
             }
+        });
+    }
 
-            $(document).on('click', '.editButton', function() {
-                var id = $(this).data('id');
-                var nameAr =    $(this).data('name_ar');
-                var nameEn = $(this).data('name_en');
-                var type = $(this).data('type');
+    $(document).on('click', '.editButton', function() {
+        var id = $(this).data('id');
+        var nameAr = $(this).data('name_ar');
+        var nameEn = $(this).data('name_en');
+        var type = $(this).data('type');
 
-                $('#editId').val(id);
-                $('#editNameAr').val(nameAr);
-                $('#editNameEn').val(nameEn);
-                $('#editTypeSelect').val(type).trigger('change');
+        console.log('Edit button clicked');
+        console.log('ID:', id);
+        console.log('Name AR:', nameAr);
+        console.log('Name EN:', nameEn);
+        console.log('Type:', type);
 
-                $('#kt_modal_edit_user').modal('show');
-            });
+        $('#editId').val(id);
+        $('#editNameAr').val(nameAr);
+        $('#editNameEn').val(nameEn);
+        $('#editTypeSelect').val(type).trigger('change');
 
+        $('#kt_modal_edit_user').modal('show');
+    });
 
+    $('#editSubmitButton').on('click', function(e) {
+        e.preventDefault();
 
-            $('#editSubmitButton').on('click', function(e) {
-                e.preventDefault();
+        var formData = new FormData($('#kt_modal_edit_user_form')[0]);
+        var id = $('#editId').val();
 
-                var formData = new FormData($('#kt_modal_edit_user_form')[0]);
-                var id = $('#editId').val();
-
-                $.ajax({
-                    url: '/admin/features/' + id,
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        $('#kt_modal_edit_user').modal('hide');
-                        if (response.message == 'success') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: "{{ __("admin.updatedSuccessfully") }}",
-                                text: '{{ __("admin.updatemes") }}',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-                            get_data();
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.message,
-                            });
-                        }
-                        get_data();
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            var errors = xhr.responseJSON.errors;
-                            for (var field in errors) {
-                                $('#error-' + field).text(errors[field][0]).show();
-                            }
-                        } else {
-                            alert('An error occurred. Please try again.');
-                        }
-
-                        $label.removeClass('d-none');
-                    }
-                });
-            });
-
-            $('#submitButton').on('click', function() {
-                var $button = $(this);
-                var $label = $button.find('.indicator-label');
-                var formData = new FormData($('#kt_modal_add_user_formm')[0]);
-
-                $label.addClass('d-none');
-
-                // Clear previous error messages
-                $('.invalid-feedback').text('');
-
-                $.ajax({
-                    url: '/admin/features',
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        $label.removeClass('d-none');
-                        if (response.message == 'success') {
-                            $('#kt_modal_add_user').modal('hide');
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: "{{ __("admin.addedSuccessfully") }}",
-                                text: '{{ __("admin.updatemes") }}',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-                            get_data();
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.message,
-                            });
-                        }
-                        get_data();
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            var errors = xhr.responseJSON.errors;
-                            for (var field in errors) {
-                                $('#error-' + field).text(errors[field][0]).show();
-                            }
-                        } else {
-                            alert('An error occurred. Please try again.');
-                        }
-
-                        $label.removeClass('d-none');
-                    }
-                });
-            });
-
-            $(document).on('click', '.deleteButton', function() {
-                var item_id = $(this).data('id');
-
-                $.ajax({
-                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    type: 'get',
-                    dataType: 'text',
-                    url: "/admin/features/" + item_id,
-                    success: function(response) {
-                        try {
-                            var jsonResponse = JSON.parse(response);
-
-                            if (jsonResponse.status == 404) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Sorry',
-                                    text: jsonResponse.message,
-                                });
-                            } else {
-                                const swalWithBootstrapButtons = Swal.mixin({
-                                    customClass: {
-                                        confirmButton: 'btn btn-primary',
-                                        cancelButton: 'btn btn-danger'
-                                    },
-                                    buttonsStyling: false
-                                });
-
-                                swalWithBootstrapButtons.fire({
-                                    title: '{{__('admin.isDelete')}} ' + jsonResponse.name_en + ' !!?',
-                                    text: '{{__('admin.revet')}}',
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonText: '{{__('admin.yes')}}',
-                                    cancelButtonText: '{{__('admin.no')}}',
-                                    reverseButtons: true
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        delete_item(jsonResponse.id);
-                                        swalWithBootstrapButtons.fire(
-                                            '{{__('admin.delete')}}',
-                                            '{{__('admin.fileDeleted')}}',
-                                            'success'
-                                        );
-                                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                                        swalWithBootstrapButtons.fire(
-                                            '{{__('admin.cancelled')}}',
-                                            '{{__('admin.fileSave')}}',
-                                            'error'
-                                        );
-                                    }
-                                });
-                            }
-                        } catch (e) {
-                            console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error); // التحقق من وجود أخطاء
-                    }
-                });
-            });
-
-            $(document).on('click', '.deleteButton', function() {
-                var id = $(this).data('id');
-                if (confirm('Are you sure you want to delete this feature?')) {
-                    $.ajax({
-                        url: '/admin/subscription/' + id,
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(response) {
-                            alert('Category deleted successfully!');
-                            get_data();
-                            // قم بتحديث البيانات في الجدول هنا إذا كنت تريد
-                            // مثلاً: location.reload();
-                        },
-                        error: function(xhr) {
-                            alert('An error occurred. Please try again.');
-                        }
+        $.ajax({
+            url: '/admin/features/' + id,
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                $('#kt_modal_edit_user').modal('hide');
+                if (response.message == 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: "{{ __("admin.updatedSuccessfully") }}",
+                        text: '{{ __("admin.updatemes") }}',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                    get_data();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message,
                     });
                 }
-            });
-
-
+                get_data();
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    for (var field in errors) {
+                        $('#error-' + field).text(errors[field][0]).show();
+                    }
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
+            }
         });
+    });
+
+    $('#submitButton').on('click', function() {
+        var $button = $(this);
+        var $label = $button.find('.indicator-label');
+        var formData = new FormData($('#kt_modal_add_user_formm')[0]);
+
+        $label.addClass('d-none');
+
+        // Clear previous error messages
+        $('.invalid-feedback').text('');
+
+        $.ajax({
+            url: '/admin/features',
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                $label.removeClass('d-none');
+                if (response.message == 'success') {
+                    $('#kt_modal_add_user').modal('hide');
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: "{{ __("admin.addedSuccessfully") }}",
+                        text: '{{ __("admin.updatemes") }}',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                    get_data();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message,
+                    });
+                }
+                get_data();
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    for (var field in errors) {
+                        $('#error-' + field).text(errors[field][0]).show();
+                    }
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.deleteButton', function() {
+        var item_id = $(this).data('id');
+
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            type: 'get',
+            dataType: 'text',
+            url: "/admin/features/" + item_id,
+            success: function(response) {
+                try {
+                    var jsonResponse = JSON.parse(response);
+
+                    if (jsonResponse.status == 404) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Sorry',
+                            text: jsonResponse.message,
+                        });
+                    } else {
+                        const swalWithBootstrapButtons = Swal.mixin({
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-danger'
+                            },
+                            buttonsStyling: false
+                        });
+
+                        swalWithBootstrapButtons.fire({
+                            title: '{{__('admin.isDelete')}} ' + jsonResponse.name_en + ' !!?',
+                            text: '{{__('admin.revet')}}',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: '{{__('admin.yes')}}',
+                            cancelButtonText: '{{__('admin.no')}}',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                delete_item(jsonResponse.id);
+                                swalWithBootstrapButtons.fire(
+                                    '{{__('admin.delete')}}',
+                                    '{{__('admin.fileDeleted')}}',
+                                    'success'
+                                );
+                            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                swalWithBootstrapButtons.fire(
+                                    '{{__('admin.cancelled')}}',
+                                    '{{__('admin.fileSave')}}',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error('Parsing Error:', e);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+    $(document).on('click', '.deleteButton', function() {
+        var id = $(this).data('id');
+        if (confirm('Are you sure you want to delete this feature?')) {
+            $.ajax({
+                url: '/admin/subscription/' + id,
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    alert('Category deleted successfully!');
+                    get_data();
+                },
+                error: function(xhr) {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        }
+    });
+});
+
     </script>
 
 
