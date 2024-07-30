@@ -75,45 +75,49 @@ class GeneralController extends Controller
         ]);
     }
 
-    public function filter(Request $request)
-    {
-        $query = Store::query();
+public function filter(Request $request)
+{
+    $query = Store::query();
 
-        // Filter by category names (Arabic and English)
-        if ($request->has('categories') && !empty($request->categories)) {
-            $categories = $request->categories;
-            $query->whereHas('categories', function($q) use ($categories) {
-                $q->where(function($q) use ($categories) {
-                    foreach ($categories as $category) {
-                        $q->orWhere('categories.name_ar', 'like', '%' . $category . '%')
-                          ->orWhere('categories.name_en', 'like', '%' . $category . '%');
-                    }
-                });
+    // Ensure categories are an array
+    $categories = $request->has('categories') ? explode(',', $request->categories) : [];
+    $tags = $request->has('tags') ? explode(',', $request->tags) : [];
+
+    // Filter by category names (Arabic and English)
+    if (!empty($categories)) {
+        $query->whereHas('categories', function($q) use ($categories) {
+            $q->where(function($q) use ($categories) {
+                foreach ($categories as $category) {
+                    $q->orWhere('categories.name_ar', 'like', '%' . $category . '%')
+                      ->orWhere('categories.name_en', 'like', '%' . $category . '%');
+                }
             });
-        }
-
-        // Filter by tag names (Arabic and English)
-        if ($request->has('tags') && !empty($request->tags)) {
-            $tags = $request->tags;
-            $query->whereHas('category.tags', function($q) use ($tags) {
-                $q->where(function($q) use ($tags) {
-                    foreach ($tags as $tag) {
-                        $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
-                          ->orWhere('tags.name_en', 'like', '%' . $tag . '%');
-                    }
-                });
-            });
-        }
-
-        // Retrieve the filtered stores
-        $stores = $query->get();
-
-        // Return the response
-        return response()->json([
-            'isSuccess' => true,
-            'data' => StoreResource::collection( $stores )
-        ]);
+        });
     }
+
+    // Filter by tag names (Arabic and English)
+    if (!empty($tags)) {
+        $query->whereHas('categories.tags', function($q) use ($tags) {
+            $q->where(function($q) use ($tags) {
+                foreach ($tags as $tag) {
+                    $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
+                      ->orWhere('tags.name_en', 'like', '%' . $tag . '%');
+                }
+            });
+        });
+    }
+
+    // Retrieve the filtered stores
+    $stores = $query->get();
+
+    // Return the response
+    return response()->json([
+        'isSuccess' => true,
+        'data' => StoreResource::collection($stores)
+    ]);
+}
+
+
 
     public function all_stores()
     {
@@ -156,14 +160,22 @@ class GeneralController extends Controller
 
         return response()->json(['isSuccess' => true, 'message' => 'Sent successfully'], 200);
     }
-    public function getNearbyStores($radius = 10)
+public function getNearbyStores(Request $request, $radius = 10)
 {
-    $userLatitude =  Auth::guard('users')->user()->lat;
-    $userLongitude =  Auth::guard('users')->user()->lon;
+    $userLatitude = $request->lat;
+    $userLongitude = $request->lon;
 
-    return Store::selectRaw("*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance", [$userLatitude, $userLongitude, $userLatitude])
-        ->having('distance', '<=', $radius)
-        ->orderBy('distance')
-        ->get();
+    $stores = Store::selectRaw("
+        *, ( 6371 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lon ) - radians(?) ) + sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance
+    ", [$userLatitude, $userLongitude, $userLatitude])
+    ->having('distance', '<=', $radius)
+    ->orderBy('distance')
+    ->get();
+   return response()->json([
+        'isSuccess' => true,
+        'data' => StoreResource::collection($stores)
+    ]);
+
 }
+
 }

@@ -16,6 +16,7 @@ class ReviewsResource extends JsonResource
     {
         return  [
             'id' => $this->id,
+             'user_id' => $this->user?->id ?? '',
             'firstname' => $this->user?->firstname ?? '',
             'lastname' => $this->user?->lastname ?? '',
             'photo' => $this->user?->photo ? asset('images/' . $this->user->photo) : '',
