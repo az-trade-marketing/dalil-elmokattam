@@ -233,12 +233,15 @@
                                             <input type="file" name="multiimage[]" class="form-control form-control-solid" multiple />
                                             @if ($store->gallaries)
                                                 @foreach ($store->gallaries as $image)
-                                                    <img src="{{ asset('images/' .$image) }}" alt="store multiimage"
-                                                        class="mt-2" style="max-width: 100px; margin-right: 10px;">
+                                                    <img src="{{ asset('images/' . $image->image) }}" alt="store multiimage"
+                                                         class="mt-2" style="max-width: 100px; margin-right: 10px;">
                                                 @endforeach
                                             @endif
                                         </div>
                                     </div>
+
+
+
                                 </div>
                             </div>
                         </div>
