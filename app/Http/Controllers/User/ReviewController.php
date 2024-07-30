@@ -44,7 +44,7 @@ class ReviewController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'store_id' => 'required|exists:stores,id',
-            'descriptions' => 'nullable|string',
+            'message' => 'nullable|string',
             'rating' => 'required|numeric|min:0|max:10',
         ]);
 
@@ -57,7 +57,7 @@ class ReviewController extends Controller
         $reviews = Review::create([
             'user_id' => Auth::guard('users')->user()->id,
             'store_id' => $request->store_id,
-            'message' => $request->descriptions,
+            'message' => $request->message,
             'rating' => $request->rating,
         ]);
         return response()->json(['isSuccess' => true, 'data' =>  $reviews], 200);
@@ -83,7 +83,7 @@ class ReviewController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'store_id' => 'required|exists:stores,id',
-            'descriptions' => 'nullable|string',
+            'message' => 'nullable|string',
             'rating' => 'required|numeric|min:0|max:10',
         ]);
 
@@ -97,7 +97,7 @@ class ReviewController extends Controller
         $review->update([
             'user_id' => Auth::guard('users')->user()->id,
             'store_id' => $request->store_id,
-            'descriptions' => $request->descriptions,
+            'message' => $request->message,
             'rating' => $request->rating,
         ]);
         return response()->json(['isSuccess' => true, 'data' =>   $review], 200);

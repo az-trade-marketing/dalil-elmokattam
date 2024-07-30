@@ -14,13 +14,14 @@ class StoreResource extends JsonResource
      */
     public function toArray($request)
     {
+        $reviews = $this->reviews;
 
-            $ratingSum = $this->reviews->sum('rating');
-
+           // Calculate the average rating
+              $averageRating = $reviews->isEmpty() ? 0 : $reviews->avg('rating');
             $response = [
                 'id' => $this->id,
                 'cat_name' => app()->getLocale() == 'ar' ? $this->category->name_ar : $this->category->name_en,
-                'rating' => $ratingSum,
+                'rating' =>  $averageRating,
                 'reviews' => ReviewsResource::collection($this->reviews),
                 'zone_name' => app()->getLocale() == 'ar' ? $this->zones->name_ar : $this->zones->name_en,
             ];
