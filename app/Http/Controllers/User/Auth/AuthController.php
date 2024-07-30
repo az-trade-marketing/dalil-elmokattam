@@ -24,28 +24,29 @@ class AuthController extends Controller
 
 
     public function signin(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => ['required'],
-            'password' => ['required'],
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['success' => "false", 'error' => $validator->errors()], 422);
-        }
-
-        $email = $request->email;
-        $password = $request->password;
-
-        if (Auth::guard('users')->attempt(['email' => $email, 'password' => $password])) {
-
-            $user = User::where('email', $email)->first();
-            $token = JWTAuth::fromUser($user);
-            return response()->json(['success' => "true", 'user' => $user, 'token' => $token], 200);
-        }
-        $error = json_decode('{"failed": "you do not have access"}', true);
-        return response()->json(['success' => "false", 'error' => $error], 403);
+    if ($validator->fails()) {
+        return response()->json(['success' => "false", 'error' => $validator->errors()], 422);
     }
+
+    $email = $request->email;
+    $password = $request->password;
+
+    if (Auth::guard('users')->attempt(['email' => $email, 'password' => $password])) {
+        $user = User::where('email', $email)->first();
+        $token = JWTAuth::fromUser($user);
+        return response()->json(['success' => "true", 'user' => $user, 'token' => $token], 200);
+    }
+
+    $error = json_decode('{"failed": "you do not have access"}', true);
+    return response()->json(['success' => "false", 'error' => $error], 403);
+}
+
     public function signup(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -129,35 +130,60 @@ class AuthController extends Controller
     //     ], 200);
     // }
 
-    public function resetPassword(Request $request)
-    {
-
+   public function resetPassword(Request $request)
+{
+    // Validate the request input
     $request->validate([
         'otp' => 'required',
         'newPassword' => 'required|min:8',
     ]);
 
+    // Fetch the PasswordReset entry by token
     $passwordReset = PasswordReset::where('token', $request->otp)->first();
 
+    // Check if the password reset token is invalid
     if (!$passwordReset) {
         return response()->json([
             'message' => 'This password reset otp is invalid.'
         ], 404);
     }
-    $user = User::where('email', $passwordReset->email)->first();
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'We can\'t find a user with that e-mail address.'
-            ], 404);
-        }
-        $user->password = Hash::make($request->newPassword);
-        $user->save();
-        $passwordReset->delete();
+    // Log the entire PasswordReset object
+    Log::info('PasswordReset object: ', $passwordReset->toArray());
+
+    // Retrieve the email from the PasswordReset object
+    $email = $passwordReset->email;
+
+    // Log the raw email value
+    Log::info('Retrieved email before dd: ' . var_export($email, true));
+
+
+
+    // Find the user by email
+    $user = User::where('email', $email)->first();
+
+    // Check if the user was found
+    if (!$user) {
         return response()->json([
-            'message' => 'Your password has been reset successfully.'
-        ]);
+            'message' => 'We can\'t find a user with that e-mail address.'
+        ], 404);
     }
+
+    // Update the user's password
+    $user->password = Hash::make($request->newPassword);
+    $user->save();
+
+    // Log the updated password hash
+    Log::info('Updated password hash for user ' . $user->email . ': ' . $user->password);
+
+    // Delete the password reset entry
+    $passwordReset->delete();
+
+    return response()->json([
+        'message' => 'Your password has been reset successfully.'
+    ]);
+}
+
     public function changePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
