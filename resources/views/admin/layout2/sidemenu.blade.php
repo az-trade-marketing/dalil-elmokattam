@@ -161,7 +161,7 @@
                         </div>
 
 
-                        @can("Active Store Read")
+                        @can("stores Read")
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "stores" ) ? "hover show" :""  }}">
                             <!--begin:Menu link-->
                             <span class="menu-link">
@@ -186,7 +186,7 @@
                                         <span class="menu-title">{{ __("admin.stores") }}</span>
                                     </a>
                                 </div>
-                                @can("Active Store Create")
+                                @can("stores Create")
                                     <div class="menu-item">
                                         <a class="menu-link {{ (Request::segment(2) == "stores" && Request::is('admin/stores/create')) ? "active" :""  }}" href="{{ url("admin/stores/create") }}">
                                             <span class="menu-bullet">
