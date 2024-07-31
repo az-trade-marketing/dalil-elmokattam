@@ -20,8 +20,8 @@ class UserController extends Controller
     {
         $results = User::orderByDesc("id")->get();
         $permissions = [
-            'canCreate' => auth()->user()->can('admin Create'),
-            'canDelete' => auth()->user()->can('admin Delete')
+            'canCreate' => auth()->user()->can('users Create'),
+            'canDelete' => auth()->user()->can('users Delete')
         ];
         return response()->json([
             'data' => $results,

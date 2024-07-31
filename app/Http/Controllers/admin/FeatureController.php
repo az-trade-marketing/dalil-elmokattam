@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Feature;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -119,17 +120,21 @@ class FeatureController extends Controller
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function destroy($id)
-   {
-    try {
-        $feature = Feature::findOrFail($id);
-        $feature->delete();
-        return response()->json(["message" => "success"], 200);
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return response()->json(["error" => "Permission not found"], 404);
-    } catch (\Exception $e) {
-        return response()->json(["error" => $e->getMessage()], 500);
+    public function destroy($id)
+    {
+        try {
+            $feature = Feature::findOrFail($id);
+            // Delete related records in feature_subscriptions
+            DB::table('feature_subscriptions')->where('feature_id', $id)->delete();
+            // Now delete the feature
+            $feature->delete();
+            return response()->json(["message" => "success"], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(["error" => "Feature not found"], 404);
+        } catch (\Exception $e) {
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
     }
 
-   }
+
 }

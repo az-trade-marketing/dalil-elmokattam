@@ -23,7 +23,7 @@ class AuthController extends Controller
 {
 
 
-    public function signin(Request $request)
+public function signin(Request $request)
 {
     $validator = Validator::make($request->all(), [
         'email' => ['required', 'email'],
@@ -37,15 +37,27 @@ class AuthController extends Controller
     $email = $request->email;
     $password = $request->password;
 
-    if (Auth::guard('users')->attempt(['email' => $email, 'password' => $password])) {
-        $user = User::where('email', $email)->first();
-        $token = JWTAuth::fromUser($user);
-        return response()->json(['success' => "true", 'user' => $user, 'token' => $token], 200);
+    // Check if the email exists
+    $user = User::where('email', $email)->first();
+    if (!$user) {
+        return response()->json(['success' => "false", 'message' => 'The email address is incorrect'], 403);
     }
 
-    $error = json_decode('{"failed": "you do not have access"}', true);
-    return response()->json(['success' => "false", 'error' => $error], 403);
+    // Check if the password is correct
+    if (!Auth::guard('users')->attempt(['email' => $email, 'password' => $password])) {
+        return response()->json(['success' => "false", 'message' => 'The password is incorrect'], 403);
+    }
+
+    $token = JWTAuth::fromUser($user);
+     return response()->json([
+            'success' => true,
+            'message' => 'logged in successfully',
+            'user' => $user,
+            'token' => $token,
+        ], 200);
+
 }
+
 
     public function signup(Request $request)
     {
@@ -135,7 +147,7 @@ class AuthController extends Controller
     // Validate the request input
     $request->validate([
         'otp' => 'required',
-        'newPassword' => 'required|min:8',
+        'newPassword' => 'required|min:6',
     ]);
 
     // Fetch the PasswordReset entry by token

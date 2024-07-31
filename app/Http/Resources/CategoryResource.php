@@ -18,9 +18,7 @@ class CategoryResource extends JsonResource
         return array_merge(parent::toArray($request), [
             'icon'=> asset('images/' . $this->image),
             'stores' => StoreResource::collection($this->stores),
-            'tags'=>$this->tags->map(function ($tag) use ($locale) {
-                return $locale == 'ar' ? $tag->name_ar : $tag->name_en;
-            }),
+
         ]);
     }
 }

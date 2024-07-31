@@ -77,27 +77,34 @@ class GeneralController extends Controller
 
 public function filter(Request $request)
 {
-    $query = Store::query();
+    // التأكد من أن التصنيفات والعلامات هي مصفوفات
+    $categories = $request->input('categories', []);
+    $tags = $request->input('tags', []);
 
-    // Ensure categories are an array
-    $categories = $request->has('categories') ? explode(',', $request->categories) : [];
-    $tags = $request->has('tags') ? explode(',', $request->tags) : [];
-
-    // Filter by category names (Arabic and English)
-    if (!empty($categories)) {
-        $query->whereHas('categories', function($q) use ($categories) {
-            $q->where(function($q) use ($categories) {
-                foreach ($categories as $category) {
-                    $q->orWhere('categories.name_ar', 'like', '%' . $category . '%')
-                      ->orWhere('categories.name_en', 'like', '%' . $category . '%');
-                }
-            });
-        });
+    // إذا لم يتم إرسال أي تصنيفات، لا يتم جلب أي متاجر
+    if (empty($categories)) {
+        return response()->json([
+            'isSuccess' => false,
+            'data' => [],
+            'message' => 'No categories provided.'
+        ]);
     }
 
-    // Filter by tag names (Arabic and English)
+    $query = Store::query();
+
+    // فلترة بناءً على التصنيفات
+    $query->whereHas('category', function($q) use ($categories) {
+        $q->where(function($q) use ($categories) {
+            foreach ($categories as $category) {
+                $q->orWhere('categories.name_ar', 'like', '%' . $category . '%')
+                  ->orWhere('categories.name_en', 'like', '%' . $category . '%');
+            }
+        });
+    });
+
+    // فلترة بناءً على العلامات إذا كانت موجودة
     if (!empty($tags)) {
-        $query->whereHas('categories.tags', function($q) use ($tags) {
+        $query->whereHas('category.tags', function($q) use ($tags) {
             $q->where(function($q) use ($tags) {
                 foreach ($tags as $tag) {
                     $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
@@ -107,15 +114,25 @@ public function filter(Request $request)
         });
     }
 
-    // Retrieve the filtered stores
+    // جلب المتاجر التي تم فلترتها
     $stores = $query->get();
 
-    // Return the response
+    // إذا لم يتم العثور على أي متاجر، إرجاع استجابة فارغة
+    if ($stores->isEmpty()) {
+        return response()->json([
+            'isSuccess' => false,
+            'data' => [],
+            'message' => 'No stores found for the provided categories.'
+        ]);
+    }
+
+    // إرجاع الاستجابة مع المتاجر المطابقة
     return response()->json([
         'isSuccess' => true,
         'data' => StoreResource::collection($stores)
     ]);
 }
+
 
 
 
