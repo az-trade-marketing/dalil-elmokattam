@@ -57,6 +57,12 @@
                                     <div class="invalid-feedback text-danger" id="error-name_en" style="display: none;"></div>
                                 </div>
                             </div>
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">{{ __("admin.logo") }} </label>
+                                <input type="file" name="image" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.logo") }} " />
+                                <div class="invalid-feedback text-danger" id="error-image" style="display: none;"></div>
+                                <div class="text-muted fs-7 mb-7">ex:jpeg,png,jpg  height:3000 width:3000</div>
+                            </div>
                             <div class="d-flex flex-stack" style="justify-content: flex-start!important;">
                                 <div class="fw-semibold me-5">
                                     <label class="fs-6">{{ __("admin.map") }}:</label>
@@ -77,7 +83,7 @@
                                 <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">{{ __("admin.discard") }}</button>
                                 <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
                                     <span class="indicator-label">{{ __("admin.save") }}</span>
-                                    <span class="indicator-progress">Please wait... 
+                                    <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
                             </div>
@@ -239,7 +245,7 @@ let polygons = [];
         document.getElementById("coordinates").style.height = (document.getElementById("coordinates").scrollHeight) + "px";
     }
 
-    
+
     $('#zone_form').on('submit', function () {
             let formData = new FormData(this);
             $.ajaxSetup({
@@ -279,7 +285,7 @@ let polygons = [];
                     }
                 },
                 error: function(xhr) {
-                    if (xhr.status === 422) { 
+                    if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
                         for (var field in errors) {
 

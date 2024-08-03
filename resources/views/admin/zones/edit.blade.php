@@ -44,6 +44,15 @@
 
                 <div class="card-body py-4">
                     <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+                       @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                         <form action="{{route('zones.update', $zone->id)}}" method="post" id="zone_form" class="shadow--card">
                             @csrf
                             @method("PUT")
@@ -57,6 +66,18 @@
                                     <label class="required fs-6 fw-semibold mb-2">{{ __("admin.name_en") }}</label>
                                     <input type="text" class="form-control form-control-solid" placeholder="{{ __("admin.name_en") }}" name="name_en"  value="{{ @$zone->name_en }}" />
                                     @error("name_en") <div class="invalid-feedback text-danger"> {{ $message }}</div> @enderror
+                                </div>
+
+                            </div>
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">{{ __("admin.logo") }}</label>
+                                <input type="file" name="image" id="editImage" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.logo") }}" />
+                                <div class="invalid-feedback text-danger" id="error-edit-logo" style="display: none;"></div>
+                                <div class="text-muted fs-7 mb-7">ex:jpeg,png,jpg height:3000 width:3000</div>
+                            </div>
+                            <div class="fv-row mb-7">
+                                <div >
+                                    <img src="{{ asset('images/'.$zone->image) }}" alt="" id="editImagePreview" width="100" height="100">
                                 </div>
                             </div>
                             <div class="d-flex flex-stack" style="justify-content: flex-start!important;">
@@ -79,7 +100,7 @@
                                 <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">{{ __("admin.discard") }}</button>
                                 <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
                                     <span class="indicator-label">{{ __("admin.save") }}</span>
-                                    <span class="indicator-progress">Please wait... 
+                                    <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
                             </div>
@@ -304,7 +325,13 @@
     $('#reset_btn').click(function(){
         location.reload(true);
     })
+    @if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
 
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
 </script>
 @endsection
 @endsection

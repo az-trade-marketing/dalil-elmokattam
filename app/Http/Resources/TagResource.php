@@ -20,8 +20,6 @@ class TagResource extends JsonResource
             'category' => CategoryResource::collection($this->categories),
         ];
         $existingAttributes = parent::toArray($request);
-
-        unset($existingAttributes['name_en'], $existingAttributes['name_ar']);
         return array_merge($newAttributes,$existingAttributes);
 
     }

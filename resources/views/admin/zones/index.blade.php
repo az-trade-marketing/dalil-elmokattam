@@ -15,7 +15,7 @@
                         <span class="bullet bg-gray-500 w-5px h-2px"></span>
                     </li>
                     <li class="breadcrumb-item text-muted">{{ __("admin.zones") }}</li>
-                   
+
                 </ul>
             </div>
         </div>
@@ -80,11 +80,13 @@
                             <th>#</th>
                             <th>{{__('admin.name_ar')}}</th>
                             <th>{{__('admin.name_en')}}</th>
+                            <th>{{__('admin.logo')}}</th>
+
                             <th>{{__('admin.action')}}</th>
                           </tr>
                         </thead>
                         <tbody class="list country_table">
-                            
+
                         </tbody>
                       </table>
                     <!--end::Table-->
@@ -103,7 +105,7 @@
 
 @section('js')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
 <script>
     $(document).ready(function() {
 
@@ -124,6 +126,7 @@
                     $.each(response.data ,function(key , item){
                             var name_ar = item.name_ar ?? '';
                             var name_en = item.name_en ?? '';
+                            var country_img = item.image ?  item.image : '{{asset("/assets/img/user.png")}}' ;
                             var actionButtons = '';
                             if (permissions.canCreate) {
                                 actionButtons += '<a href="/admin/zones/' + item.id + '/edit" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2">{{ __("admin.edit") }}</a>';
@@ -131,7 +134,7 @@
                             if (permissions.canDelete) {
                                 actionButtons += '<a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="'+ item.id +'"  value="'+item.id+'">{{ __("admin.delete") }}</a>';
                             }
-                            
+
                             $('.country_table').append('<tr>\
                                     <td class=" text-center pt-4">\
                                         <h6>#'+item.id+'</h6> \
@@ -142,6 +145,11 @@
                                     <td class="align-middle name text-nowrap ">\
                                         <h6 class="m-0 p-0">'+name_en+' </h6>  \
                                     </td>\
+                                      <td class="text-center min-w-100">\
+                                    <div class="avatar avatar-3xl">\
+                                        <img src="{{ image_path()."/" }}'+country_img+'" alt="" height="100" width="100"/>\
+                                    </div>\
+                                   </td>\
                                     <td class="min-w-100 pt-3">\
                                         <div class="d-flex">'+ actionButtons +'</div>\
                                     </td>\
@@ -165,7 +173,7 @@
             $('#kt_modal_edit_user').modal('show');
         });
 
-        
+
 
         $('#editSubmitButton').on('click', function(e) {
             e.preventDefault();
@@ -191,7 +199,7 @@
                             timer: 1500,
                             showConfirmButton: false
                         });
-                        get_data(); 
+                        get_data();
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -202,7 +210,7 @@
                     get_data();
                 },
                 error: function(xhr) {
-                    if (xhr.status === 422) { 
+                    if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
                         for (var field in errors) {
                             $('#error-edit' + field).text(errors[field][0]).show();
@@ -246,7 +254,7 @@
                             timer: 1500,
                             showConfirmButton: false
                         });
-                        get_data(); 
+                        get_data();
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -257,7 +265,7 @@
                     get_data();
                 },
                 error: function(xhr) {
-                    if (xhr.status === 422) { 
+                    if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
                         for (var field in errors) {
                             $('#error-' + field).text(errors[field][0]).show();
@@ -277,7 +285,7 @@
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 type: 'get',
-                dataType: 'text', 
+                dataType: 'text',
                 url: "/admin/zones/" + item_id,
                 success: function(response) {
                     try {

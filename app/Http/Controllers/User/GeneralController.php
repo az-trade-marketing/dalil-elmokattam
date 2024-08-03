@@ -39,41 +39,46 @@ class GeneralController extends Controller
        $zones= Zone::with('stores')->get();
       return response()->json(['isSuccess' => true, 'data' =>ZoneResource::collection($zones)], 200);
     }
-    public function search(Request $request)
-    {
-        $query = Store::query();
-        $searchTerm = $request->input('key'); // The search term passed as a parameter
-        if ($searchTerm) {
-            // Search in store name (Arabic and English)
-            $query->where(function ($q) use ($searchTerm) {
+  public function search(Request $request)
+{
+    $query = Store::query();
+    $searchTerm = $request->input('key'); // The search term passed as a parameter
+    if ($searchTerm) {
+        // Search in store name (Arabic and English)
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('name_ar', 'like', '%' . $searchTerm . '%')
+              ->orWhere('name_en', 'like', '%' . $searchTerm . '%')
+              ->orWhere('description_en', 'like', '%' . $searchTerm . '%')
+              ->orWhere('description_ar', 'like', '%' . $searchTerm . '%');
+        });
+
+        // Search in category name (Arabic and English)
+        $query->orWhereHas('category', function ($q) use ($searchTerm) {
+            $q->where(function ($q) use ($searchTerm) {
+                $q->where('name_ar', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('name_en', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description_en', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description_ar', 'like', '%' . $searchTerm . '%');
+            });
+        });
+
+        // Search in tag names (Arabic and English)
+        $query->orWhereHas('category.tags', function ($q) use ($searchTerm) {
+            $q->where(function ($q) use ($searchTerm) {
                 $q->where('name_ar', 'like', '%' . $searchTerm . '%')
                   ->orWhere('name_en', 'like', '%' . $searchTerm . '%');
             });
-
-            // Search in category name (Arabic and English)
-            $query->orWhereHas('category', function ($q) use ($searchTerm) {
-                $q->where(function ($q) use ($searchTerm) {
-                    $q->where('name_ar', 'like', '%' . $searchTerm . '%')
-                      ->orWhere('name_en', 'like', '%' . $searchTerm . '%');
-                });
-            });
-
-            // Search in tag names (Arabic and English)
-            $query->orWhereHas('category.tags', function ($q) use ($searchTerm) {
-                $q->where(function ($q) use ($searchTerm) {
-                    $q->where('name_ar', 'like', '%' . $searchTerm . '%')
-                      ->orWhere('name_en', 'like', '%' . $searchTerm . '%');
-                });
-            });
-        }
-
-        $stores = $query->get();
-
-        return response()->json([
-            'isSuccess' => true,
-            'data' => StoreResource::collection( $stores )
-        ]);
+        });
     }
+
+    $stores = $query->get();
+
+    return response()->json([
+        'isSuccess' => true,
+        'data' => StoreResource::collection($stores)
+    ]);
+}
+
 
 public function filter(Request $request)
 {
@@ -81,37 +86,51 @@ public function filter(Request $request)
     $categories = $request->input('categories', []);
     $tags = $request->input('tags', []);
 
-    // إذا لم يتم إرسال أي تصنيفات، لا يتم جلب أي متاجر
-    if (empty($categories)) {
+    // إذا لم يتم إرسال أي تصنيفات أو علامات، لا يتم جلب أي متاجر
+    if (empty($categories) && empty($tags)) {
         return response()->json([
             'isSuccess' => false,
             'data' => [],
-            'message' => 'No categories provided.'
+            'message' => 'No categories and tags provided.'
         ]);
     }
 
     $query = Store::query();
 
-    // فلترة بناءً على التصنيفات
-    $query->whereHas('category', function($q) use ($categories) {
-        $q->where(function($q) use ($categories) {
-            foreach ($categories as $category) {
-                $q->orWhere('categories.name_ar', 'like', '%' . $category . '%')
-                  ->orWhere('categories.name_en', 'like', '%' . $category . '%');
-            }
-        });
-    });
-
-    // فلترة بناءً على العلامات إذا كانت موجودة
-    if (!empty($tags)) {
-        $query->whereHas('category.tags', function($q) use ($tags) {
-            $q->where(function($q) use ($tags) {
-                foreach ($tags as $tag) {
-                    $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
-                      ->orWhere('tags.name_en', 'like', '%' . $tag . '%');
+    // فلترة بناءً على التصنيفات والعلامات ضمن التصنيفات
+    if (!empty($categories)) {
+        $query->whereHas('category', function($q) use ($categories, $tags) {
+            $q->where(function($q) use ($categories) {
+                foreach ($categories as $category) {
+                    $q->orWhere('categories.name_ar', 'like', '%' . $category . '%')
+                      ->orWhere('categories.name_en', 'like', '%' . $category . '%');
                 }
             });
+
+            // إذا كانت العلامات موجودة، فلترة ضمن التصنيفات
+            if (!empty($tags)) {
+                $q->whereHas('tags', function($q) use ($tags) {
+                    $q->where(function($q) use ($tags) {
+                        foreach ($tags as $tag) {
+                            $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
+                              ->orWhere('tags.name_en', 'like', '%' . $tag . '%');
+                        }
+                    });
+                });
+            }
         });
+    } else {
+        // إذا لم تكن هناك تصنيفات ولكن هناك علامات، فلترة بناءً على العلامات فقط
+        if (!empty($tags)) {
+            $query->whereHas('category.tags', function($q) use ($tags) {
+                $q->where(function($q) use ($tags) {
+                    foreach ($tags as $tag) {
+                        $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
+                          ->orWhere('tags.name_en', 'like', '%' . $tag . '%');
+                    }
+                });
+            });
+        }
     }
 
     // جلب المتاجر التي تم فلترتها
@@ -122,7 +141,7 @@ public function filter(Request $request)
         return response()->json([
             'isSuccess' => false,
             'data' => [],
-            'message' => 'No stores found for the provided categories.'
+            'message' => 'No stores found for the provided categories and tags.'
         ]);
     }
 
@@ -132,6 +151,8 @@ public function filter(Request $request)
         'data' => StoreResource::collection($stores)
     ]);
 }
+
+
 
 
 

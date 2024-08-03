@@ -18,10 +18,9 @@ class ZoneResource extends JsonResource
 
         $newAttributes = [
             'stores' => StoreResource::collection($this->stores),
+            'image'=> asset('images/' . $this->image),
         ];
         $existingAttributes = parent::toArray($request);
-
-        unset($existingAttributes['name_en'], $existingAttributes['name_ar']);
         return array_merge($existingAttributes,$newAttributes);
 
     }
