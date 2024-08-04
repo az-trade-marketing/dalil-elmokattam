@@ -12,14 +12,7 @@ class Store extends Model
     public function category() {
         return $this->belongsTo(Category::class);
     }
-    // public function tags()
-    // {
-    //     return $this->belongsToMany(Tag::class, 'category_tags', 'store_id', 'tag_id');
-    // }
-    // public function tags()
-    // {
-    //     return $this->hasManyThrough(Tag::class, 'category_tags', 'store_id', 'id', 'id', 'tag_id');
-    // }
+
     public function zones() {
         return $this->belongsTo(Zone::class,'zone_id');
     }
@@ -42,5 +35,30 @@ class Store extends Model
     public function subscription() {
         return $this->belongsTo(Subscription::class);
     }
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::deleting(function ($store) {
+            // Delete all related gallaries
+            $store->gallaries()->each(function ($gallary) {
+                $gallary->delete();
+            });
+
+            // Delete all related reviews
+            $store->reviews()->each(function ($review) {
+                $review->delete();
+            });
+
+            // Delete all related favorites
+            $store->favorites()->each(function ($favorite) {
+                $favorite->delete();
+            });
+
+            // Delete all related reports
+            $store->reports()->each(function ($report) {
+                $report->delete();
+            });
+        });
+    }
 }

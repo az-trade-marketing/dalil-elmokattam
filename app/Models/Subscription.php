@@ -15,4 +15,13 @@ class Subscription extends Model
     public function features() {
         return $this->belongsToMany(Feature::class,'feature_subscriptions');
     }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($sub) {
+
+            $sub->features()->detach();
+        });
+    }
 }

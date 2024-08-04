@@ -18,4 +18,15 @@ class Zone extends Model
     public function stores() {
         return $this->hasMany(Store::class);
     }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($zone) {
+            // Delete all related stores before deleting the zone
+            $zone->stores()->each(function ($store) {
+                $store->delete();
+            });
+        });
+    }
 }

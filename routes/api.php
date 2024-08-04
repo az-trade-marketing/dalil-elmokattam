@@ -30,11 +30,13 @@ Route::group([
     Route::post('signup', [AuthController::class, 'signup']);
     Route::post('password/forget', [AuthController::class, 'forgetPassword']);
     Route::post('password/reset', [AuthController::class, 'resetPassword']);
+    Route::post('login/social', [AuthController::class, 'handleSocialLogin']);
+
    ////////////////socialite
-    Route::get('login/facebook', [SocialAuthController::class, 'redirectToFacebook'])->name('login.facebook');
-    Route::get('login/facebook/callback', [SocialAuthController::class, 'handleFacebookCallback']);
-    Route::get('login/google', [SocialAuthController::class, 'redirectToGoogle'])->name('login.google');
-    Route::get('login/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);
+    // Route::get('login/facebook', [SocialAuthController::class, 'redirectToFacebook'])->name('login.facebook');
+    // Route::get('login/facebook/callback', [SocialAuthController::class, 'handleFacebookCallback']);
+    // Route::get('login/google', [SocialAuthController::class, 'redirectToGoogle'])->name('login.google');
+    // Route::get('login/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);
 });
 
 Route::group([

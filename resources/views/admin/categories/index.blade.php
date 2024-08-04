@@ -513,101 +513,90 @@
             });
 
             $(document).on('click', '.deleteButton', function() {
-                var item_id = $(this).data('id');
-
-                $.ajax({
-                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    type: 'get',
-                    dataType: 'text',
-                    url: "/admin/categories/" + item_id,
-                    success: function(response) {
-                        try {
-                            var jsonResponse = JSON.parse(response);
-
-                            if (jsonResponse.status == 404) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Sorry',
-                                    text: jsonResponse.message,
-                                });
-                            } else {
-                                const swalWithBootstrapButtons = Swal.mixin({
-                                    customClass: {
-                                        confirmButton: 'btn btn-primary',
-                                        cancelButton: 'btn btn-danger'
-                                    },
-                                    buttonsStyling: false
-                                });
-
-                                swalWithBootstrapButtons.fire({
-                                    title: '{{__('admin.isDelete')}} ' + jsonResponse.category.name_en + ' !!?',
-                                    text: '{{__('admin.revet')}}',
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonText: '{{__('admin.yes')}}',
-                                    cancelButtonText: '{{__('admin.no')}}',
-                                    reverseButtons: true
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        delete_item(jsonResponse.category.id);
-                                        swalWithBootstrapButtons.fire(
-                                            '{{__('admin.delete')}}',
-                                            '{{__('admin.fileDeleted')}}',
-                                            'success'
-                                        );
-                                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                                        swalWithBootstrapButtons.fire(
-                                            '{{__('admin.cancelled')}}',
-                                            '{{__('admin.fileSave')}}',
-                                            'error'
-                                        );
-                                    }
-                                });
-                            }
-                        } catch (e) {
-                            console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error); // التحقق من وجود أخطاء
-                    }
-                });
-            });
-
-     function delete_item(item_id) {
-    console.log('Deleting item ID:', item_id); // للتحقق من ID العنصر المراد حذفه
+    var item_id = $(this).data('id');
 
     $.ajax({
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        type: 'delete',
-        dataType: 'text',
+        type: 'GET',
+        dataType: 'json',
         url: "/admin/categories/" + item_id,
-        data: {
-            id: item_id
-        },
         success: function(response) {
-            try {
-                var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
-                console.log('Delete Response:', jsonResponse); // تحقق من استجابة الحذف
+            if (response.status == 404) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Sorry',
+                    text: response.message,
+                });
+            } else {
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                });
 
-                if (jsonResponse.status == 200) {
-                    Swal.fire(
-                        '{{__('admin.delete')}}',
-                        '{{__('admin.fileDeleted')}}',
-                        'success'
-                    );
-                    get_data();
-                } else {
-                    // Handle other statuses if needed
-                }
-            } catch (e) {
-                console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
+                swalWithBootstrapButtons.fire({
+                    title: '{{__('admin.isDelete')}} ' + response.category.name_en + ' !!?',
+                    text: '{{__('admin.revet')}}',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '{{__('admin.yes')}}',
+                    cancelButtonText: '{{__('admin.no')}}',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        delete_item(response.category.id);
+                        swalWithBootstrapButtons.fire(
+                            '{{__('admin.delete')}}',
+                            '{{__('admin.fileDeleted')}}',
+                            'success'
+                        );
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        swalWithBootstrapButtons.fire(
+                            '{{__('admin.cancelled')}}',
+                            '{{__('admin.fileSave')}}',
+                            'error'
+                        );
+                    }
+                });
             }
         },
         error: function(xhr, status, error) {
-            console.error('Delete Error:', error); // التحقق من وجود أخطاء في الحذف
+            console.error('Error:', error);
+        }
+    });
+});
 
-            // Handle specific error messages based on the status code
+function delete_item(item_id) {
+    console.log('Deleting item ID:', item_id);
+
+    $.ajax({
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        type: 'DELETE',
+        dataType: 'json',
+        url: "/admin/categories/" + item_id,
+        success: function(response) {
+            console.log('Delete Response:', response);
+
+            if (response.status == 200) {
+                Swal.fire(
+                    '{{__('admin.delete')}}',
+                    '{{__('admin.fileDeleted')}}',
+                    'success'
+                );
+                get_data(); // Ensure get_data() function is defined and updates the UI
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.message,
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Delete Error:', error);
+
             if (xhr.status === 400) {
                 var errorResponse = JSON.parse(xhr.responseText);
                 Swal.fire({
@@ -625,8 +614,7 @@
         }
     });
 }
-
-        });
+});
     </script>
 
 

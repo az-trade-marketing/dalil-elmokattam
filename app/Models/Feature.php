@@ -13,4 +13,13 @@ class Feature extends Model
     {
         return $this->belongsToMany(Subscription::class,'feature_subscriptions');
     }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($feature) {
+
+            $feature->subscriptions()->detach();
+        });
+    }
 }

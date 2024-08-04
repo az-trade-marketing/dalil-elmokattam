@@ -16,4 +16,15 @@ class Category extends Model
     public function tags() {
         return $this->belongsToMany(Tag::class,'category_tags');
     }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($category) {
+            $category->stores()->each(function ($store) {
+                $store->delete();
+            });
+            $category->tags()->detach();
+        });
+    }
 }

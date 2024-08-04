@@ -14,4 +14,12 @@ class Tag extends Model
     {
         return $this->belongsToMany(Category::class, 'category_tags');
     }
+    //   protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::deleting(function ($tag) {
+    //         $tag->categories()->detach(); // Detach all related categories before deleting the tag
+    //     });
+    // }
 }

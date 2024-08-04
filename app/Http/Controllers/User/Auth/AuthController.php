@@ -23,40 +23,81 @@ class AuthController extends Controller
 {
 
 
-public function signin(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'email' => ['required', 'email'],
-        'password' => ['required'],
-    ]);
+    public function signin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['success' => "false", 'error' => $validator->errors()], 422);
-    }
+        if ($validator->fails()) {
+            return response()->json(['success' => "false", 'error' => $validator->errors()], 422);
+        }
 
-    $email = $request->email;
-    $password = $request->password;
+        $email = $request->email;
+        $password = $request->password;
 
-    // Check if the email exists
-    $user = User::where('email', $email)->first();
-    if (!$user) {
-        return response()->json(['success' => "false", 'message' => 'The email address is incorrect'], 403);
-    }
+        // Check if the email exists
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return response()->json(['success' => "false", 'message' => 'The email address is incorrect'], 403);
+        }
 
-    // Check if the password is correct
-    if (!Auth::guard('users')->attempt(['email' => $email, 'password' => $password])) {
-        return response()->json(['success' => "false", 'message' => 'The password is incorrect'], 403);
-    }
+        // Check if the password is correct
+        if (!Auth::guard('users')->attempt(['email' => $email, 'password' => $password])) {
+            return response()->json(['success' => "false", 'message' => 'The password is incorrect'], 403);
+        }
 
-    $token = JWTAuth::fromUser($user);
-     return response()->json([
+        $token = JWTAuth::fromUser($user);
+        return response()->json([
             'success' => true,
             'message' => 'logged in successfully',
             'user' => $user,
             'token' => $token,
         ], 200);
+    }
+    public function handleSocialLogin(Request $request)
+    {
+        $validated = $request->validate([
+            'provider' => 'required|in:google,facebook',
+            'provider_id' => 'required|string',
+            'email' => 'required|email',
+            'firstname' => 'nullable|string',
+            'lastname' => 'nullable|string',
+        ]);
 
-}
+        $user = User::where('email', $validated['email'])
+            ->orWhere($validated['provider'] . '_id', $validated['provider_id'])
+            ->first();
+
+        if ($user) {
+            $user->update([
+                $validated['provider'] . '_id' => $validated['provider_id'],
+                'firstname' => $validated['firstname'] ?? $user->firstname,
+                'lastname' => $validated['lastname'] ?? $user->lastname,
+            ]);
+        } else {
+            $user = User::create([
+                'email' => $validated['email'],
+                'firstname' => $validated['firstname'],
+                'lastname' => $validated['lastname'],
+
+                $validated['provider'] . '_id' => $validated['provider_id'],
+                'password' => Hash::make($request->password),
+                'status' => 'active',
+            ]);
+        }
+
+        Auth::login($user, true);
+
+        $token = JWTAuth::fromUser($user);
+        return response()->json([
+            'success' => true,
+            'message' => 'logged in successfully',
+            'user' => $user,
+            'token' => $token,
+        ], 200);
+    }
 
 
     public function signup(Request $request)
@@ -96,111 +137,67 @@ public function signin(Request $request)
     }
 
 
-    // public function resetPassword(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'newPassword' => 'required|min:8',
-    //     ]);
 
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status' => false,
-    //             'message' => $validator->errors()->first(),
-    //         ], 422);
-    //     }
 
-    //     $user = Auth::guard('users')->user();
+    public function resetPassword(Request $request)
+    {
+        // Validate the request input
+        $request->validate([
+            'otp' => 'required',
+            'newPassword' => 'required|min:6',
+        ]);
 
-    //     if (!$user) {
-    //         $validator = Validator::make($request->all(), [
-    //             'email' => 'required|email',
-    //         ]);
+        // Fetch the PasswordReset entry by token
+        $passwordReset = PasswordReset::where('token', $request->otp)->first();
 
-    //         if ($validator->fails()) {
-    //             return response()->json([
-    //                 'status' => false,
-    //                 'message' => $validator->errors()->first(),
-    //             ], 422);
-    //         }
+        // Check if the password reset token is invalid
+        if (!$passwordReset) {
+            return response()->json([
+                'message' => 'This password reset otp is invalid.'
+            ], 404);
+        }
 
-    //         $user = User::where('email', $request->email)->first();
+        // Log the entire PasswordReset object
+        Log::info('PasswordReset object: ', $passwordReset->toArray());
 
-    //         if (!$user) {
-    //             return response()->json([
-    //                 'status' => false,
-    //                 'message' => 'No user found with this email.',
-    //             ], 404);
-    //         }
-    //     }
+        // Retrieve the email from the PasswordReset object
+        $email = $passwordReset->email;
 
-    //     $user->password = Hash::make($request->newPassword);
-    //     $user->save();
+        // Log the raw email value
+        Log::info('Retrieved email before dd: ' . var_export($email, true));
 
-    //     return response()->json([
-    //         'isSuccess' => true,
-    //         'message' => 'Password reset successfully.',
-    //     ], 200);
-    // }
 
-   public function resetPassword(Request $request)
-{
-    // Validate the request input
-    $request->validate([
-        'otp' => 'required',
-        'newPassword' => 'required|min:6',
-    ]);
 
-    // Fetch the PasswordReset entry by token
-    $passwordReset = PasswordReset::where('token', $request->otp)->first();
+        // Find the user by email
+        $user = User::where('email', $email)->first();
 
-    // Check if the password reset token is invalid
-    if (!$passwordReset) {
+        // Check if the user was found
+        if (!$user) {
+            return response()->json([
+                'message' => 'We can\'t find a user with that e-mail address.'
+            ], 404);
+        }
+
+        // Update the user's password
+        $user->password = Hash::make($request->newPassword);
+        $user->save();
+
+        // Log the updated password hash
+        Log::info('Updated password hash for user ' . $user->email . ': ' . $user->password);
+
+        // Delete the password reset entry
+        $passwordReset->delete();
+
         return response()->json([
-            'message' => 'This password reset otp is invalid.'
-        ], 404);
+            'message' => 'Your password has been reset successfully.'
+        ]);
     }
-
-    // Log the entire PasswordReset object
-    Log::info('PasswordReset object: ', $passwordReset->toArray());
-
-    // Retrieve the email from the PasswordReset object
-    $email = $passwordReset->email;
-
-    // Log the raw email value
-    Log::info('Retrieved email before dd: ' . var_export($email, true));
-
-
-
-    // Find the user by email
-    $user = User::where('email', $email)->first();
-
-    // Check if the user was found
-    if (!$user) {
-        return response()->json([
-            'message' => 'We can\'t find a user with that e-mail address.'
-        ], 404);
-    }
-
-    // Update the user's password
-    $user->password = Hash::make($request->newPassword);
-    $user->save();
-
-    // Log the updated password hash
-    Log::info('Updated password hash for user ' . $user->email . ': ' . $user->password);
-
-    // Delete the password reset entry
-    $passwordReset->delete();
-
-    return response()->json([
-        'message' => 'Your password has been reset successfully.'
-    ]);
-}
 
     public function changePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'oldPassword' => 'required',
-            'newPassword' => 'required|string|min:8',
+            'newPassword' => 'required|string|min:6',
         ]);
 
         if ($validator->fails()) {
