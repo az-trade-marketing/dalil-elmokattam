@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Tag;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
-use App\Models\Tag;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use App\Http\Requests\CategoryRequest;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
@@ -161,28 +162,25 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-
         try {
             $category = Category::findOrFail($id);
 
-            // Check if the category has an associated foreign key
-            if ($category->foreign_key) {
-                return response()->json(['error' => 'Category cannot be deleted because it is referenced by a foreign key.'], 400);
-            }
-
-            // Check and delete the category image from storage if exists
+            // Check and delete the category image from storage if it exists
             if ($category->image && Storage::exists('images/' . $category->image)) {
                 Storage::delete('images/' . $category->image);
             }
 
+            // Delete the category (related stores and tags will be handled by the model's deleting event)
             $category->delete();
-            return response()->json(['message' => 'Category deleted successfully.']);
-        } catch (QueryException $e) {
-            // Handle specific SQL error - foreign key constraint violation
-            return response()->json(['error' => 'Category cannot be deleted because it is referenced by a foreign key in tags','status' => 400], 400);
+
+            return response()->json(['message' => 'Category deleted successfully.'], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'Category not found.'], 404);
         } catch (\Exception $e) {
-            // Handle other exceptions
+            // Log the detailed error message for debugging
+            Log::error('Failed to delete category: ' . $e->getMessage());
             return response()->json(['error' => 'Failed to delete category.'], 500);
         }
     }
 }
+

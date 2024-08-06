@@ -185,9 +185,9 @@
                             </div>
                         </div>
 
-                        {{-- <div class="row mb-10">
+                        <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.upload') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.logo') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="image-input image-input-outline"
@@ -208,7 +208,7 @@
                                     title="Change avatar">
                                     <i class="bi bi-pencil-fill fs-7"></i>
                                     <!--begin::Inputs-->
-                                    <input type="file" name="image"
+                                    <input type="file" name="logo"
                                         accept=".png, .jpg, .jpeg" />
 
                                     <!--end::Inputs-->
@@ -236,7 +236,7 @@
 
                             <div class="form-text">{{ __( 'category.allowed_file_types:_png,_jpg,_jpeg.' ) }}</div>
                             </div>
-                        </div> --}}
+                        </div>
 
 
 

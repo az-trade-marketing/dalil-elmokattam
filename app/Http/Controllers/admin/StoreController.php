@@ -73,8 +73,7 @@ class StoreController extends Controller
 
 public function store(Request $request)
 {
-    // dd($request->all());
-    // Validate input data
+
     $validatedData = $request->validate([
         'name_en' => 'required|string|max:255',
         'name_ar' => 'required|string|max:255',
@@ -90,7 +89,12 @@ public function store(Request $request)
     ]);
 
     $validatedData['admin_id'] = Auth::guard('admin')->user()->id;
+    if ($request->hasFile('logo')) {
+        $logo = $request->file('logo');
 
+        $imagePath = upload($logo);
+        $validatedData['logo'] = $imagePath;
+    }
     // Handle image upload
     if ($request->hasFile('features.image')) {
         $images = $request->file('features.image');
@@ -167,25 +171,62 @@ public function store(Request $request)
         $validatedData = $request->validate([
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
-            'description_en' => 'required|string|max:255',
-            'description_ar' => 'required|string|max:255',
+            'description_en' => 'nullable|string|max:255',
+            'description_ar' => 'nullable|string|max:255',
             'category_id' => 'required|integer|exists:categories,id',
             'subscription_id' => 'required|integer|exists:subscriptions,id',
             'zone_id' => 'required|integer|exists:zones,id',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            "mobile" => 'required|unique:stores,mobile,' . $id,
+            'lat' => 'required|numeric',
+            'lon' => 'required|numeric',
+            'mobile' => 'required|unique:stores,mobile,' . $id,
             'email' => 'required|email|unique:stores,email,' . $id,
         ]);
-         $store =  Store::find($id);
-        if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            $avatar = $request->file('image');
-            $image = upload($avatar);
-            $validatedData['image'] = $image;
+
+        $store = Store::findOrFail($id);
+
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $imagePath = upload($logo);
+            $validatedData['logo'] = $imagePath;
         }
+
+        // Handle image upload
+        if ($request->hasFile('features.image')) {
+            $images = $request->file('features.image');
+            $imagePath = upload($images);
+            $validatedData['image'] = $imagePath;
+        }
+
+        // Handle text
+        if ($request->has('features.text')) {
+            $validatedData['contacts'] = $request->features['text'] ?? null;
+        }
+
+        // Handle video
+        if ($request->hasFile('features.vidio')) {
+            $video = $request->file('features.vidio');
+            $videoPath = upload($video);
+            $validatedData['vidio'] = $videoPath;
+        }
+
+        // Update the store record
         $store->update($validatedData);
+
+        // Handle multiple images
+        if ($request->hasFile('features.multiImage')) {
+            // Remove existing images if needed
+            $store->gallaries()->delete();
+
+            foreach ($request->file('features.multiImage') as $file) {
+                $path = upload($file);
+                $store->gallaries()->create(['image' => $path]);
+            }
+        }
+
         Session::flash('success', 'Updated successfully');
         return back();
     }
+
 
     /**
      * Remove the specified resource from storage.

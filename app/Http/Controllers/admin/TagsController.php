@@ -96,15 +96,15 @@ class TagsController extends Controller
             "name_ar" => "required|string|unique:tags,name_ar," . $id,
             "name_en" => "required|string|unique:tags,name_en," . $id,
         ]);
-    
+
         try {
             $permission = Tag::findOrFail($id);
-    
+
             $permission->update([
                 "name_ar"       => $request->name_ar,
                 "name_en"       => $request->name_en,
             ]);
-    
+
             return response()->json(["message" => "success"], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(["error" => "Permission not found"], 404);
@@ -112,7 +112,7 @@ class TagsController extends Controller
             return response()->json(["error" => $e->getMessage()], 500);
         }
     }
-    
+
 
     /**
      * Remove the specified resource from storage.
