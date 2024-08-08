@@ -172,8 +172,11 @@
                                     data-original-title="{{ __('admin.draw_your_zone_on_the_map') }}">{{ __('admin.draw_your_zone_on_the_map') }}</span></label>
                             <textarea type="text" rows="8" name="coordinates" id="coordinates" class="form-control" readonly></textarea>
                         </div>
-
-                            {{-- <div class="col-lg-9">
+                        <div class="row mb-10">
+                            <div class="col-md-3">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.subscriptions') }}</label>
+                            </div>
+                            <div class="col-lg-9">
                                 <!--begin::Input-->
                                 <select id="business-type-select-activity"
                                     class="form-select activity form-select-solid" data-hide-search="subscription_id"
@@ -240,132 +243,40 @@
 
 
                                 </div>
-                                <div class="row mb-10">
-                                    <div class="col-md-3">
-                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.logo') }}</label>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <div class="image-input image-input-outline"
-                                        data-kt-image-input="true"
-                                        style="background-image: url(assets/media/avatars/blank.png)">
-                                        <!--begin::Preview existing Site Logo-->
-                                        @if (!empty($store->logo))
+
+                            </div>
+                        </div>
+                        <div class="row mb-10">
+                            <div class="col-md-3">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.logo') }}</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <div class="image-input image-input-outline" data-kt-image-input="true"
+                                    style="background-image: url(assets/media/avatars/blank.png)">
+                                    @if (!empty($store->logo))
                                         <div class="image-input-wrapper w-125px h-125px"
                                             style="background-image: url({{ asset('images/' . $store->logo) }})"></div>
                                     @else
                                         <div class="image-input-wrapper w-125px h-125px"
                                             style="background-image: url(assets/media/avatars/150-26.jpg)"></div>
                                     @endif
-
-
-                                        <!--end::Preview existing Site Logo-->
-                                        <!--begin::Label-->
-                                        <label
-                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                            data-kt-image-input-action="change"
-                                            data-bs-toggle="tooltip"
-                                            title="Change avatar">
-                                            <i class="bi bi-pencil-fill fs-7"></i>
-                                            <!--begin::Inputs-->
-                                            <input type="file" name="logo"
-                                                accept=".png, .jpg, .jpeg" />
-
-                                            <!--end::Inputs-->
-                                        </label>
-                                        <!--end::Label-->
-                                        <!--begin::Cancel-->
-                                        <span
-                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                            data-kt-image-input-action="cancel"
-                                            data-bs-toggle="tooltip"
-                                            title="Cancel avatar">
-                                            <i class="bi bi-x fs-2"></i>
-                                        </span>
-                                        <!--end::Cancel-->
-                                        <!--begin::Remove-->
-                                        <span
-                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                            data-kt-image-input-action="remove"
-                                            data-bs-toggle="tooltip"
-                                            title="Remove avatar">
-                                            <i class="bi bi-x fs-2"></i>
-                                        </span>
-                                        <!--end::Remove-->
-                                    </div>
-
-                                    <div class="form-text">{{ __( 'category.allowed_file_types:_png,_jpg,_jpeg.' ) }}</div>
-                                    </div>
+                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                                        <i class="bi bi-pencil-fill fs-7"></i>
+                                        <input type="file" name="logo" accept=".png, .jpg, .jpeg" />
+                                    </label>
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+                                        <i class="bi bi-x fs-2"></i>
+                                    </span>
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
+                                        <i class="bi bi-x fs-2"></i>
+                                    </span>
                                 </div>
+                                <div class="form-text">{{ __('category.allowed_file_types:_png,_jpg,_jpeg.') }}</div>
                             </div>
-                        </div> --}}
-    <!-- Subscription -->
-    <div class="row mb-10">
-        <div class="col-md-3">
-            <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.subscriptions') }}</label>
-        </div>
-        <div class="col-lg-9">
-            <select id="business-type-select-activity"
-                class="form-select activity form-select-solid" data-hide-search="subscription_id"
-                data-placeholder="{{ __('admin.subscriptions') }}" name="subscription_id" required>
-                <option value="">{{ __('admin.choose') }}</option>
-                @foreach ($subscriptions as $subscription)
-                    <option value="{{ $subscription->id }}"
-                        {{ $subscription->id == $store->subscription_id ? 'selected' : '' }}>
-                        {{ $subscription->{'title_'. app()->getLocale()} }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-    <!-- Dynamic Features -->
-    <div id="features-container" class="col-lg-9"></div>
-    <!-- Image upload -->
-    <div class="row mb-10">
-        <div class="col-md-3">
-            <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.image') }}</label>
-        </div>
-        <div class="col-lg-9">
-            <div class="mb-5">
-                <input type="file" name="image" class="form-control form-control-solid" />
-                @if ($store->image)
-                    <img src="{{ asset('images/' . $store->image) }}" alt="store image"
-                        class="mt-2" style="max-width: 200px;">
-                @endif
-            </div>
-        </div>
-    </div>
-    <!-- Logo upload -->
-    <div class="row mb-10">
-        <div class="col-md-3">
-            <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.logo') }}</label>
-        </div>
-        <div class="col-lg-9">
-            <div class="image-input image-input-outline" data-kt-image-input="true"
-                style="background-image: url(assets/media/avatars/blank.png)">
-                @if (!empty($store->logo))
-                    <div class="image-input-wrapper w-125px h-125px"
-                        style="background-image: url({{ asset('images/' . $store->logo) }})"></div>
-                @else
-                    <div class="image-input-wrapper w-125px h-125px"
-                        style="background-image: url(assets/media/avatars/150-26.jpg)"></div>
-                @endif
-                <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                    data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
-                    <i class="bi bi-pencil-fill fs-7"></i>
-                    <input type="file" name="logo" accept=".png, .jpg, .jpeg" />
-                </label>
-                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                    data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
-                    <i class="bi bi-x fs-2"></i>
-                </span>
-                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                    data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
-                    <i class="bi bi-x fs-2"></i>
-                </span>
-            </div>
-            <div class="form-text">{{ __('category.allowed_file_types:_png,_jpg,_jpeg.') }}</div>
-        </div>
-    </div>
+                        </div>
                     </div>
                     <!--end::Card body-->
                     <div class="card-footer d-flex justify-content-end py-6 px-9">
@@ -685,65 +596,65 @@
         @endif
        /////////////////////////
        document.addEventListener('DOMContentLoaded', function() {
-            const subscriptionSelect = document.querySelector('select[name="subscription_id"]');
+    const subscriptionSelect = document.querySelector('select[name="subscription_id"]');
 
-            subscriptionSelect.addEventListener('change', function() {
-                const subscriptionId = this.value;
-                console.log(subscriptionId);
-                const featuresContainer = document.getElementById('features-container');
-                featuresContainer.innerHTML = '';
+    subscriptionSelect.addEventListener('change', function() {
+        const subscriptionId = this.value;
+        console.log(subscriptionId);
+        const featuresContainer = document.getElementById('features-container');
+        featuresContainer.innerHTML = '';
 
-                if (subscriptionId) {
-                    fetch(`/admin/subscription/${subscriptionId}/features`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(features => {
-                            features.forEach(feature => {
-                                console.log(feature.type);
-                                let inputElement;
-                                switch (feature.type) {
-                                    case 'image':
-                                        inputElement = `<input type="file" name="features[${feature.type}]" accept="image/*" class="form-control form-control-solid">`;
-                                        break;
-                                    case 'multiImage':
-                                        inputElement = `<input type="file" name="features[${feature.type}][]" accept="image/*" multiple class="form-control form-control-solid">`;
-                                        break;
-                                    case 'video':
-                                        inputElement = `<input type="file" name="features[${feature.type}]" accept="video/*" class="form-control form-control-solid">`;
-                                        break;
-                                    case 'text':
-                                        inputElement = `<textarea name="features[${feature.type}]" class="form-control form-control-solid"></textarea>`;
-                                        break;
-                                }
+        if (subscriptionId) {
+            fetch(`/admin/subscription/${subscriptionId}/features`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(features => {
+                    features.forEach(feature => {
+                        console.log(feature.type);
+                        let inputElement;
+                        switch (feature.type) {
+                            case 'image':
+                                inputElement = `<input type="file" name="features[${feature.id}]" accept="image/*" class="form-control form-control-solid">`;
+                                break;
+                            case 'multiImage':
+                                inputElement = `<input type="file" name="features[${feature.id}][]" accept="image/*" multiple class="form-control form-control-solid">`;
+                                break;
+                            case 'video':
+                                inputElement = `<input type="file" name="features[${feature.id}]" accept="video/*" class="form-control form-control-solid">`;
+                                break;
+                            case 'text':
+                                inputElement = `<textarea name="features[${feature.id}]" class="form-control form-control-solid"></textarea>`;
+                                break;
+                        }
 
-                                if (inputElement) {
-                                    const featureElement = `
-                                        <div class="row mb-10">
-                                            <div class="col-md-3">
-                                                <label class="col-lg-4 col-form-label required fw-bold fs-6">${feature.name_en}</label>
-                                            </div>
-                                            <div class="col-lg-9">
-                                                <div class="d-flex gap-3">
-                                                    ${inputElement}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `;
-                                    featuresContainer.innerHTML += featureElement;
-                                }
-                            });
-                        })
-                        .catch(error => {
-                            console.error('There was a problem with the fetch operation:', error);
-                        });
-                }
-            });
-        });
+                        const featureElement = `
+                            <div class="row mb-10">
+                                <div class="col-md-3">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">${feature.name_en}</label>
+                                </div>
+                                <div class="col-lg-9">
+                                    <div class="d-flex gap-3">
+                                        ${inputElement}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        featuresContainer.innerHTML += featureElement;
+                    });
+
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+    });
+});
 
 
    </script>
 @endsection
+

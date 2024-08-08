@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Resources;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,29 +16,29 @@ class StoreResource extends JsonResource
     public function toArray($request)
     {
         $reviews = $this->reviews;
-      $locale = app()->getLocale();
-           // Calculate the average rating
-             $averageRating = $reviews->isEmpty() ? 0 : $reviews->avg('rating');
+        $locale = app()->getLocale();
+        // Calculate the average rating
+        $averageRating = $reviews->isEmpty() ? 0 : $reviews->avg('rating');
         $averageRating = number_format($averageRating, 1);
-            $response = [
-                'id' => $this->id,
-                'cat_name' => app()->getLocale() == 'ar' ? $this->category->name_ar : $this->category->name_en,
-                'rating' =>  $averageRating,
-                'reviews' => ReviewsResource::collection($this->reviews),
-                'zone_name' => app()->getLocale() == 'ar' ? $this->zones->name_ar : $this->zones->name_en,
-                'tags'=>$this->category->tags->map(function ($tag) use ($locale) {
+        $response = [
+            'id' => $this->id,
+            'cat_name' => app()->getLocale() == 'ar' ? $this->category->name_ar : $this->category->name_en,
+            'rating' =>  $averageRating,
+            'reviews' => ReviewsResource::collection($this->reviews),
+            'zone_name' => app()->getLocale() == 'ar' ? $this->zones->name_ar : $this->zones->name_en,
+            'tags' => $this->category->tags->map(function ($tag) use ($locale) {
                 return $locale == 'ar' ? $tag->name_ar : $tag->name_en;
             }),
-            ];
-            if ($this->logo) {
-                $response['logo'] = asset('images/' . $this->logo);
-            }
-            // Conditionally add keys if they are not null
-            if ($this->image) {
-                $response['image'] = asset('images/' . $this->image);
-            }
+        ];
+        if ($this->logo) {
+            $response['logo'] = asset('images/' . $this->logo);
+        }
+        // Conditionally add keys if they are not null
+        if ($this->image) {
+            $response['image'] = asset('images/' . $this->image);
+        }
 
-             if ($this->gallaries->isNotEmpty()) {
+        if ($this->gallaries->isNotEmpty()) {
             $response['gallaries'] = $this->gallaries->map(function ($image) {
                 return asset('images/' . $image->image);
             })->toArray();
@@ -54,8 +55,6 @@ class StoreResource extends JsonResource
         }
 
 
-            return array_merge(parent::toArray($request), $response);
-        }
-
-
+        return array_merge(parent::toArray($request), $response);
+    }
 }

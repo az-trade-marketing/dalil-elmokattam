@@ -61,7 +61,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'provider' => 'required|in:google,facebook',
             'provider_id' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'nullable|email',
             'firstname' => 'nullable|string',
             'lastname' => 'nullable|string',
         ]);

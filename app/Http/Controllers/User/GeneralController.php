@@ -152,11 +152,6 @@ public function filter(Request $request)
     ]);
 }
 
-
-
-
-
-
     public function all_stores()
     {
        $stores= Store::with('category','zones','reviews','subscription','category.tags')->get();
