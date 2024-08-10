@@ -8,14 +8,15 @@ use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\StoreController;
+use App\Http\Controllers\Admin\ZonesController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\PushNotificationController;
 use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
-use App\Http\Controllers\Admin\StoreController;
-use App\Http\Controllers\Admin\ZonesController;
 
 //================== Route Login Admin =========================
 Route::get('login', [AdminAuthenticatedSessionController::class, 'login'])->name('AdminFormLogin');
@@ -76,6 +77,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
     // ============================== users ====================
     Route::resource('users', UserController::class);
     Route::get('users-get-data', [UserController::class, 'data']);
+      // ============================== push notification ====================
+      Route::resource('push-notifications', PushNotificationController::class);
+      Route::get('push-notifications-get-data', [PushNotificationController::class, 'data']);
     // ============================== lang ====================
 
     Route::post('/user/language', [AdminController::class, 'updateLanguage'])->name('user.language.update');

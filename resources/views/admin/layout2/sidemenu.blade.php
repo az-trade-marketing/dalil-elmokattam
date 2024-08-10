@@ -263,6 +263,36 @@
                             <!--end:Menu sub-->
 
                         </div>
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "push-notifications" ? "hover show" :"")  }}">
+                            <!--begin:Menu link-->
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-address-book fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">{{ __("admin.push_notification") }}</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <!--end:Menu link-->
+                            <!--begin:Menu sub-->
+                            <div class="menu-sub menu-sub-accordion">
+                                @can('Zone Read')
+                                <div class="menu-item">
+                                    <a class="menu-link {{ (Request::segment(2) == "push-notifications" ) ? "active" :""  }}" href="{{ url("admin/push-notifications") }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __("admin.push_notification") }}</span>
+                                    </a>
+                                </div>
+                                @endcan
+                            </div>
+                            <!--end:Menu sub-->
+
+                        </div>
                         <!--end:Menu item-->
                     </div>
                     <!--end::Menu-->

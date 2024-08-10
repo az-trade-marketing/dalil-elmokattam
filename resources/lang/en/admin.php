@@ -105,5 +105,10 @@ return [
     'lon' => 'longitude',
     'firstname'=>'firstname',
     'lastname'=>'lastname',
-    'phone'=>'phone'
+    'phone'=>'phone',
+    'push_notifications',
+    'title'=>'title',
+    'message'=>'message',
+    'image'=>'image',
+    'link'=>'link',
 ];
