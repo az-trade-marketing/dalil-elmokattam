@@ -111,4 +111,5 @@ return [
     'message'=>'message',
     'image'=>'image',
     'link'=>'link',
+    'push_notification'=>'push notification',
 ];

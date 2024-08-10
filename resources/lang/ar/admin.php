@@ -109,5 +109,10 @@ return [
     'firstname' => 'اسم أول',
     'lastname' => 'اسم العائلة',
     'phone' => 'الهاتف',
-
+    'push_notifications' => 'الإشعارات الفورية',
+    'title' => 'العنوان',
+    'message' => 'الرسالة',
+    'image' => 'الصورة',
+    'link' => 'الرابط',
+    'push_notification' => 'الإشعار الفوري',
 ];
