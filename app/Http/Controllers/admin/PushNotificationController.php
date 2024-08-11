@@ -18,14 +18,17 @@ class PushNotificationController extends Controller
     public function index()
     {
         return view('admin.notification.index');
-
     }
     public function data()
     {
         $results = PushNotification::orderByDesc("id")->get();
+        // $permissions = [
+        //     'canCreate' => auth()->user()->can('push_notification Create'),
+        //     'canDelete' => auth()->user()->can('push_notification Delete')
+        // ];
         $permissions = [
-            'canCreate' => auth()->user()->can('push_notification Create'),
-            'canDelete' => auth()->user()->can('push_notification Delete')
+            'canCreate' => auth()->user()->can('admin Create'),
+            'canDelete' => auth()->user()->can('admin Delete')
         ];
         return response()->json([
             'data' => $results,
@@ -49,25 +52,30 @@ class PushNotificationController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-        public function store(Request $request)
-        {
-dd(77777);
-            $users = User::all();
+    public function store(Request $request)
+    {
 
+        $users = User::all();
+        if (!empty($users)) {
             foreach ($users as $user) {
+                if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                    $avatar = $request->file('image');
+                    $image = upload($avatar);
+                }
                 $pushNotification = PushNotification::create([
                     'user_id' => $user->id,
                     'title' => $request->title,
                     'message' => $request->message,
-                    'image' => $request->image,
+                    'image' => $image,
                     'link' => $request->link,
                 ]);
 
                 SendPushNotification::dispatch($pushNotification);
             }
             return response()->json(['message' => 'Push notifications sent successfully.']);
-
         }
+        return response()->json(['message' => 'no found users.']);
+    }
     /**
      * Display the specified resource.
      *
@@ -76,7 +84,8 @@ dd(77777);
      */
     public function show($id)
     {
-        //
+        $data = PushNotification::findOrFail($id);
+        return response()->json($data);
     }
 
     /**
@@ -99,14 +108,14 @@ dd(77777);
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'title' => 'nullable|string|max:255',
-            'message' => 'nullable|string',
-            'image' => 'nullable|url',
-            'link' => 'nullable|url',
-        ]);
-
         $pushNotification = PushNotification::find($id);
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $image = upload($image);
+        } else {
+            $image = $pushNotification->image;
+        }
+
 
         if (!$pushNotification) {
             return response()->json(['error' => 'Push notification not found.'], 404);
@@ -115,7 +124,7 @@ dd(77777);
         $pushNotification->update([
             'title' => $request->title,
             'message' => $request->message,
-            'image' => $request->image,
+            'image' => $image,
             'link' => $request->link,
         ]);
 
@@ -133,6 +142,7 @@ dd(77777);
      */
     public function destroy($id)
     {
-        //
+        $push = PushNotification::findOrFail($id);
+        $push->delete();
     }
 }

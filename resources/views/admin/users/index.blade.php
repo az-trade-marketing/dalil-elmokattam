@@ -38,6 +38,8 @@
                             <i class="ki-duotone ki-plus fs-2"></i>{{ __("admin.add") . ' '.__("admin.users") }}</button>
                             <!--end::Add user-->
                             @endcan
+                            <a href="{{ route('admin.export.users') }}" class="btn btn-success">Export to Excel</a>
+
                         </div>
 
                         {{-- modal for adding  --}}
@@ -236,6 +238,7 @@
         <!--end::Content container-->
     </div>
     <!--end::Content-->
+
 </div>
 <!--end::Content wrapper-->
 

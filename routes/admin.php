@@ -77,6 +77,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     // ============================== users ====================
     Route::resource('users', UserController::class);
     Route::get('users-get-data', [UserController::class, 'data']);
+    Route::get('/export-users', [UserController::class, 'exportUsers'])->name('admin.export.users');
+
       // ============================== push notification ====================
       Route::resource('push-notifications', PushNotificationController::class);
       Route::get('push-notifications-get-data', [PushNotificationController::class, 'data']);
