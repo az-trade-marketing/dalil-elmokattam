@@ -172,13 +172,17 @@
                                                             style="display: none;"></div>
                                                     </div>
                                                     <div class="fv-row mb-7">
-                                                        <label
-                                                            class="required fw-semibold fs-6 mb-2">{{ __('admin.image') }}</label>
-                                                        <input type="file" name="image" id="editImage"
-                                                            class="form-control form-control-solid mb-3 mb-lg-0" />
-                                                        <div class="invalid-feedback text-danger" id="error-edit-image"
-                                                            style="display: none;"></div>
+                                                        <label class="required fw-semibold fs-6 mb-2">{{ __("admin.logo") }}</label>
+                                                        <input type="file" name="image" id="editImage" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.logo") }}" />
+                                                        <div class="invalid-feedback text-danger" id="error-edit-logo" style="display: none;"></div>
+                                                        <div class="text-muted fs-7 mb-7">ex:jpeg,png,jpg  height:3000 width:3000</div>
                                                     </div>
+                                                    <div class="fv-row mb-7">
+                                                        <div >
+                                                            <img src="" alt="" id="editImagePreview" width="100" height="100">
+                                                        </div>
+                                                    </div>
+
                                                     <div class="fv-row mb-7">
                                                         <label
                                                             class="required fw-semibold fs-6 mb-2">{{ __('admin.link') }}</label>
@@ -326,10 +330,12 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        console.log(response);
                         $('#editId').val(response.id);
                         $('#editTitle').val(response.title);
                         $('#editMessage').val(response.message);
                         $('#editLink').val(response.link);
+                        $('#editImagePreview').attr('src', "{{ image_path() }}" + "/" + response.logo );
 
                         if (response.image) {
                             $('#editImage').attr('data-existing-file', response.image);
@@ -358,15 +364,17 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        if (response.message === 'success') {
+                        $('#kt_modal_edit_user').modal('hide');
+                        if (response.message == 'success') {
+                            $('#kt_modal_add_user').modal('hide');
+
                             Swal.fire({
                                 icon: 'success',
-                                title: "{{ __('admin.updatedSuccessfully') }}",
-                                text: '{{ __('admin.updatemes') }}',
+                                title: "{{ __("admin.addedSuccessfully") }}",
+                                text: '{{ __("admin.updatemes") }}',
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            $('#kt_modal_edit_user').modal('hide');
                             get_data();
                         } else {
                             Swal.fire({
@@ -375,19 +383,23 @@
                                 text: response.message,
                             });
                         }
+                        get_data();
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
                             for (var field in errors) {
-                                $('#error-edit-' + field).text(errors[field][0]).show();
+                                $('#error-' + field).text(errors[field][0]).show();
                             }
                         } else {
                             alert('An error occurred. Please try again.');
                         }
+
+                        $label.removeClass('d-none');
                     }
                 });
             });
+
 
 
 
