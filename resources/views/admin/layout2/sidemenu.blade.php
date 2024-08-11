@@ -108,7 +108,36 @@
                             </div>
                             <!--end:Menu sub-->
                         </div>
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "zones" ? "hover show" :"")  }}">
+                            <!--begin:Menu link-->
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-address-book fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">{{ __("admin.areas") }}</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <!--end:Menu link-->
+                            <!--begin:Menu sub-->
+                            <div class="menu-sub menu-sub-accordion">
+                                @can('Zone Read')
+                                <div class="menu-item">
+                                    <a class="menu-link {{ (Request::segment(2) == "zones" ) ? "active" :""  }}" href="{{ url("admin/zones") }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __("admin.zones") }}</span>
+                                    </a>
+                                </div>
+                                @endcan
+                            </div>
+                            <!--end:Menu sub-->
 
+                        </div>
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "categories" || Request::segment(2) == "features" || Request::segment(2) == "tags") ? "hover show" :""  }}">
                             <!--begin:Menu link-->
                             <span class="menu-link">
@@ -125,26 +154,6 @@
                             <!--end:Menu link-->
                             <!--begin:Menu sub-->
                             <div class="menu-sub menu-sub-accordion">
-                                @can('categories Read')
-                                <div class="menu-item">
-                                    <a class="menu-link {{ (Request::segment(2) == "categories" ) ? "active" :""  }}" href="{{ url("admin/categories") }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __("admin.categories") }}</span>
-                                    </a>
-                                </div>
-                                @endcan
-                                @can("features Read")
-                                <div class="menu-item">
-                                    <a class="menu-link {{ (Request::segment(2) == "features" ) ? "active" :""  }}" href="{{ url("admin/features") }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __("admin.features") }}</span>
-                                    </a>
-                                </div>
-                                @endcan
                                 @can("tags Read")
                                 <div class="menu-item">
                                     <a class="menu-link {{ (Request::segment(2) == "tags" ) ? "active" :""  }}" href="{{ url("admin/tags") }}">
@@ -155,11 +164,61 @@
                                     </a>
                                 </div>
                                 @endcan
+                                @can('categories Read')
+                                <div class="menu-item">
+                                    <a class="menu-link {{ (Request::segment(2) == "categories" ) ? "active" :""  }}" href="{{ url("admin/categories") }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __("admin.categories") }}</span>
+                                    </a>
+                                </div>
+                                @endcan
+                                {{-- @can("features Read")
+                                <div class="menu-item">
+                                    <a class="menu-link {{ (Request::segment(2) == "features" ) ? "active" :""  }}" href="{{ url("admin/features") }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __("admin.features") }}</span>
+                                    </a>
+                                </div>
+                                @endcan --}}
+
                             </div>
                             <!--end:Menu sub-->
 
                         </div>
+                        @can("subscription Read")
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                            <!--begin:Menu link-->
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-address-book fs-2">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                    </i>
+                                </span>
+                                <span class="menu-title">{{ __("admin.subscription") }}</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <!--end:Menu link-->
+                            <!--begin:Menu sub-->
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <a class="menu-link" href="{{ url("admin/subscription") }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __("admin.subscription") }}</span>
+                                    </a>
+                                </div>
 
+                            </div>
+                            <!--end:Menu sub-->
+                        </div>
+                        @endcan
 
                         @can("stores Read")
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "stores" ) ? "hover show" :""  }}">
@@ -202,67 +261,9 @@
 
 
 
-                        @can("subscription Read")
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <!--begin:Menu link-->
-                            <span class="menu-link">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-address-book fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">{{ __("admin.subscription") }}</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <!--end:Menu link-->
-                            <!--begin:Menu sub-->
-                            <div class="menu-sub menu-sub-accordion">
-                                <div class="menu-item">
-                                    <a class="menu-link" href="{{ url("admin/subscription") }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __("admin.subscription") }}</span>
-                                    </a>
-                                </div>
 
-                            </div>
-                            <!--end:Menu sub-->
-                        </div>
-                        @endcan
 
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "zones" ? "hover show" :"")  }}">
-                            <!--begin:Menu link-->
-                            <span class="menu-link">
-                                <span class="menu-icon">
-                                    <i class="ki-duotone ki-address-book fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                    </i>
-                                </span>
-                                <span class="menu-title">{{ __("admin.areas") }}</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <!--end:Menu link-->
-                            <!--begin:Menu sub-->
-                            <div class="menu-sub menu-sub-accordion">
-                                @can('Zone Read')
-                                <div class="menu-item">
-                                    <a class="menu-link {{ (Request::segment(2) == "zones" ) ? "active" :""  }}" href="{{ url("admin/zones") }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __("admin.zones") }}</span>
-                                    </a>
-                                </div>
-                                @endcan
-                            </div>
-                            <!--end:Menu sub-->
 
-                        </div>
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ (Request::segment(2) == "push-notifications" ? "hover show" :"")  }}">
                             <!--begin:Menu link-->
                             <span class="menu-link">
