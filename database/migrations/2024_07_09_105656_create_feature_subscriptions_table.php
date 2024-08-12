@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('feature_subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('feature_id')->references('id')->on('features');
-            $table->foreignId('subscription_id')->references('id')->on('subscriptions');
+            $table->foreignId('feature_id')->constrained('features')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+            $table->foreignId('subscription_id')->constrained('subscriptions')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
             $table->timestamps();
         });
     }

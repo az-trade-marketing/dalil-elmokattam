@@ -27,7 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('zones', function (Blueprint $table) {
-            //
+            $table->string('image')->nullable();
         });
     }
 };

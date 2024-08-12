@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('gallary_stores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_id')->references('id')->on('stores');
+            $table->foreignId('store_id')->constrained('stores')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
             $table->string('image');
             $table->timestamps();
         });

@@ -20,8 +20,12 @@ return new class extends Migration
             $table->text('description_en')->nullable();
             $table->text('description_ar')->nullable();
             $table->foreignId('admin_id')->references('id')->on('admins');
-            $table->foreignId('category_id')->references('id')->on('categories');
-            $table->foreignId('subscription_id')->references('id')->on('subscriptions');
+            $table->foreignId('category_id')->constrained('categories')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+            $table->foreignId('subscription_id')->constrained('subscriptions')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
             $table->boolean('status')->default(true);
             $table->string('lat')->nullable();
             $table->string('lon')->nullable();

@@ -22,6 +22,7 @@ class PermisionsSeeder extends Seeder
             'subscription' => ['en' => 'subscription', 'ar' => 'اشتراك'],
             'zones' => ['en' => 'Zone', 'ar' => 'المناطق'],
             'stores' => ['en' => 'stores', 'ar' => 'المتاجر'],
+            'push_notification' => ['en' => 'push_notification', 'ar' => 'الاشعارات'],
 
 
         ];

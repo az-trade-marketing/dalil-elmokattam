@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_id')->references('id')->on('stores');
-            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('store_id')->constrained('stores')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained('users')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
             $table->string('title')->nullable();
             $table->text('message')->nullable();
             $table->decimal('rating');

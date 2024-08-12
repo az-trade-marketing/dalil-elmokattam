@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('store_name');
             $table->string('owner_name');
             $table->string('phone_number');
-            $table->foreignId('zone_id')->references('id')->on('zones');
+            $table->foreignId('zone_id')->constrained('zones')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
             $table->text('comments')->nullable();
             $table->timestamps();
         });

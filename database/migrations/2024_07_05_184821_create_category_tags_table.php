@@ -15,8 +15,13 @@ return new class extends Migration
     {
         Schema::create('category_tags', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tag_id')->references('id')->on('tags');
-            $table->foreignId('category_id')->references('id')->on('categories');
+            $table->foreignId('tag_id')
+            ->constrained('tags')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+            $table->foreignId('category_id')->constrained('categories')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
             $table->timestamps();
         });
     }
