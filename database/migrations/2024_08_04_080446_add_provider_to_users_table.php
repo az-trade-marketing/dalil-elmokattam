@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->enum('provider', ['google', 'facebook'])->default('google');
-            $table->string('provider_id');
+            $table->string('provider_id')->nullable();
         });
     }
 
