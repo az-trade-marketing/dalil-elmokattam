@@ -228,6 +228,7 @@
                                     <th>{{ __('admin.message') }}</th>
                                     <th>{{ __('admin.image') }}</th>
                                     <th>{{ __('admin.link') }}</th>
+                                    <th>{{ __('admin.user_name') }}</th>
                                     <th>{{ __('admin.action') }}</th>
                                 </tr>
                             </thead>
@@ -269,9 +270,12 @@
                         $('#myTable tbody').empty();
                         var select_type = $('.level_select option:selected').val();
                         var permissions = response.permissions;
-
+                        console.log(response)
                         $.each(response.data, function(key, item) {
+
                             var title = item.title ?? '';
+                            var user_name = (item.user ? (item.user.firstname ?? '') + ' ' + (item.user.lastname ?? '') : '');
+
                             var message = item.message ?? '';
                             var country_img = item.image ?  item.image : '{{asset("/assets/img/user.png")}}' ;
                             var imagePath = '{{ image_path() }}/';
@@ -308,6 +312,9 @@
                             </td>\
                                     <td class="align-middle name text-nowrap">\
                                         <h6 class="m-0 p-0">' + link + '</h6>\
+                                    </td>\
+                                    <td class="text-center pt-4">\
+                                        <h6>' + user_name + '</h6>\
                                     </td>\
                                     <td class="min-w-100 pt-3">\
                                         <div class="d-flex">' + actionButtons + '</div>\
@@ -455,7 +462,7 @@
             });
 
             $('#submitButton').on('click', function() {
-                // event.preventDefault();
+                event.preventDefault();
                 var $button = $(this);
                 var $label = $button.find('.indicator-label');
                 var formData = new FormData($('#kt_modal_add_notification_form')[0]);

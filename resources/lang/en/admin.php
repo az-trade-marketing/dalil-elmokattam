@@ -112,4 +112,5 @@ return [
     'image'=>'image',
     'link'=>'link',
     'push_notification'=>'push notification',
+    'user_name'=>'user_name',
 ];
