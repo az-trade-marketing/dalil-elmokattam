@@ -62,7 +62,7 @@
                         </div>
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.description_en') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6"  style="width: auto">{{ __('admin.description_en') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="mb-5">
@@ -73,7 +73,7 @@
                         </div>
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.description_ar') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.description_ar') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="mb-5">
@@ -84,7 +84,7 @@
                         </div>
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.contact') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.contact') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="d-flex gap-3">
@@ -172,9 +172,11 @@
                                     data-original-title="{{ __('admin.draw_your_zone_on_the_map') }}">{{ __('admin.draw_your_zone_on_the_map') }}</span></label>
                             <textarea type="text" rows="8" name="coordinates" id="coordinates" class="form-control" readonly></textarea>
                         </div>
+                        @if (!auth()->user()->hasRole('stores'))
+                            
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.subscriptions') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.subscriptions') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <!--begin::Input-->
@@ -192,6 +194,7 @@
                                 <!--end::Input-->
                             </div>
                         </div>
+                        @endif
                         <div class="col-lg-9">
                             <div id="features-container" class="row mb-10">
                                 <div class="row mb-10">
@@ -226,7 +229,7 @@
                                 </div>
                                 <div class="row mb-10">
                                     <div class="col-md-3">
-                                        <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.multiimage') }}</label>
+                                        <label class="col-lg-4 col-form-label fw-bold fs-6"  style="width: auto">{{ __('admin.multiImage') }}</label>
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="mb-5">
@@ -281,7 +284,7 @@
                     <!--end::Card body-->
                     <div class="card-footer d-flex justify-content-end py-6 px-9">
                         <button type="submit" class="btn btn-primary">
-                            {{ __('admin.save_changes') }}
+                            {{ __('admin.update') }}
                         </button>
                     </div>
                 </form>
@@ -485,7 +488,6 @@
         })
         $(document).on('ready', function() {
             let id = $('#choice_zones').val();
-            console.log("dddddddddddddd");
             $.get({
                 url: `{{ url('admin/get-zone-Coordinate') }}/${id}`,
                 dataType: 'json',
@@ -630,11 +632,11 @@
                                 inputElement = `<textarea name="features[${feature.id}]" class="form-control form-control-solid"></textarea>`;
                                 break;
                         }
-
+                        const currentLocale = "{{ App::getLocale() }}";
                         const featureElement = `
                             <div class="row mb-10">
                                 <div class="col-md-3">
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">${feature.name_en}</label>
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">${currentLocale == 'ar' ? feature.name_ar : feature.name_en}</label>
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="d-flex gap-3">

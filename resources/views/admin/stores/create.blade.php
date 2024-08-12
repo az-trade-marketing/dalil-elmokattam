@@ -61,7 +61,7 @@
                         </div>
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.description_en') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6" style="    width: auto">{{ __('admin.description_en') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="mb-5">
@@ -72,7 +72,7 @@
                         </div>
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.description_ar') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6" style="    width: auto">{{ __('admin.description_ar') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="mb-5">
@@ -89,6 +89,7 @@
                                 <div class="d-flex gap-3">
                                         <input type="text" name="mobile" class="form-control form-control-solid"  placeholder="{{ __('admin.mobile') }}" />
                                         <input type="text"name="email" class="form-control form-control-solid" placeholder="{{ __('admin.email') }}" />
+                                        <input type="password"name="password" class="form-control form-control-solid" placeholder="{{ __('admin.password') }}" />
                                 </div>
 
                             </div>
@@ -96,7 +97,7 @@
                         <div class="row mb-10">
                             <div class="col-md-6">
                                 <div class="col-md-3">
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.category') }}</label>
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6" style="    width: auto">{{ __('admin.category') }}</label>
                                 </div>
                                 <div class="col-lg-9">
                                     <!--begin::Input-->
@@ -114,7 +115,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="col-md-4">
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.subscriptions') }}</label>
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6" style="    width: auto">{{ __('admin.subscriptions') }}</label>
                                 </div>
                                 <div class="col-lg-9">
                                 <!--begin::Input-->
@@ -186,10 +187,10 @@
                         </div>
 
                         <div class="row mb-10">
-                            <div class="col-md-3">
+                           {{-- <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.logo') }}</label>
                             </div>
-                            <div class="col-lg-9">
+                             <div class="col-lg-9">
                                 <div class="image-input image-input-outline"
                                 data-kt-image-input="true"
                                 style="background-image: url(assets/media/avatars/blank.png)">
@@ -235,7 +236,7 @@
                             </div>
 
                             <div class="form-text">{{ __( 'category.allowed_file_types:_png,_jpg,_jpeg.' ) }}</div>
-                            </div>
+                            </div> --}}
                         </div>
 
 
@@ -249,8 +250,8 @@
 
         <!--end::Card body-->
         <div class="card-footer d-flex justify-content-end py-6 px-9">
-            <button type="reset" class="btn btn-light btn-active-light-primary me-2">تراجع</button>
-            <button type="submit" form="create" value="Submit" class="btn btn-primary">حفظ</button>
+            <button type="reset" class="btn btn-light btn-active-light-primary me-2">{{ __("admin.discard") }}</button>
+            <button type="submit" form="create" value="Submit" class="btn btn-primary">{{ __("admin.save") }}</button>
 
         </div>
         <!-- END: Form Layout -->
@@ -524,11 +525,11 @@ $('.delivery-time').on('click',function (){
                                 inputElement = `<textarea name="features[${feature.type}]" class="form-control form-control-solid"></textarea>`;
                                 break;
                         }
-
+                        const currentLocale = "{{ App::getLocale() }}";
                         const featureElement = `
                             <div class="row mb-10">
                                 <div class="col-md-3">
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">${feature.name_en}</label>
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6" style="    width: auto">${currentLocale == 'ar' ? feature.name_ar : feature.name_en}</label>
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="d-flex gap-3">

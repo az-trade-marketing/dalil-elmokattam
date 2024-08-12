@@ -19,6 +19,11 @@ class RoleSeeder extends Seeder
         $permissions = Permission::get();
        // Sync the permissions with the role
        $role->syncPermissions($permissions);
+
+        $role= Role::create(['name'=>'stores','name_en' => 'store', 'name_ar' => 'متاجر', 'guard_name' => 'admin']);
+        $permissions = Permission::where("name","Active Store Update")->get();
+       // Sync the permissions with the role
+       $role->syncPermissions($permissions);
         
     }
 }

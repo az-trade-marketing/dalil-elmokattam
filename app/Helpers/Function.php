@@ -22,15 +22,15 @@ if (!function_exists('lang')) {
     }
 }
 
-
 if (!function_exists('upload')) {
     function upload($file)
     {
-        $imageName = time().'.'.$file->getClientOriginalExtension();
+        $imageName = uniqid().time().'.'.$file->getClientOriginalExtension();
         $file->move(public_path('images'), $imageName);
         return $imageName;
     }
 }
+
 
 /////////////function to location
 function pointStringToCoordinates($pointString)
