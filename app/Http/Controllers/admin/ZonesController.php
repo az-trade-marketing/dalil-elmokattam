@@ -67,24 +67,22 @@ class ZonesController extends Controller
 
     public function getAddData(Request $request): array
     {
-        $value = $request->input('coordinates');
-        $polygon = [];
-        $lastCord = [];
+        $value = $request['coordinates'];
 
-        foreach (explode('),(', trim($value, '()')) as $index => $single_array) {
-            $coords = explode(',', $single_array);
-            if ($index == 0) {
-                $lastCord = $coords;
+        foreach(explode('),(',trim($value,'()')) as $index=>$single_array){
+            if($index == 0)
+            {
+                $lastCord = explode(',',$single_array);
             }
-            $polygon[] = new Point($coords[1], $coords[0]);
+            $coords = explode(',',$single_array);
+            $polygon[] = new Point($coords[0], $coords[1]);
         }
-        $polygon[] = new Point($lastCord[1], $lastCord[0]);
-
+        $polygon[] = new Point($lastCord[0], $lastCord[1]);
         return [
-            'name_en' => $request->input('name_en'),
-            'name_ar' => $request->input('name_ar'),
+            'name_en' => $request->name_en,
+            'name_ar' => $request->name_ar,
             'coordinates' => new Polygon([new LineString($polygon)]),
-        ];
+        ];   
     }
 
     public function show($id)

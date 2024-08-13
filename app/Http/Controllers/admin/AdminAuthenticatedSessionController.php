@@ -27,9 +27,11 @@ class AdminAuthenticatedSessionController extends Controller
     {
 
         $request->authenticate('admin');
-
-         $request->session()->regenerate();
-
+        $request->session()->regenerate();
+        $user = Auth::guard("admin")->user();
+        if ($user->hasRole('stores')) {
+            return redirect()->to("admin/stores/".$user?->store_id."/edit");
+        }
         return redirect()->intended(RouteServiceProvider::ADMIN);
     }
 

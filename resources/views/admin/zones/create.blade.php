@@ -138,112 +138,108 @@ let polygons = [];
     }
 
     function initialize() {
-        @php($default_location = json_decode('{"lat":"30.012179702023793","lng":"31.321902566160922"}', true));
-        let myLatlng = { lat: {{ $default_location ? $default_location['lat'] : '23.757989' }}, lng: {{ $default_location ? $default_location['lng'] : '90.360587' }} };
+    @php($default_location = json_decode('{"lat":"30.012179702023793","lng":"31.321902566160922"}', true));
+    let myLatlng = { lat: {{ $default_location ? $default_location['lat'] : '23.757989' }}, lng: {{ $default_location ? $default_location['lng'] : '90.360587' }} };
 
-        let myOptions = {
-            zoom: 13,
-            center: myLatlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+    let myOptions = {
+        zoom: 13,
+        center: myLatlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+    drawingManager = new google.maps.drawing.DrawingManager({
+        drawingMode: google.maps.drawing.OverlayType.POLYGON,
+        drawingControl: true,
+        drawingControlOptions: {
+            position: google.maps.ControlPosition.TOP_CENTER,
+            drawingModes: [google.maps.drawing.OverlayType.POLYGON]
+        },
+        polygonOptions: {
+            editable: true
         }
-        map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
-        drawingManager = new google.maps.drawing.DrawingManager({
-            drawingMode: google.maps.drawing.OverlayType.POLYGON,
-            drawingControl: true,
-            drawingControlOptions: {
-                position: google.maps.ControlPosition.TOP_CENTER,
-                drawingModes: [google.maps.drawing.OverlayType.POLYGON]
-            },
-            polygonOptions: {
-                editable: true
-            }
-        });
-        drawingManager.setMap(map);
+    });
+    drawingManager.setMap(map);
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    };
-                    map.setCenter(pos);
-                });
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+                map.setCenter(pos);
+            });
+    }
+
+    drawingManager.addListener("overlaycomplete", function(event) {
+        if (lastpolygon) {
+            lastpolygon.setMap(null);
+        }
+        $('#coordinates').val(event.overlay.getPath().getArray());
+        lastpolygon = event.overlay;
+        auto_grow();
+    });
+
+    const resetDiv = document.createElement("div");
+    resetMap(resetDiv);
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(resetDiv);
+
+    const input = document.getElementById("pac-input");
+    const searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+
+    map.addListener("bounds_changed", () => {
+        searchBox.setBounds(map.getBounds());
+    });
+
+    let markers = [];
+
+    searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+            return;
         }
 
-        drawingManager.addListener("overlaycomplete", function(event) {
-            if (lastpolygon) {
-                lastpolygon.setMap(null);
-            }
-            $('#coordinates').val(event.overlay.getPath().getArray());
-            lastpolygon = event.overlay;
-            auto_grow();
+        markers.forEach((marker) => {
+            marker.setMap(null);
         });
+        markers = [];
 
-        const resetDiv = document.createElement("div");
-        resetMap(resetDiv);
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(resetDiv);
-
-        const input = document.getElementById("pac-input");
-        const searchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
-
-        map.addListener("bounds_changed", () => {
-            searchBox.setBounds(map.getBounds());
-        });
-
-        let markers = [];
-
-        searchBox.addListener("places_changed", () => {
-            const places = searchBox.getPlaces();
-
-            if (places.length == 0) {
+        const bounds = new google.maps.LatLngBounds();
+        places.forEach((place) => {
+            if (!place.geometry || !place.geometry.location) {
+                console.log("Returned place contains no geometry");
                 return;
             }
 
-            markers.forEach((marker) => {
-                marker.setMap(null);
-            });
-            markers = [];
+            const icon = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25),
+            };
 
-            const bounds = new google.maps.LatLngBounds();
-            places.forEach((place) => {
-                if (!place.geometry || !place.geometry.location) {
-                    console.log("Returned place contains no geometry");
-                    return;
-                }
+            markers.push(
+                new google.maps.Marker({
+                    map,
+                    icon,
+                    title: place.name,
+                    position: place.geometry.location,
+                })
+            );
 
-                const icon = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25),
-                };
-
-                markers.push(
-                    new google.maps.Marker({
-                        map,
-                        icon,
-                        title: place.name,
-                        position: place.geometry.location,
-                    })
-                );
-
-                if (place.geometry.viewport) {
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
-            });
-            map.fitBounds(bounds);
+            if (place.geometry.viewport) {
+                bounds.union(place.geometry.viewport);
+            } else {
+                bounds.extend(place.geometry.location);
+            }
         });
-    }
+        map.fitBounds(bounds);
+    });
+}
 
-    function auto_grow() {
-        document.getElementById("coordinates").style.height = "5px";
-        document.getElementById("coordinates").style.height = (document.getElementById("coordinates").scrollHeight) + "px";
-    }
 
 
     $('#zone_form').on('submit', function () {
