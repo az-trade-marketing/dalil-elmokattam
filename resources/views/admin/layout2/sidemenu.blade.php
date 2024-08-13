@@ -98,6 +98,7 @@
                                         </a>
                                     </div>
                                     @endcan
+                                    @can("users Read")
                                     <div class="menu-item ">
                                         <a class="menu-link  {{ Request::segment(2) == "users" ? "active" :""  }}" href="{{ url("admin/users") }}">
                                             <span class="menu-bullet ">
@@ -106,6 +107,7 @@
                                             <span class="menu-title ">{{ __("admin.users") }}</span>
                                         </a>
                                     </div>
+                                    @endcan
                                 </div>
                                 <!--end:Menu sub-->
                             </div>

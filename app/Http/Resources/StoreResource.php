@@ -30,12 +30,12 @@ class StoreResource extends JsonResource
                 return $locale == 'ar' ? $tag->name_ar : $tag->name_en;
             }),
         ];
-        if ($this->logo) {
-            $response['logo'] = asset('images/' . $this->logo);
-        }
+        // if ($this->logo) {
+        //     $response['logo'] = asset('images/' . $this->logo);
+        // }
         // Conditionally add keys if they are not null
         if ($this->image) {
-            $response['image'] = asset('images/' . $this->image);
+            $response['logo'] = asset('images/' . $this->image);
         }
 
         if ($this->gallaries->isNotEmpty()) {
