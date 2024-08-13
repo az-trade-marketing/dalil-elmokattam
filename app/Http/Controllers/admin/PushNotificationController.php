@@ -22,14 +22,11 @@ class PushNotificationController extends Controller
     public function data()
     {
         $results = PushNotification::orderByDesc("id")->get();
-        // $permissions = [
-        //     'canCreate' => auth()->user()->can('push_notification Create'),
-        //     'canDelete' => auth()->user()->can('push_notification Delete')
-        // ];
         $permissions = [
-            'canCreate' => auth()->user()->can('admin Create'),
-            'canDelete' => auth()->user()->can('admin Delete')
+            'canCreate' => auth()->user()->can('push_notification Create'),
+            'canDelete' => auth()->user()->can('push_notification Delete')
         ];
+
         return response()->json([
             'data' => $results,
             'permissions' => $permissions
@@ -61,6 +58,8 @@ class PushNotificationController extends Controller
                 if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     $avatar = $request->file('image');
                     $image = upload($avatar);
+                }else{
+                    $image = null;
                 }
                 $pushNotification = PushNotification::create([
                     'user_id' => $user->id,
