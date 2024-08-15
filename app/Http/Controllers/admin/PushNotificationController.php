@@ -71,7 +71,7 @@ class PushNotificationController extends Controller
 
                 SendPushNotification::dispatch($pushNotification);
             }
-            return response()->json(['message' => 'Push notifications sent successfully.']);
+            return response()->json(['message' => 'success']);
         }
         return response()->json(['message' => 'no found users.']);
     }
@@ -129,7 +129,7 @@ class PushNotificationController extends Controller
 
         SendPushNotification::dispatch($pushNotification);
 
-        return response()->json(['message' => 'Push notification updated and sent successfully.']);
+        return response()->json(['message' => 'success']);
     }
 
 
