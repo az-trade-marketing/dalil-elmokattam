@@ -17,6 +17,8 @@ class StoreResource extends JsonResource
     {
         $reviews = $this->reviews;
         $locale = app()->getLocale();
+        $parentData = parent::toArray($request);
+        $parentData['name'] = app()->getLocale() == 'ar' ? $this->name_ar : $this->name_en;
         // Calculate the average rating
         $averageRating = $reviews->isEmpty() ? 0 : $reviews->avg('rating');
         $averageRating = number_format($averageRating, 1);
@@ -55,6 +57,6 @@ class StoreResource extends JsonResource
         }
 
 
-        return array_merge(parent::toArray($request), $response);
+        return array_merge($parentData, $response);
     }
 }
