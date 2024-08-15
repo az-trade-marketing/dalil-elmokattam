@@ -23,6 +23,11 @@ class UserController extends Controller
         }
         return response()->json(['status' => false, 'message' => 'User not found'], 404);
     }
+    public function saveToken(Request $request)
+    {
+        Auth::guard('users')->user()->update(['device_token'=>$request->device_token]);
+        return response()->json(['token saved successfully.']);
+    }
     public function editProfile(Request $request)
     {
         $authenticatedUserId = Auth::guard('users')->user()->id;

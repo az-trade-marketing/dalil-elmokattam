@@ -48,6 +48,7 @@ Route::group([
     Route::post('editProfile', [UserController::class, 'editProfile']);
     Route::post('editProfileImage', [UserController::class, 'editProfileImage']);
     Route::delete('deleteAccount', [UserController::class, 'deleteAccount']);
+    Route::post('/save-token', [UserController::class, 'saveToken'])->name('save-token');
    //reviews route
     Route::post('/review', [ReviewController::class, 'store']);
     Route::post('/review/{review}', [ReviewController::class, 'update']);

@@ -35,7 +35,7 @@ class StoreResource extends JsonResource
         // }
         // Conditionally add keys if they are not null
         if ($this->image) {
-            $response['logo'] = asset('images/' . $this->image);
+            $response['logo'] = asset('images/' . $this->logo);
         }
 
         if ($this->gallaries->isNotEmpty()) {
