@@ -56,48 +56,51 @@ class AuthController extends Controller
             'token' => $token,
         ], 200);
     }
-    public function handleSocialLogin(Request $request)
-    {
-        $validated = $request->validate([
-            'provider' => 'required|in:google,facebook',
-            'provider_id' => 'required|string',
-            'email' => 'nullable|email',
-            'firstname' => 'nullable|string',
-            'lastname' => 'nullable|string',
+public function handleSocialLogin(Request $request)
+{
+    $validated = $request->validate([
+        'provider' => 'required|in:google,facebook',
+        'provider_id' => 'required|string',
+        'email' => 'required|email',
+        'firstname' => 'required|string',
+        'lastname' => 'required|string',
+    ]);
+
+    $user = User::where('email', $validated['email'])
+        ->orWhere(function ($query) use ($validated) {
+            $query->where('provider', $validated['provider'])
+                  ->where('provider_id', $validated['provider_id']);
+        })
+        ->first();
+
+    if ($user) {
+        $user->update([
+            'provider_id' => $validated['provider_id'],
+            'firstname' => $validated['firstname'] ?? $user->firstname,
+            'lastname' => $validated['lastname'] ?? $user->lastname,
         ]);
-
-        $user = User::where('email', $validated['email'])
-            ->orWhere($validated['provider'] . '_id', $validated['provider_id'])
-            ->first();
-
-        if ($user) {
-            $user->update([
-                $validated['provider'] . '_id' => $validated['provider_id'],
-                'firstname' => $validated['firstname'] ?? $user->firstname,
-                'lastname' => $validated['lastname'] ?? $user->lastname,
-            ]);
-        } else {
-            $user = User::create([
-                'email' => $validated['email'],
-                'firstname' => $validated['firstname'],
-                'lastname' => $validated['lastname'],
-
-                $validated['provider'] . '_id' => $validated['provider_id'],
-                'password' => Hash::make($request->password),
-                'status' => 'active',
-            ]);
-        }
-
-        Auth::login($user, true);
-
-        $token = JWTAuth::fromUser($user);
-        return response()->json([
-            'success' => true,
-            'message' => 'logged in successfully',
-            'user' => $user,
-            'token' => $token,
-        ], 200);
+    } else {
+        $user = User::create([
+            'email' => $validated['email'],
+            'firstname' => $validated['firstname'],
+            'lastname' => $validated['lastname'],
+            'provider' => $validated['provider'],
+            'provider_id' => $validated['provider_id'],
+        ]);
     }
+
+    // Load additional fields or relationships if needed
+    $user = $user->fresh();
+
+    $token = JWTAuth::fromUser($user);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'logged in successfully',
+        'user' => $user,
+        'token' => $token,
+    ], 200);
+}
 
 
     public function signup(Request $request)
