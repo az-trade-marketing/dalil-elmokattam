@@ -1,4 +1,6 @@
 <?php
+
+use Illuminate\Support\Facades\Http;
 if (!function_exists('image_path')) {
     function image_path($url = '')
     {
@@ -189,4 +191,73 @@ function pointOnVertex($point, $vertices)
             }
         }
     }
+    if (!function_exists('sendFirebase')) {
+ function sendFirebase($tokens, $title = null, $body = null, $clickActionUrl = null, $imageUrl = null)
+    {
+        if (empty($tokens)) {
+            return;
+        }
 
+        $apiAccessToken = self::getGoogleAccessToken();
+        $isGroup = false;
+        $key = time();
+
+        if (is_string($tokens)) {
+            $tokens = [$tokens];
+        }
+
+        $tokens = array_values(array_filter(array_unique($tokens))); // Ensure tokens are unique and not null
+
+        $notification = [
+            'title' => !empty($title) ? $title : config('app.name') . ' Notification',
+            'body' => $body,
+            'click_action' => $clickActionUrl,
+        ];
+
+        if ($imageUrl) {
+            $notification['image'] = $imageUrl;
+        }
+
+        if (count($tokens) === 1) {
+            $token = $tokens[0];
+        } else {
+            if ($tokens instanceof \Illuminate\Support\Collection) {
+                $tokens = $tokens->toArray();
+            }
+            // Create a notification group and get the group token
+            $token = self::makeGroup($tokens, $key, $apiAccessToken);
+            $isGroup = true;
+        }
+
+        $payload = [
+            'token' => $token,
+            'notification' => $notification,
+        ];
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $apiAccessToken,
+            'Content-Type' => 'application/json',
+        ];
+
+        try {
+            $result = Http::withHeaders($headers)->post('https://fcm.googleapis.com/v1/projects/top-star-75039/messages:send', [
+                'message' => $payload
+            ]);
+
+            $result = json_decode($result);
+
+            if ($result && isset($result->error)) {
+                throw new Exception("Notification Error: " . json_encode($result) . " Tokens: " . json_encode($tokens));
+            }
+
+            // Remove the group if it was created
+            if ($result && $isGroup) {
+                self::removeGroupName($key, $token, $tokens, $apiAccessToken);
+            }
+
+            return $result;
+        } catch (Exception $ex) {
+            // Handle the exception (e.g., log the error)
+        }
+    }
+}

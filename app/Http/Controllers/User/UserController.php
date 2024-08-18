@@ -15,7 +15,7 @@ class UserController extends Controller
     public function getUserProfile()
     {
         $user = User::where('id', Auth::guard('users')->user()->id)->first();
-        $user['photo']=asset('images/' . $user->photo);
+        $user['photo']=  $user ->photo ? asset('images/' . $user->photo) : null;
         if ($user) {
             return response()->json([
                 'userData' => $user,
@@ -70,7 +70,7 @@ class UserController extends Controller
         }else {
             return response()->json(['status' => false, 'message' => 'Image not uploaded successfully'], 310);
         }
-        return response()->json(['status' => false, 'message' => 'Image  uploaded successfully'], 200);
+        return response()->json(['status' => true, 'message' => 'Image  uploaded successfully'], 200);
     }
     public function deleteAccount(Request $request)
     {
