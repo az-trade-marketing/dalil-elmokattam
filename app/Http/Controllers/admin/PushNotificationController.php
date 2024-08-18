@@ -70,6 +70,7 @@ class PushNotificationController extends Controller
                 ]);
 
                 SendPushNotification::dispatch($pushNotification);
+
             }
             return response()->json(['message' => 'success']);
         }

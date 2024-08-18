@@ -43,6 +43,7 @@ class SendPushNotification implements ShouldQueue
                 $this->pushNotification->image
             );
         }
+
     }
 }
 

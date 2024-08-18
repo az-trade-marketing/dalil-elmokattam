@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
+
 if (!function_exists('image_path')) {
     function image_path($url = '')
     {
@@ -14,191 +15,90 @@ if (!function_exists('aurl')) {
         return url('admin/' . trim($url, '/'));
     }
 }
-//change language
+
+// تغيير اللغة
 if (!function_exists('lang')) {
     function lang()
     {
-        return  app()->getLocale() ;
-        // $lang = session()->get('lang') ?? 'ar';
-        // return $lang;
+        return app()->getLocale();
     }
 }
 
 if (!function_exists('upload')) {
     function upload($file)
     {
-        $imageName = uniqid().time().'.'.$file->getClientOriginalExtension();
+        $imageName = uniqid() . time() . '.' . $file->getClientOriginalExtension();
         $file->move(public_path('images'), $imageName);
         return $imageName;
     }
 }
 
-
-/////////////function to location
-function pointStringToCoordinates($pointString)
-{
-    $coordinates = explode(" ", $pointString);
-    return array("x" => $coordinates[0], "y" => $coordinates[1]);
-}
-function pointOnVertex($point, $vertices)
-{
-    foreach ($vertices as $vertex) {
-        if ($point == $vertex) {
-            return true;
-        }
-    }
-}
-
-    function pointInPolygon($point, $polygon)
+// دالة للحصول على Google Access Token
+if (!function_exists('getGoogleAccessToken')) {
+    function getGoogleAccessToken()
     {
-        // pointOnVertex = true;
-
-        // Transform string coordinates into arrays with x and y values
-        $point = pointStringToCoordinates($point);
-        $vertices = array();
-        foreach ($polygon as $vertex) {
-            $vertices[] = pointStringToCoordinates($vertex);
-        }
-
-        // Check if the point sits exactly on a vertex
-        if (pointOnVertex($point, $vertices) == true) {
-            return true;
-        }
-
-        // Check if the point is inside the polygon or on the boundary
-        $intersections = 0;
-
-        for ($i = 1; $i < count($vertices); $i++) {
-            $vertex1 = $vertices[$i - 1];
-            $vertex2 = $vertices[$i];
-            if ($vertex1['y'] == $vertex2['y'] and $vertex1['y'] == $point['y'] and $point['x'] > min($vertex1['x'], $vertex2['x']) and $point['x'] < max($vertex1['x'], $vertex2['x'])) { // Check if point is on an horizontal polygon boundary
-                return true;
-            }
-            if ($point['y'] > min($vertex1['y'], $vertex2['y']) and $point['y'] <= max($vertex1['y'], $vertex2['y']) and $point['x'] <= max($vertex1['x'], $vertex2['x']) and $vertex1['y'] != $vertex2['y']) {
-                $xinters = ($point['y'] - $vertex1['y']) * ($vertex2['x'] - $vertex1['x']) / ($vertex2['y'] - $vertex1['y']) + $vertex1['x'];
-                if ($xinters == $point['x']) { // Check if point is on the polygon boundary (other than horizontal)
-                    return true;
-                }
-                if ($vertex1['x'] == $vertex2['x'] || $point['x'] <= $xinters) {
-                    $intersections++;
-                }
-            }
-        }
-        // If the number of edges we passed through is odd, then it's in the polygon.
-        if ($intersections % 2 != 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $credentialsFilePath = base_path('firebase-cloud-messaging.json'); // تأكد من أن المسار صحيح
+        $client = new \Google_Client(); // استخدم Google_Client مباشرة بدون use statement
+        $client->setAuthConfig($credentialsFilePath);
+        $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+        $client->refreshTokenWithAssertion();
+        $token = $client->getAccessToken();
+        return $token['access_token'];
     }
+}
 
+// دالة لإنشاء مجموعة
+if (!function_exists('makeGroup')) {
+    function makeGroup(array $registrationIds, string $notificationKeyName, $accessToken, string $operation = 'create')
+    {
+        $url = 'https://fcm.googleapis.com/fcm/notification';
+        $projectId = "9209b6225f70c869575649091cb2147557c14f39";
 
-    if (!function_exists('checkPoints')) {
+        if (empty($registrationIds)) return;
 
-        function checkPoints($lat, $lon)
-        {
-            ini_set('memory_limit', -1);
-            ini_set('set_time_limit', -1);
-            ini_set('max_execution_time', -1);
-            ini_set('post_max_size', -1);
-            ini_set('upload_max_filesize', -1);
+        $headers = [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $accessToken,
+            'project_id: ' . $projectId,
+        ];
 
-            $point = $lat . " " . $lon;
-            $check = false;
-            $area_id = 0;
-            $areas = \App\Models\Area::all();
+        $payload = [
+            'operation' => $operation,
+            'notification_key_name' => $notificationKeyName,
+            'registration_ids' => $registrationIds,
+        ];
 
-            foreach ($areas as $one) {
-                $polygon = [];
-                $boundaries = json_decode($one->boundaries, true);
+        $ch = curl_init();
 
-                if (is_array($boundaries) && !empty($boundaries)) {
-                    foreach ($boundaries as $x) {
-                        foreach ($x as $o) {
-                            $polygon[] = $o[0] . " " . $o[1];
-                        }
-                    }
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-                    if (isset($boundaries[0][0][0])) {
-                        $polygon[] = $boundaries[0][0][0] . " " . $boundaries[0][0][1];
-                        $check = pointInPolygon($point, $polygon);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-                        if ($check) {
-                            $area_id = $one->id;
-                            break;
-                        }
-                    }
-                }
-            }
+        curl_close($ch);
 
-            if ($check && $area_id > 0) {
-                $area = \App\Models\Area::find($area_id);
-
-                if ($area) {
-                    return $area->id;
-                }
-                return -1;
-            }
-            return -1;
+        if ($httpCode == 200) {
+            $response = json_decode($response);
+            return $response->notification_key ?? null;
         }
+
+        return null;
     }
-    ///////////////////sendFirbase
-    if (!function_exists('sendFirebase')) {
-        function sendFirebase(array $tokens, $title = null, $body = null, $clickActionUrl = null, $imageUrl = null)
-        {
-            $tokens = array_values(array_filter(array_unique($tokens)));
+}
 
-            $notification = [
-                'title' => !empty($title) ? $title : config('app.name') . ' Notification',
-                'body' => $body,
-                'click_action' => $clickActionUrl, // Add click action URL
-            ];
-
-            if ($imageUrl) {
-                $notification['image'] = $imageUrl; // Add image URL if provided
-            }
-
-            try {
-                $headers = [
-                    'Authorization: key=' . env('API_ACCESS_KEY'),
-                    'Content-Type: application/json'
-                ];
-
-                $fields = [
-                    'registration_ids' => $tokens,
-                    'notification' => $notification,
-                ];
-
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-                logger(json_encode($fields));
-                $result = curl_exec($ch);
-                $res = json_decode($result);
-                curl_close($ch);
-
-                if ($res && $res->failure) {
-                    throw new Exception("\n Notification Error: \n" . json_encode($res) . "\n Tokens: " . json_encode($tokens));
-                }
-
-                return $res;
-            } catch (Exception $ex) {
-                // Handle the exception
-            }
-        }
-    }
-    if (!function_exists('sendFirebase')) {
- function sendFirebase($tokens, $title = null, $body = null, $clickActionUrl = null, $imageUrl = null)
+// إرسال إشعار باستخدام Firebase
+if (!function_exists('sendFirebase')) {
+    function sendFirebase($tokens, $title = null, $body = null, $clickActionUrl = null, $imageUrl = null)
     {
         if (empty($tokens)) {
             return;
         }
 
-        $apiAccessToken = self::getGoogleAccessToken();
+        $apiAccessToken = getGoogleAccessToken();
         $isGroup = false;
         $key = time();
 
@@ -206,10 +106,10 @@ function pointOnVertex($point, $vertices)
             $tokens = [$tokens];
         }
 
-        $tokens = array_values(array_filter(array_unique($tokens))); // Ensure tokens are unique and not null
+        $tokens = array_values(array_filter(array_unique($tokens))); // التأكد من أن الرموز فريدة وليست فارغة
 
         $notification = [
-            'title' => !empty($title) ? $title : config('app.name') . ' Notification',
+            'title' => $title ?: config('app.name') . ' Notification',
             'body' => $body,
             'click_action' => $clickActionUrl,
         ];
@@ -224,8 +124,8 @@ function pointOnVertex($point, $vertices)
             if ($tokens instanceof \Illuminate\Support\Collection) {
                 $tokens = $tokens->toArray();
             }
-            // Create a notification group and get the group token
-            $token = self::makeGroup($tokens, $key, $apiAccessToken);
+            // إنشاء مجموعة الإشعارات والحصول على توكن المجموعة
+            $token = makeGroup($tokens, $key, $apiAccessToken);
             $isGroup = true;
         }
 
@@ -240,24 +140,25 @@ function pointOnVertex($point, $vertices)
         ];
 
         try {
-            $result = Http::withHeaders($headers)->post('https://fcm.googleapis.com/v1/projects/top-star-75039/messages:send', [
+            $result = Http::withHeaders($headers)->post('https://fcm.googleapis.com/v1/projects/dalil-almokattam/messages:send', [
                 'message' => $payload
             ]);
 
             $result = json_decode($result);
 
             if ($result && isset($result->error)) {
-                throw new Exception("Notification Error: " . json_encode($result) . " Tokens: " . json_encode($tokens));
+                throw new \Exception("Notification Error: " . json_encode($result) . " Tokens: " . json_encode($tokens));
             }
 
-            // Remove the group if it was created
+            // إزالة المجموعة إذا تم إنشاؤها
             if ($result && $isGroup) {
-                self::removeGroupName($key, $token, $tokens, $apiAccessToken);
+                makeGroup($tokens, $key, $apiAccessToken, 'remove');
             }
 
             return $result;
-        } catch (Exception $ex) {
-            // Handle the exception (e.g., log the error)
+        } catch (\Exception $ex) {
+            // التعامل مع الاستثناء (مثلاً تسجيل الخطأ)
+            // يمكنك تسجيل الخطأ هنا حسب الحاجة
         }
     }
 }
