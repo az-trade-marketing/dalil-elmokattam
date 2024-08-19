@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 if (!function_exists('image_path')) {
@@ -90,12 +91,13 @@ if (!function_exists('makeGroup')) {
     }
 }
 
-// إرسال إشعار باستخدام Firebase
+
+
 if (!function_exists('sendFirebase')) {
     function sendFirebase($tokens, $title = null, $body = null, $clickActionUrl = null, $imageUrl = null)
     {
         if (empty($tokens)) {
-            return;
+            return false;
         }
 
         $apiAccessToken = getGoogleAccessToken();
@@ -106,12 +108,12 @@ if (!function_exists('sendFirebase')) {
             $tokens = [$tokens];
         }
 
-        $tokens = array_values(array_filter(array_unique($tokens))); // التأكد من أن الرموز فريدة وليست فارغة
+        $tokens = array_values(array_filter(array_unique($tokens)));
 
         $notification = [
             'title' => $title ?: config('app.name') . ' Notification',
             'body' => $body,
-            'click_action' => $clickActionUrl,
+            // 'click_action' => $clickActionUrl,
         ];
 
         if ($imageUrl) {
@@ -124,7 +126,6 @@ if (!function_exists('sendFirebase')) {
             if ($tokens instanceof \Illuminate\Support\Collection) {
                 $tokens = $tokens->toArray();
             }
-            // إنشاء مجموعة الإشعارات والحصول على توكن المجموعة
             $token = makeGroup($tokens, $key, $apiAccessToken);
             $isGroup = true;
         }
@@ -140,25 +141,32 @@ if (!function_exists('sendFirebase')) {
         ];
 
         try {
-            $result = Http::withHeaders($headers)->post('https://fcm.googleapis.com/v1/projects/dalil-almokattam/messages:send', [
-                'message' => $payload
+            // Use GuzzleHttp Client instead of Http facade
+            // $client = new \GuzzleHttp\Client(['verify' => false]);
+            $client = new \GuzzleHttp\Client([
+                'verify' => 'E:/laragon/etc/ssl/cacert.pem',
             ]);
 
-            $result = json_decode($result);
+            $response = $client->post('https://fcm.googleapis.com/v1/projects/dalil-almokattam/messages:send', [
+                'headers' => $headers,
+                'json' => ['message' => $payload],
+            ]);
 
-            if ($result && isset($result->error)) {
+            $result = json_decode($response->getBody()->getContents());
+
+            if (isset($result->error)) {
                 throw new \Exception("Notification Error: " . json_encode($result) . " Tokens: " . json_encode($tokens));
             }
 
-            // إزالة المجموعة إذا تم إنشاؤها
-            if ($result && $isGroup) {
+            if ($isGroup) {
                 makeGroup($tokens, $key, $apiAccessToken, 'remove');
             }
 
             return $result;
         } catch (\Exception $ex) {
-            // التعامل مع الاستثناء (مثلاً تسجيل الخطأ)
-            // يمكنك تسجيل الخطأ هنا حسب الحاجة
+            Log::error('Firebase Notification Error: ' . $ex->getMessage());
+            return false;
         }
     }
 }
+
