@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html  dir="{{ auth()->user()->lang == "ar" ? 'rtl' : 'ltr' }}" >
-    
+
 @include("admin.layout2.header")
 
 	<!--begin::Body-->
@@ -12,7 +12,7 @@
 		<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
 			<!--begin::Page-->
 			<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-				
+
 				@include('admin.layout2.header-nave')
 
 
@@ -24,7 +24,7 @@
 
 					<!--begin::Main-->
 					<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
-				
+
 						@yield("content")
 
 					</div>
