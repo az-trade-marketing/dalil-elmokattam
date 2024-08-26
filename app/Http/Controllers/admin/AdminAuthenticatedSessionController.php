@@ -17,6 +17,8 @@ class AdminAuthenticatedSessionController extends Controller
     public function login()
     {
         return view('admin.auth.loginForm');
+
+
     }
     public function create()
     {
@@ -35,7 +37,7 @@ class AdminAuthenticatedSessionController extends Controller
         return redirect()->intended(RouteServiceProvider::ADMIN);
     }
 
-    
+
 
 
     public function destroy(Request $request)
