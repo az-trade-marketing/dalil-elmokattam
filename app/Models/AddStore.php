@@ -13,4 +13,7 @@ class AddStore extends Model
     protected $casts = [
         'id' => 'string',
     ];
+    public function zone() {
+        return $this->belongsTo(Zone::class,'zone_id');
+    }
 }

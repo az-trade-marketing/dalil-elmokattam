@@ -117,5 +117,13 @@ return [
     'push_notification' => 'الإشعار الفوري',
     'user_name'=>'اسم المستخدم',
     'sliders' => 'الشرائح',
+    'contacts' => 'جهات الاتصال',
+    'contacts-store' => ' جهات الاتصال المتجر',
+    'joining-store' => 'طلبات الانضمام',
+    'replay' => 'الرد',
+    'store_name' => 'اسم المتجر',
+    'owner_name' => 'اسم المالك',
+    'phone_number' => 'رقم الهاتف',
+    'comments' => 'التعليقات',
 
 ];

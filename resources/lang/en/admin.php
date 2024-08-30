@@ -114,4 +114,12 @@ return [
     'push_notification'=>'push notification',
     'user_name'=>'user_name',
     'sliders'=>'sliders',
+    'contacts'=>'contacts',
+    'contacts-store'=>'contacts-store',
+    'joining-store'=>'joining-store',
+    'replay'=>'replay',
+    'store_name'=>'store name',
+    'owner_name'=>'owner name',
+    'phone_number'=>'phone number',
+    'comments'=>'comments'
 ];

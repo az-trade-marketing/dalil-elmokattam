@@ -11,10 +11,13 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\Admin\ZonesController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\ContactStoreController;
+use App\Http\Controllers\Admin\JoiningStoreController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\PushNotificationController;
 use App\Http\Controllers\Admin\AdminAuthenticatedSessionController;
@@ -88,6 +91,16 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::resource('sliders', SliderController::class);
     Route::get('sliders-get-data', [SliderController::class, 'slider_data']);
     Route::post('/user/language', [AdminController::class, 'updateLanguage'])->name('user.language.update');
+      // ============================== joining store ====================
+    Route::resource('joining-store', JoiningStoreController::class);
+    Route::get('joining-store-get-data', [JoiningStoreController::class, 'data']);
+      // ============================== contacts store ====================
+    Route::resource('contacts-store', ContactStoreController::class);
+    Route::get('contacts-store-get-data', [ContactStoreController::class, 'data']);
+    Route::post('send-reply', [ContactStoreController::class, 'sendReply']);
+   // ============================== contacts  ====================
+   Route::resource('contacts', ContactController::class);
+   Route::get('contacts-get-data', [ContactController::class, 'data']);
 });
 
 
