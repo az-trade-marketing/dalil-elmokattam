@@ -275,7 +275,6 @@
 
                             var title = item.title ?? '';
                             var user_name = (item.user ? (item.user.firstname ?? '') + ' ' + (item.user.lastname ?? '') : '');
-
                             var message = item.message ?? '';
                             var country_img = item.image ?  item.image : '{{asset("/assets/img/user.png")}}' ;
                             var imagePath = '{{ image_path() }}/';

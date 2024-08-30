@@ -116,5 +116,6 @@ return [
     'link' => 'الرابط',
     'push_notification' => 'الإشعار الفوري',
     'user_name'=>'اسم المستخدم',
+    'sliders' => 'الشرائح',
 
 ];

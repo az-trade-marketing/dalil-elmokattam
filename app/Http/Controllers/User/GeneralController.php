@@ -4,16 +4,19 @@ namespace App\Http\Controllers\User;
 
 use App\ModelApi\Tag;
 use App\ModelApi\Zone;
+use App\Models\Slider;
 use App\ModelApi\Store;
 use App\Models\Contact;
 use App\ModelApi\Category;
 use App\Models\HelpSupport;
 use Illuminate\Http\Request;
+use App\Models\PushNotification;
 use App\Http\Resources\TagResource;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ZoneResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\StoreResource;
+use App\Http\Resources\SliderResource;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
 
@@ -210,5 +213,53 @@ public function getNearbyStores(Request $request, $radius = 10)
     ]);
 
 }
+public function notification(Request $request)
+{
+    $user = Auth::guard('users')->user();
+    if (!$user) {
+        return response()->json(['error' => 'User not authenticated'], 401);
+    }
 
+    $notifications = PushNotification::where('user_id', $user->id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // Loop through notifications to update image URL
+    foreach ($notifications as $notification) {
+        if ($notification->image) {
+            $notification->image = asset('images/' . $notification->image);
+        }
+    }
+
+    // Return notifications as a JSON response
+    return response()->json([
+        'status' => 'success',
+        'notifications' => $notifications,
+    ], 200);
+}
+public function SwipNotification(Request $request)
+{
+    $user = Auth::guard('users')->user();
+    if (!$user) {
+        return response()->json(['error' => 'User not authenticated'], 401);
+    }
+
+    $notification = PushNotification::where('user_id', $user->id)->where('id', $request->id)
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+       $notification->delete();
+
+    // Return notifications as a JSON response
+    return response()->json([
+        'status' => 'success',
+    ], 200);
+}
+public function get_sliders(){
+   $sliders =  Slider::with('store')->get();
+   return response()->json([
+    'isSuccess' => true,
+    'data' => SliderResource::collection($sliders)
+]);
+}
 }

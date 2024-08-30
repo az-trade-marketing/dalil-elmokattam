@@ -42,7 +42,7 @@ class SendPushNotification implements ShouldQueue
                 $this->pushNotification->title,
                 $this->pushNotification->message,
                 $this->pushNotification->link,
-                $this->pushNotification->image
+                asset('images/' . $this->pushNotification->image)
             );
 
             if ($response) {

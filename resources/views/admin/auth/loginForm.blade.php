@@ -111,11 +111,7 @@
                 @enderror
             </div>
             
-            <label class="checkbox-group">
-                <input class="form-check-input" type="checkbox" id="remember-me" name="remember" />
-                <span class="checkbox-label">
-                    Remember me
-                </span>
+         
             </label>
             <button type="submit"  class="btn btn-primary flex justify-center grow">
                 Sign In

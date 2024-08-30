@@ -59,7 +59,8 @@ Route::group([
     Route::post('/update-favorit', [FavoriteController::class, 'update']);
     Route::get('/user-favorits', [FavoriteController::class, 'index']);
     ////////////
-
+    Route::get('/user-notification', [GeneralController::class, 'notification']);
+     Route::post('/user-notification', [GeneralController::class, 'SwipNotification']);
 });
 ////////categories&tags
 Route::get('categories', [GeneralController::class, 'all_categories']);
@@ -77,3 +78,4 @@ Route::post('help-support', [GeneralController::class, 'helpSupport']);
 
 ////////add store
 Route::post('add-store', [StoreController::class, 'store']);
+Route::get('get-sliders', [GeneralController::class, 'get_sliders']);

@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\Admin\ZonesController;
+use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -83,7 +84,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
       Route::resource('push-notifications', PushNotificationController::class);
       Route::get('push-notifications-get-data', [PushNotificationController::class, 'data']);
     // ============================== lang ====================
-
+    // ============================== sliders ====================
+    Route::resource('sliders', SliderController::class);
+    Route::get('sliders-get-data', [SliderController::class, 'slider_data']);
     Route::post('/user/language', [AdminController::class, 'updateLanguage'])->name('user.language.update');
 });
 

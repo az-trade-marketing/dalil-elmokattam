@@ -92,9 +92,8 @@ if (!function_exists('makeGroup')) {
 }
 
 
-
 if (!function_exists('sendFirebase')) {
-    function sendFirebase($tokens, $title = null, $body = null, $clickActionUrl = null, $imageUrl = null)
+    function sendFirebase($tokens, $title = null, $body = null, $Url = null, $imageUrl = null)
     {
         if (empty($tokens)) {
             return false;
@@ -110,14 +109,23 @@ if (!function_exists('sendFirebase')) {
 
         $tokens = array_values(array_filter(array_unique($tokens)));
 
+        // Notification object for FCM
         $notification = [
             'title' => $title ?: config('app.name') . ' Notification',
             'body' => $body,
-            // 'click_action' => $clickActionUrl,
         ];
 
-        if ($imageUrl) {
+        // Data object to include additional information like URL
+        $data = [
+            'url' => $Url,
+        ];
+
+        // If image URL is provided, include it in the notification object
+        if (isset($imageUrl) && !empty($imageUrl)) {
             $notification['image'] = $imageUrl;
+        } else {
+            // Use a default image URL if none is provided
+            $notification['image'] = 'https://kita.rstar-soft.com/storage/images/kitaimg.jpg';
         }
 
         if (count($tokens) === 1) {
@@ -130,9 +138,11 @@ if (!function_exists('sendFirebase')) {
             $isGroup = true;
         }
 
+        // Payload structure for FCM
         $payload = [
             'token' => $token,
             'notification' => $notification,
+            'data' => $data, // Include the additional data here
         ];
 
         $headers = [
@@ -141,11 +151,8 @@ if (!function_exists('sendFirebase')) {
         ];
 
         try {
-            // Use GuzzleHttp Client instead of Http facade
-            // $client = new \GuzzleHttp\Client(['verify' => false]);
-            $client = new \GuzzleHttp\Client([
-                'verify' => 'E:/laragon/etc/ssl/cacert.pem',
-            ]);
+            // Use GuzzleHttp Client for the request
+            $client = new \GuzzleHttp\Client(['verify' => false]);
 
             $response = $client->post('https://fcm.googleapis.com/v1/projects/dalil-almokattam/messages:send', [
                 'headers' => $headers,
@@ -169,4 +176,6 @@ if (!function_exists('sendFirebase')) {
         }
     }
 }
+
+
 

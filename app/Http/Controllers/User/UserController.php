@@ -15,7 +15,7 @@ class UserController extends Controller
     public function getUserProfile()
     {
         $user = User::where('id', Auth::guard('users')->user()->id)->first();
-        $user['photo']=  $user ->photo ? asset('images/' . $user->photo) : null;
+           $user['photo']=  $user ->photo ? asset('images/' . $user->photo) : null;
         if ($user) {
             return response()->json([
                 'userData' => $user,
@@ -28,30 +28,31 @@ class UserController extends Controller
         Auth::guard('users')->user()->update(['device_token'=>$request->device_token]);
         return response()->json(['token saved successfully.']);
     }
-    public function editProfile(Request $request)
-    {
-        $authenticatedUserId = Auth::guard('users')->user()->id;
-        $validator = Validator::make($request->all(), [
-            'email' => 'nullable|email|unique:users,email,' . $authenticatedUserId . ',id',
-            'phone' => 'nullable|string|unique:users,mobile,' . $authenticatedUserId . ',id',
+  public function editProfile(Request $request)
+{
+    $authenticatedUserId = Auth::guard('users')->user()->id;
+    $validator = Validator::make($request->all(), [
+        'email' => 'nullable|email|unique:users,email,' . $authenticatedUserId . ',id',
+        'phone' => 'nullable|string|unique:users,phone,' . $authenticatedUserId . ',id',
+    ]);
 
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => $validator->errors()->first(),
-            ], 422);
-        }
-
-        $user = User::find($authenticatedUserId);
-        $user->update($request->all());
-        $user->save();
+    if ($validator->fails()) {
         return response()->json([
-            'status' => true,
-            'userData' => $user,
-        ], 200);
+            'status' => false,
+            'message' => $validator->errors()->first(),
+        ], 422);
     }
+
+    $user = User::find($authenticatedUserId);
+    $user->update($request->all());
+    $user->save();
+
+    return response()->json([
+        'status' => true,
+        'userData' => $user,
+    ], 200);
+}
+
     public function editProfileImage(Request $request)
     {
 

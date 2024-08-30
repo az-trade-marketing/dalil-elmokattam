@@ -197,20 +197,20 @@
                         @endif
                         <div class="col-lg-9">
                             <div id="features-container" class="row mb-10">
-                                <div class="row mb-10">
-                                    <div class="col-md-3">
-                                        <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.image') }}</label>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <div class="mb-5">
-                                            <input type="file" name="image" class="form-control form-control-solid" />
-                                            @if ($store->image)
-                                                <img src="{{ asset('images/' . $store->image) }}" alt="store image"
-                                                    class="mt-2" style="max-width: 200px;">
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
+                                <!--<div class="row mb-10">-->
+                                <!--    <div class="col-md-3">-->
+                                <!--        <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.image') }}</label>-->
+                                <!--    </div>-->
+                                <!--    <div class="col-lg-9">-->
+                                <!--        <div class="mb-5">-->
+                                <!--            <input type="file" name="image" class="form-control form-control-solid" />-->
+                                <!--            @if ($store->image)-->
+                                <!--                <img src="{{ asset('images/' . $store->image) }}" alt="store image"-->
+                                <!--                    class="mt-2" style="max-width: 200px;">-->
+                                <!--            @endif-->
+                                <!--        </div>-->
+                                <!--    </div>-->
+                                <!--</div>-->
                                 <div class="row mb-10">
                                     <div class="col-md-3">
                                         <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.video') }}</label>

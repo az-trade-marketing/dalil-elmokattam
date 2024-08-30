@@ -113,4 +113,5 @@ return [
     'link'=>'link',
     'push_notification'=>'push notification',
     'user_name'=>'user_name',
+    'sliders'=>'sliders',
 ];

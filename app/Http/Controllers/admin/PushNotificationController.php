@@ -21,7 +21,7 @@ class PushNotificationController extends Controller
     }
     public function data()
     {
-        $results = PushNotification::orderByDesc("id")->get();
+        $results = PushNotification::with('user')->orderByDesc("id")->get();
         $permissions = [
             'canCreate' => auth()->user()->can('push_notification Create'),
             'canDelete' => auth()->user()->can('push_notification Delete')
@@ -49,33 +49,35 @@ class PushNotificationController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
+   public function store(Request $request)
+{
+    $users = User::all();
 
-        $users = User::all();
-        if (!empty($users)) {
-            foreach ($users as $user) {
-                if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                    $avatar = $request->file('image');
-                    $image = upload($avatar);
-                }else{
-                    $image = null;
-                }
-                $pushNotification = PushNotification::create([
-                    'user_id' => $user->id,
-                    'title' => $request->title,
-                    'message' => $request->message,
-                    'image' => $image,
-                    'link' => $request->link,
-                ]);
-
-                SendPushNotification::dispatch($pushNotification);
-
+    if ($users->isNotEmpty()) {
+        foreach ($users as $user) {
+            
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                $avatar = $request->file('image');
+                $image = upload($avatar);
             }
-            return response()->json(['message' => 'success']);
+
+            $pushNotification = PushNotification::create([
+                'user_id' => $user->id,
+                'title' => $request->title,
+                'message' => $request->message,
+                'image' => $image,
+                'link' => $request->link,
+            ]);
+
+            SendPushNotification::dispatch($pushNotification);
         }
-        return response()->json(['message' => 'no found users.']);
+
+        return response()->json(['message' => 'success']);
     }
+
+    return response()->json(['message' => 'no users found.']);
+}
+
     /**
      * Display the specified resource.
      *
