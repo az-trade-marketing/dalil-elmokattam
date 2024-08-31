@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OpningTimeController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\ContactStoreController;
 use App\Http\Controllers\Admin\JoiningStoreController;
@@ -103,6 +104,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
    // ============================== contacts  ====================
    Route::resource('contacts', ContactController::class);
    Route::get('contacts-get-data', [ContactController::class, 'data']);
+
+   Route::resource('opening-time', OpningTimeController::class);
 });
 
 

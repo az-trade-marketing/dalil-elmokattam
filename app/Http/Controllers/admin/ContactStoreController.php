@@ -34,8 +34,10 @@ class ContactStoreController extends Controller
         $record = Contact::find($request->record_id);
         $record->replay = $request->reply;
         $record->save();
+
         // Send email
         Mail::to($record->email)->send(new YourReplyMail($record));
+
         return response()->json(['success' => 'Reply sent successfully.']);
     }
     /**

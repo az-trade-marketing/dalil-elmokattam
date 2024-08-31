@@ -18,12 +18,11 @@ class YourReplyMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Your Reply')
-                    ->view('emails.reply')
-                    ->with([
-                        'name' => $this->record->name,
-                        'reply' => $this->record->replay,
-                    ]);
+        return $this->view('admin.emails.replay')
+            ->with([
+                'name' => $this->record->name,
+                'reply' => $this->record->reply, // تأكد من أن هذا المفتاح مكتوب بشكل صحيح
+            ]);
     }
 }
 
