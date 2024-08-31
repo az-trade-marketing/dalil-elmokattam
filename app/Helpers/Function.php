@@ -33,6 +33,19 @@ if (!function_exists('upload')) {
         return $imageName;
     }
 }
+if (!function_exists('deleteFile')) {
+    function deleteFile($fileName)
+    {
+        $filePath = public_path('images') . "/" . $fileName;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+            return true;
+        }
+
+        return false;
+    }
+}
+
 
 // دالة للحصول على Google Access Token
 if (!function_exists('getGoogleAccessToken')) {

@@ -136,5 +136,7 @@ return [
     'thursday' => 'Thursday',
     'friday' => 'Friday',
     'create_opening_time'=>'create opening time',
+    'copy_link' => 'Copy Link',
     'opening-time'=>'opening time'
+
 ];

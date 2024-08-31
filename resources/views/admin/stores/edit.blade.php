@@ -219,9 +219,8 @@
                                         <div class="mb-5">
                                             <input type="file" name="video" class="form-control form-control-solid" />
                                             @if ($store->vidio)
-                                                <video controls class="mt-2" style="max-width: 300px;">
+                                                <video width="300" height="150" controls>
                                                     <source src="{{ asset('images/' . $store->vidio) }}" type="video/mp4">
-                                                    Your browser does not support the video tag.
                                                 </video>
                                             @endif
                                         </div>
@@ -234,19 +233,34 @@
                                     <div class="col-lg-9">
                                         <div class="mb-5">
                                             <input type="file" name="multiimage[]" class="form-control form-control-solid" multiple />
+                                            <input type="hidden" name="deleted_images" id="deleted_images">
                                             @if ($store->gallaries)
                                                 @foreach ($store->gallaries as $image)
-                                                    <img src="{{ asset('images/' . $image->image) }}" alt="store multiimage"
-                                                         class="mt-2" style="max-width: 100px; margin-right: 10px;">
+                                                    <div class="image-input image-input-outline" data-kt-image-input="true" style="margin: 30px">
+                                                        <div class="image-input-wrapper w-125px h-125px"
+                                                             style="background-image: url({{ asset('images/' . $image->image) }})">
+                                                        </div>
+                                                        <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" onclick="removeImage('{{ $image->image }}')"
+                                                               data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                                                            <i class="bi bi-pencil-fill fs-7"></i>
+                                                            <input type="file" name="multiimage[]" accept=".png, .jpg, .jpeg" data-image="{{ $image->image }}" />
+                                                        </label>
+                                                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                              data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+                                                            <i class="bi bi-x fs-2"></i>
+                                                        </span>
+                                                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                              data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar"
+                                                              onclick="removeImage('{{ $image->image }}')">
+                                                            <i class="bi bi-x fs-2"></i>
+                                                        </span>
+                                                    </div>
                                                 @endforeach
                                             @endif
                                         </div>
                                     </div>
-
-
-
+                                    
                                 </div>
-
                             </div>
                         </div>
                         <div class="row mb-10">
@@ -657,6 +671,24 @@
 });
 
 
+   </script>
+
+   <script>
+      function removeImage(imageName) {
+        console.log(imageName);
+        const deletedImagesInput = document.getElementById('deleted_images');
+        let deletedImages = deletedImagesInput.value ? deletedImagesInput.value.split(',') : [];
+        if (!deletedImages.includes(imageName)) {
+            deletedImages.push(imageName);
+            deletedImagesInput.value = deletedImages.join(',');
+        }
+
+        // Optionally hide or remove the image from the DOM
+        const imageDiv = document.querySelector(`span[data-image="${imageName}"]`).closest('.image-input');
+        if (imageDiv) {
+            imageDiv.style.display = 'none'; // Hide the image div
+        }
+    }
    </script>
 @endsection
 

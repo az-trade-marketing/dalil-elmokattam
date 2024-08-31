@@ -137,5 +137,6 @@ return [
     'wednesday' => 'الأربعاء',
     'thursday' => 'الخميس',
     'friday' => 'الجمعة',
+    'copy_link' => 'نسخ الرابط',
 
 ];

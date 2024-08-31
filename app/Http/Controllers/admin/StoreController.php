@@ -82,12 +82,16 @@ class StoreController extends Controller
             'description_en' => 'nullable|string|max:255',
             'description_ar' => 'nullable|string|max:255',
             'category_id' => 'required|integer|exists:categories,id',
-            'subscription_id' => 'required|integer|exists:subscriptions,id',
+            'subscription_id' => [
+                'required_if:role,admin',
+                'integer',
+                'exists:subscriptions,id',
+            ],
             'zone_id' => 'required|integer|exists:zones,id',
             'lat' => 'required|numeric',
             'lon' => 'required|numeric',
-            'mobile' => 'required|unique:stores',
-            'email' => 'required|email|unique:stores',
+            'mobile' => 'required|unique:stores,mobile',
+            'email' => 'required|email|unique:stores,email',
             'password' => 'required',
         ]);
         
@@ -169,7 +173,6 @@ class StoreController extends Controller
         $categories = Category::all();
         $zones = Zone::all();
         $subscriptions = Subscription::all();
-
         
        return view('admin.stores.edit',get_defined_vars());
     }
@@ -188,8 +191,12 @@ class StoreController extends Controller
             'name_ar' => 'required|string|max:255',
             'description_en' => 'nullable|string|max:255',
             'description_ar' => 'nullable|string|max:255',
-            'category_id' => 'required|integer|exists:categories,id',
-            'subscription_id' => 'required|integer|exists:subscriptions,id',
+            'category_id' => 'required|integer|exists:categories,id', 
+            'subscription_id' => [
+                'required_if:role,admin',
+                'integer',
+                'exists:subscriptions,id',
+            ],
             'zone_id' => 'required|integer|exists:zones,id',
             'lat' => 'required|numeric',
             'lon' => 'required|numeric',
@@ -218,24 +225,23 @@ class StoreController extends Controller
         }
 
         // Handle video
-        if ($request->hasFile('vidio')) {
-            $video = $request->file('vidio');
+        if ($request->hasFile('video')) {
+            $video = $request->file('video');
             $videoPath = upload($video);
             $validatedData['vidio'] = $videoPath;
         }
-
         // Update the store record
         $store->update($validatedData);
-        // Handle multiple images
-        if ($request->hasFile('multiimage')) {
-            $oldImages = GallaryStore::where('store_id', $store->id)->get();
-            foreach ($oldImages as $oldImage) {
-                $imagePath = public_path('images') . '/' . $oldImage->image;
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
-                }
+        if ($request->deleted_images) {
+            $deletedImages = explode(',',$request->deleted_images);
+            foreach ($deletedImages as $imageName) {
+                deleteFile($imageName);
+                GallaryStore::where('store_id', $store->id)->where('image', $imageName)->delete();
             }
-            GallaryStore::where("store_id",$store->id)->delete();
+        }
+    
+        // Handle updated images
+        if ($request->hasFile('multiimage')) {
             foreach ($request->file('multiimage') as $file) {
                 $path = upload($file);
                 $gallaryStory = new GallaryStore();

@@ -33,233 +33,168 @@
         <!--begin::Card body-->
         <div class="card-body border-top p-9">
             @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="kt_account_profile_details" class="collapse show">
-                <form action="{{ route('stores.store') }}" method="POST"
-                    enctype="multipart/form-data" id="create">
+                <form action="{{ route('stores.store') }}" method="POST" enctype="multipart/form-data" id="create">
                     @csrf
                     <!--begin::Card body-->
-                    <div class="card-body ">
+                    <div class="card-body">
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">   {{ __('admin.name_en') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.name_en') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="d-flex gap-3">
-                                        <input type="text" name="name_en" class="form-control form-control-solid"  placeholder="{{ __('admin.name_en') }}" />
-                                        <input type="text"name="name_ar" class="form-control form-control-solid" placeholder="{{ __('admin.name_ar') }}" />
+                                    <input type="text" name="name_en" class="form-control form-control-solid" placeholder="{{ __('admin.name_en') }}" value="{{ old('name_en') }}" />
+                                    <input type="text" name="name_ar" class="form-control form-control-solid" placeholder="{{ __('admin.name_ar') }}" value="{{ old('name_ar') }}" />
                                 </div>
-
                             </div>
                         </div>
+                        
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6" style="    width: auto">{{ __('admin.description_en') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.description_en') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="mb-5">
-                                    <textarea name="description_en" class="form-control form-control-solid" rows="3" placeholder="{{ __('admin.description_en') }}"></textarea>
+                                    <textarea name="description_en" class="form-control form-control-solid" rows="3" placeholder="{{ __('admin.description_en') }}">{{ old('description_en') }}</textarea>
                                 </div>
-
                             </div>
                         </div>
+                        
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6" style="    width: auto">{{ __('admin.description_ar') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.description_ar') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="mb-5">
-                                    <textarea name="description_ar" class="form-control form-control-solid" rows="3" placeholder="{{ __('admin.description_ar') }}"></textarea>
+                                    <textarea name="description_ar" class="form-control form-control-solid" rows="3" placeholder="{{ __('admin.description_ar') }}">{{ old('description_ar') }}</textarea>
                                 </div>
-
                             </div>
                         </div>
+                        
                         <div class="row mb-10">
                             <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">   {{ __('admin.contact') }}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.contact') }}</label>
                             </div>
                             <div class="col-lg-9">
                                 <div class="d-flex gap-3">
-                                        <input type="text" name="mobile" class="form-control form-control-solid"  placeholder="{{ __('admin.mobile') }}" />
-                                        <input type="text"name="email" class="form-control form-control-solid" placeholder="{{ __('admin.email') }}" />
-                                        <input type="password"name="password" class="form-control form-control-solid" placeholder="{{ __('admin.password') }}" />
+                                    <input type="text" name="mobile" class="form-control form-control-solid" placeholder="{{ __('admin.mobile') }}" value="{{ old('mobile') }}" />
+                                    <input type="text" name="email" class="form-control form-control-solid" placeholder="{{ __('admin.email') }}" value="{{ old('email') }}" />
+                                    <input type="password" name="password" class="form-control form-control-solid" placeholder="{{ __('admin.password') }}" value="{{ old('password') }}" />
                                 </div>
-
                             </div>
                         </div>
+                
                         <div class="row mb-10">
                             <div class="col-md-6">
                                 <div class="col-md-3">
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6" style="    width: auto">{{ __('admin.category') }}</label>
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.category') }}</label>
                                 </div>
                                 <div class="col-lg-9">
-                                    <!--begin::Input-->
-                                    <select id="business-type-select-activity"
-                                        class="form-select activity form-select-solid"
-                                        data-hide-search="category_id" data-placeholder="@lang('admin.admin_id')"
-                                        name="category_id" required>
+                                    <select id="business-type-select-activity" class="form-select activity form-select-solid" data-hide-search="category_id" data-placeholder="@lang('admin.admin_id')" name="category_id" required>
                                         <option value="">{{ __( 'admin.chooose' ) }}</option>
                                         @foreach ($categoreis as $category)
-                                        <option value="{{ $category->id }}">
-                                            {{ $category->{'name_' . lang()} }}</option>
+                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->{'name_' . lang()} }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="col-md-4">
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6" style="    width: auto">{{ __('admin.subscriptions') }}</label>
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.subscriptions') }}</label>
                                 </div>
                                 <div class="col-lg-9">
-                                <!--begin::Input-->
-                                <select id="business-type-select-activity"
-                                    class="form-select activity form-select-solid"
-                                    data-hide-search="subscription_id" data-placeholder="@lang('admin.subscriptions')"
-                                    name="subscription_id" required>
-                                    <option value="">{{ __( 'admin.chooose' ) }}</option>
-                                    @foreach ($subscriptions as $subscription)
-                                    <option value="{{ $subscription->id }}">
-                                        {{ $subscription->{'title_' . lang()} }}</option>
-                                    @endforeach
-                                </select>
+                                    <select id="business-type-select-activity" class="form-select activity form-select-solid" data-hide-search="subscription_id" data-placeholder="@lang('admin.subscriptions')" name="subscription_id" required>
+                                        <option value="">{{ __( 'admin.chooose' ) }}</option>
+                                        @foreach ($subscriptions as $subscription)
+                                            <option value="{{ $subscription->id }}" {{ old('subscription_id') == $subscription->id ? 'selected' : '' }}>
+                                                {{ $subscription->{'title_' . lang()} }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
+                
                         <div class="col-md-6">
                             <div id="features-container" class="row mb-10">
                                 <!-- Dynamic feature inputs will be loaded here -->
                             </div>
                         </div>
-
+                
                         <div class="row mb-10">
                             <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="input-label required" for="choice_zones">{{__('admin.zone')}}<span
-                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{__('admin.select_zone_for_map')}}"></span></label>
-                                    <select name="zone_id" id="choice_zones" required
-                                            class="form-control js-select2-custom"  data-placeholder="{{__('admin.select_zone')}}">
-                                            <option value="" selected disabled>{{__('admin.select_zone')}}</option>
+                                    <label class="input-label required" for="choice_zones">{{__('admin.zone')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{__('admin.select_zone_for_map')}}"></span></label>
+                                    <select name="zone_id" id="choice_zones" required class="form-control js-select2-custom" data-placeholder="{{__('admin.select_zone')}}">
+                                        <option value="" selected disabled>{{__('admin.select_zone')}}</option>
                                         @foreach(\App\Models\Zone::get() as $zone)
-                                            @if(isset(auth('admin')->user()->zone_id))
-                                                @if(auth('admin')->user()->zone_id == $zone->id)
-                                                    <option value="{{$zone->id}}">{{$zone->name_en}}</option>
-                                                @endif
-                                            @else
-                                            <option value="{{$zone->id}}">{{$zone->name_en}}</option>
-                                            @endif
+                                            <option value="{{ $zone->id }}" {{ old('zone_id') == $zone->id ? 'selected' : '' }}>{{ $zone->name_en }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="input-label required" for="lat">{{__('admin.lat')}}<span
-                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="{{__('admin.store_lat_lng_warning')}}"></span></label>
-                                    <input type="text" id="lat"
-                                            name="lat" class="form-control"
-                                            placeholder="{{ __('admin.Ex:') }} -94.22213" value="{{old('lat')}}" required readonly>
+                                    <label class="input-label required" for="lat">{{__('admin.lat')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{__('admin.store_lat_lng_warning')}}"></span></label>
+                                    <input type="text" id="lat" name="lat" class="form-control" placeholder="{{ __('admin.Ex:') }} -94.22213" value="{{ old('lat') }}" required readonly>
                                 </div>
                                 <div class="form-group mb-5">
-                                    <label class="input-label required" for="lon">{{__('admin.lon')}}<span
-                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="{{__('admin.store_lat_lng_warning')}}"></span></label>
-                                    <input type="text"
-                                            name="lon" class="form-control"
-                                            placeholder="{{ __('admin.Ex:') }} 103.344322" id="lon" value="{{old('lon')}}" required readonly>
+                                    <label class="input-label required" for="lon">{{__('admin.lon')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{__('admin.store_lat_lng_warning')}}"></span></label>
+                                    <input type="text" name="lon" class="form-control" placeholder="{{ __('admin.Ex:') }} 103.344322" id="lon" value="{{ old('lon') }}" required readonly>
                                 </div>
                             </div>
-
+                
                             <div class="col-lg-8">
-                                <input id="pac-input" class="controls rounded"
-                                    data-toggle="tooltip" data-placement="right" data-original-title="{{ __('admin.search_your_location_here') }}" type="text" placeholder="{{ __('admin.search_here') }}" />
-                                <div id="map" style="    position: relative;
-                                overflow: hidden;
-                                width: 100%;
-                                height: 100%;"></div>
+                                <input id="pac-input" class="controls rounded" data-toggle="tooltip" data-placement="right" data-original-title="{{ __('admin.search_your_location_here') }}" type="text" placeholder="{{ __('admin.search_here') }}" />
+                                <div id="map" style="position: relative; overflow: hidden; width: 100%; height: 100%;"></div>
                             </div>
                         </div>
-
+                
                         <div class="row mb-10">
-                           {{-- <div class="col-md-3">
+                            {{-- <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.logo') }}</label>
                             </div>
-                             <div class="col-lg-9">
-                                <div class="image-input image-input-outline"
-                                data-kt-image-input="true"
-                                style="background-image: url(assets/media/avatars/blank.png)">
-                                <!--begin::Preview existing Site Logo-->
-
-                                <div class="image-input-wrapper w-250px h-300px"
-                                    id="logo_img">
+                            <div class="col-lg-9">
+                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(assets/media/avatars/blank.png)">
+                                    <div class="image-input-wrapper w-250px h-300px" id="logo_img"></div>
+                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                                        <i class="bi bi-pencil-fill fs-7"></i>
+                                        <input type="file" name="logo" accept=".png, .jpg, .jpeg" />
+                                    </label>
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+                                        <i class="bi bi-x fs-2"></i>
+                                    </span>
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
+                                        <i class="bi bi-x fs-2"></i>
+                                    </span>
                                 </div>
-
-                                <!--end::Preview existing Site Logo-->
-                                <!--begin::Label-->
-                                <label
-                                    class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="change"
-                                    data-bs-toggle="tooltip"
-                                    title="Change avatar">
-                                    <i class="bi bi-pencil-fill fs-7"></i>
-                                    <!--begin::Inputs-->
-                                    <input type="file" name="logo"
-                                        accept=".png, .jpg, .jpeg" />
-
-                                    <!--end::Inputs-->
-                                </label>
-                                <!--end::Label-->
-                                <!--begin::Cancel-->
-                                <span
-                                    class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="cancel"
-                                    data-bs-toggle="tooltip"
-                                    title="Cancel avatar">
-                                    <i class="bi bi-x fs-2"></i>
-                                </span>
-                                <!--end::Cancel-->
-                                <!--begin::Remove-->
-                                <span
-                                    class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="remove"
-                                    data-bs-toggle="tooltip"
-                                    title="Remove avatar">
-                                    <i class="bi bi-x fs-2"></i>
-                                </span>
-                                <!--end::Remove-->
-                            </div>
-
-                            <div class="form-text">{{ __( 'category.allowed_file_types:_png,_jpg,_jpeg.' ) }}</div>
+                                <div class="form-text">{{ __( 'category.allowed_file_types:_png,_jpg,_jpeg.' ) }}</div>
                             </div> --}}
                         </div>
-
-
-
                     </div>
                     <!--end::div hidden-->
-
+                    <div class="card-footer d-flex justify-content-end py-6 px-9">
+                        <button type="reset" class="btn btn-light btn-active-light-primary me-2">{{ __("admin.discard") }}</button>
+                        <button type="submit" form="create" value="Submit" class="btn btn-primary">{{ __("admin.save") }}</button>
+            
+                    </div>
+                    <!--end::Card body-->
+                </form>
             </div>
 
         </div>
-
-        <!--end::Card body-->
-        <div class="card-footer d-flex justify-content-end py-6 px-9">
-            <button type="reset" class="btn btn-light btn-active-light-primary me-2">{{ __("admin.discard") }}</button>
-            <button type="submit" form="create" value="Submit" class="btn btn-primary">{{ __("admin.save") }}</button>
-
-        </div>
-        <!-- END: Form Layout -->
-        </form>
-
     </div>
     <!--end::Content-->
-    </div>
+</div>
 @endsection
 @section("js")
 <!--end::Basic info-->
