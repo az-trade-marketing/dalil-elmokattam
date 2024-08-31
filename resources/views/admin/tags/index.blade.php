@@ -33,18 +33,39 @@
                     <!--begin::Card toolbar-->
                     <div class="card-toolbar">
                         <!--begin::Toolbar-->
-                        <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                        <div class="d-flex justify-content-end align-items-center gap-3" data-kt-user-table-toolbar="base">
                             @can('tags Create')
                             <!--begin::Add user-->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
-                            <i class="ki-duotone ki-plus fs-2"></i>{{ __("admin.add") . ' '.__("admin.tag") }}</button>
+                            <button type="button" class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
+                                <i class="ki-duotone ki-plus fs-4"></i>
+                                <span>{{ __("admin.add") . ' ' . __("admin.tag") }}</span>
+                            </button>
                             <!--end::Add user-->
                             @endcan
+
+                            <form action="{{ route('tags.import') }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center">
+                                @csrf
+                                <input type="file" name="file" required class="form-control form-control-sm me-2">
+                                <button type="submit" class="btn btn-success btn-sm">Import Tags</button>
+                            </form>
                         </div>
+
 
                         {{-- modal for adding  --}}
                         <div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true">
                             <!--begin::Modal dialog-->
+                            @if(session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
                             <div class="modal-dialog modal-dialog-centered mw-650px">
                                 <!--begin::Modal content-->
                                 <div class="modal-content">

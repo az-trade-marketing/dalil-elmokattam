@@ -45,6 +45,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
    // =======================tags==================
    Route::resource('tags', TagsController::class);
    Route::get('tags-get-data', [TagsController::class, 'data']);
+   Route::post('/tags/import', [TagsController::class, 'import'])->name('tags.import');
+
     // =====================zones==========================
     Route::resource('zones', ZonesController::class);
     Route::get('zones-get-data', [ZonesController::class, 'data']);

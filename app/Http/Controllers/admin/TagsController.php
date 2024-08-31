@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Tag;
+use App\Imports\TagsImport;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\Controller;
 
 class TagsController extends Controller
 {
@@ -30,6 +32,13 @@ class TagsController extends Controller
             'data' => $results,
             'permissions' => $permissions
         ]);
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file');
+        Excel::import(new TagsImport, $file);
+        return redirect()->back()->with('success', 'Tags imported successfully!');
     }
 
     /**
