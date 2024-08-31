@@ -121,5 +121,20 @@ return [
     'store_name'=>'store name',
     'owner_name'=>'owner name',
     'phone_number'=>'phone number',
-    'comments'=>'comments'
+    'comments'=>'comments',
+    'add_shift' => 'Add Shift',
+    'Manage_regular_business_hours' => 'Manage Regular Business Hours',
+    'store' => 'Store',
+    'saturday' => 'Saturday',
+    'Enter_start_time' => 'Enter Start Time',
+    'Enter_end_time' => 'Enter End Time',
+    'delete' => 'Delete',
+    'sunday' => 'sunday',
+    'monday' => 'Monday',
+    'tuesday' => 'Tuesday',
+    'wednesday' => 'Wednesday',
+    'thursday' => 'Thursday',
+    'friday' => 'Friday',
+    'create_opening_time'=>'create opening time',
+    'opening-time'=>'opening time'
 ];

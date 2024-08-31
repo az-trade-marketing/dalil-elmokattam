@@ -18,7 +18,7 @@
 		{{-- <link href="{{ asset("admin/assets/plugins/custom/datatables/datatables.bundle.css")}}" rel="stylesheet" type="text/css" /> --}}
 		@if (auth()->user()->lang == "ar")
 			<link href="{{ asset("admin/assets/plugins/custom/fullcalendar/fullcalendar.bundle.rtl.css")}}" rel="stylesheet" type="text/css" />
-			
+
 			<link href="{{ asset("admin/assets/plugins/global/plugins.bundle.rtl.css")}}" rel="stylesheet" type="text/css" />
 			<link href="{{ asset("admin/assets/css/style.bundle.rtl.css")}}" rel="stylesheet" type="text/css" />
 			<link href="{{ asset("admin/assets/css/dataTable.min.rtl.css")}}" rel="stylesheet" type="text/css" />
@@ -30,6 +30,7 @@
 			<link href="{{ asset("admin/assets/css/dataTable.min.css")}}" rel="stylesheet" type="text/css" />
 			<link href="{{ asset("admin/assets/css/dataTables.bootstrap5.min.css")}}" rel="stylesheet" type="text/css" />
 		@endif
-		
+		<script src="https://cdn.jsdelivr.net/npm/jquery.repeater@1.2.1/jquery.repeater.min.js"></script>
+
 	</head>
 	<!--end::Head-->

@@ -22,4 +22,7 @@ class OpningTime extends Model
         $formattedEndTime = $time->format('h:i A');
         return $formattedEndTime;
     }
+    public function store() {
+        return $this->belongsTo(Store::class,'store_id');
+    }
 }

@@ -106,6 +106,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
    Route::get('contacts-get-data', [ContactController::class, 'data']);
 
    Route::resource('opening-time', OpningTimeController::class);
+
+
 });
 
 

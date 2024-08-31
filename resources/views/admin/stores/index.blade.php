@@ -111,7 +111,7 @@
                             <th>{{__('admin.name_ar')}}</th>
                             <th>{{__('admin.name_en')}}</th>
                             <th>{{__('admin.logo')}}</th>
-                            <th>{{__('admin.action')}}</th>
+                            <th>{{__('admin.')}}</th>
                           </tr>
                         </thead>
                         <tbody class="list country_table">

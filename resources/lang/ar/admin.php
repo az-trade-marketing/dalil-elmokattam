@@ -125,5 +125,17 @@ return [
     'owner_name' => 'اسم المالك',
     'phone_number' => 'رقم الهاتف',
     'comments' => 'التعليقات',
+    'add_shift' => 'إضافة وردية',
+    'Manage_regular_business_hours' => 'إدارة ساعات العمل ',
+    'store' => 'المتجر',
+    'saturday' => 'السبت',
+    'Enter_start_time' => 'أدخل وقت البدء',
+    'Enter_end_time' => 'أدخل وقت الانتهاء',
+    'delete' => 'حذف',
+    'monday' => 'الاثنين',
+    'tuesday' => 'الثلاثاء',
+    'wednesday' => 'الأربعاء',
+    'thursday' => 'الخميس',
+    'friday' => 'الجمعة',
 
 ];

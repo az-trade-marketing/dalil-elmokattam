@@ -32,6 +32,9 @@ class Store extends Model
     public function reports() {
         return $this->hasMany(Report::class);
     }
+    public function openingTimes() {
+        return $this->hasMany(OpningTime::class);
+    }
     public function subscription() {
         return $this->belongsTo(Subscription::class);
     }

@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('day_of_week')->nullable();
             $table->time('start_time');
             $table->time('end_time');
-            $table->integer('work_business')->default(1);
-            $table->integer('shift_number')->default(1);
             $table->timestamps();
         });
     }

@@ -397,6 +397,53 @@
  </div>
  </div>
 
+
+ <div data-kt-menu-trigger="click"
+ class="menu-item menu-accordion {{ Request::segment(2) == 'opening-time' ? 'hover show' : '' }}">
+ <!--begin:Menu link-->
+ <span class="menu-link">
+ <span class="menu-icon">
+ <i class="ki-duotone ki-address-book fs-2">
+ <span class="path1"></span>
+ <span class="path2"></span>
+ <span class="path3"></span>
+ </i>
+ </span>
+ <span class="menu-title">{{ __('admin.opening-time') }}</span>
+ <span class="menu-arrow"></span>
+ </span>
+ <!--end:Menu link-->
+ <!--begin:Menu sub-->
+ <div class="menu-sub menu-sub-accordion">
+ @can('Zone Read')
+     <div class="menu-item">
+     <a class="menu-link {{ Request::segment(2) == 'opening-time' ? 'active' : '' }}"
+     href="{{ url('admin/opening-time/create') }}">
+     <span class="menu-bullet">
+     <span class="bullet bullet-dot"></span>
+     </span>
+     <span class="menu-title">{{ __('admin.create_opening_time') }}</span>
+     </a>
+     </div>
+ @endcan
+ </div>
+
+ <div class="menu-sub menu-sub-accordion">
+    @can('Zone Read')
+        <div class="menu-item">
+        <a class="menu-link {{ Request::segment(2) == 'opening-time' ? 'active' : '' }}"
+        href="{{ url('admin/opening-time') }}">
+        <span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+        </span>
+        <span class="menu-title">{{ __('admin.opening-time') }}</span>
+        </a>
+        </div>
+    @endcan
+    </div>
+ </div>
+
+
  @endif
 
 
