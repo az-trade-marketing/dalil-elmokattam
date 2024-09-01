@@ -398,8 +398,9 @@
                         $('.country_table').html('');
                         $('#myTable').DataTable().destroy();
                         $('#myTable tbody').empty();
-                        $.each(response, function(key, item) {
-                            console.log(item);
+                        var permissions = response.permissions;
+                        
+                        $.each(response.data, function(key, item) {
                             var title_ar = item.title_ar ?? '';
                             var title_en = item.title_en ?? '';
                             var description_ar = item.description_ar ?? '';
@@ -408,6 +409,13 @@
                             var price = item.price ?? '';
                             var duration = item.duration ?? '';
 
+                            var actionButtons = '';
+                            if (permissions.canCreate) {
+                                actionButtons += '<a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'" data-name_ar="'+ item.name_ar +'" data-name_en="'+ item.name_en +'">{{ __("admin.edit") }}</a>';
+                            }
+                            if (permissions.canDelete) {
+                                actionButtons += '<a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="'+ item.id +'">{{ __("admin.delete") }}</a>';
+                            }
                             $('.country_table').append(`
                                 <tr>
                                     <td class="text-center pt-4">
@@ -428,7 +436,6 @@
                                     <td class="align-middle type text-nowrap">
                                         <h6 class="m-0 p-0">${type}</h6>
                                     </td>
-
                                     <td class="align-middle price text-nowrap">
                                         <h6 class="m-0 p-0">${price}</h6>
                                     </td>
@@ -437,8 +444,7 @@
                                     </td>
                                     <td class="min-w-100 pt-3">
                                         <div class="d-flex">
-                                            <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="${item.id}" data-title_ar="${item.title_ar}" data-title_en="${item.title_en}" data-description_ar="${item.description_ar}" data-description_en="${item.description_en}" data-type="${item.type}" data-features="${item.features}" data-price="${item.price}" data-duration="${item.duration}">{{ __('admin.edit') }}</a>
-                                            <a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="${item.id}" value="${item.id}">{{ __('admin.delete') }}</a>
+                                            ${actionButtons} <!-- إضافة الأزرار هنا -->
                                         </div>
                                     </td>
                                 </tr>
@@ -604,7 +610,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    type: 'get', // This should be 'DELETE'
+                    type: 'get',
                     dataType: 'json',
                     url: "/admin/subscription/" + item_id,
                     success: function(response) {
@@ -617,8 +623,7 @@
                                 });
                             } else {
                                 Swal.fire({
-                                    title: '{{ __('admin.isDelete') }} ' + response
-                                        .category.name_en + ' !!?',
+                                    title: '{{ __('admin.isDelete') }} ' + response.subscription.title_en + ' !!?',
                                     text: '{{ __('admin.revet') }}',
                                     icon: 'warning',
                                     showCancelButton: true,
@@ -627,7 +632,7 @@
                                     reverseButtons: true
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        delete_item(response.category.id);
+                                        delete_item(response.subscription.id);
                                     } else if (result.dismiss === Swal.DismissReason
                                         .cancel) {
                                         Swal.fire(
@@ -650,8 +655,6 @@
 
 
             function delete_item(item_id) {
-                console.log('Deleting item ID:', item_id);
-
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -661,16 +664,7 @@
                     url: "/admin/subscription/" + item_id,
                     success: function(response) {
                         try {
-                            if (response.status == 200) {
-                                Swal.fire(
-                                    '{{ __('admin.delete') }}',
-                                    '{{ __('admin.fileDeleted') }}',
-                                    'success'
-                                );
-                                get_data();
-                            } else {
-                                // Handle other statuses if needed
-                            }
+                             get_data();
                         } catch (e) {
                             console.error('Parsing Error:', e);
                         }

@@ -45,6 +45,17 @@ class StoreController extends Controller
         return response()->json(['coordinates'=>$data, 'center'=>$center]);
     }
 
+    public function user_store($id)
+    {
+        $store =  Store::find($id);
+        $admins = Admin::all();
+        $categories = Category::all();
+        $zones = Zone::all();
+        $subscriptions = Subscription::all();
+        
+       return view('admin.stores.edit',get_defined_vars());
+    }
+
     public function formatCoordinates(array $coordinates): array
     {
         $data = [];

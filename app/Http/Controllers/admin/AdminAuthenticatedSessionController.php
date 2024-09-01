@@ -25,12 +25,11 @@ class AdminAuthenticatedSessionController extends Controller
 
     public function store(AdminLoginRequest $request)
     {
-
         $request->authenticate('admin');
         $request->session()->regenerate();
         $user = Auth::guard("admin")->user();
         if ($user->hasRole('stores')) {
-            return redirect()->to("admin/stores/".$user?->store_id."/edit");
+            return redirect()->to("admin/user-store/".$user?->store_id);
         }
         return redirect()->intended(RouteServiceProvider::ADMIN);
     }

@@ -57,7 +57,7 @@ return [
     'tag'      =>   'علامه',
     'tags'      =>   'العلامات',
     'no_roles'      =>   'لا يوجد قواعد!',
-    'subscription' => 'اشتراك',
+    'subscription' => 'الباقات',
     'features' => 'ميزات',
     'type' => 'نوع',
     'weekly' => 'أسبوعي',
@@ -138,5 +138,6 @@ return [
     'thursday' => 'الخميس',
     'friday' => 'الجمعة',
     'copy_link' => 'نسخ الرابط',
+    'fileDeleted' => 'تم الحذف بنجاح',
 
 ];

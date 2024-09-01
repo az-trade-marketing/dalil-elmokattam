@@ -89,8 +89,10 @@
                                                 <div class="card-footer flex-wrap pt-0">
                                                     <a href="apps/user-management/roles/view.html" class="btn btn-light btn-active-primary my-1 me-2">View Role</a>
                                                     @can('roles Update')
-                                                    <button type="button" class="btn btn-light btn-active-light-primary my-1 edit-role-btn" data-id="{{ $result->id }}">Edit Role</button>
+                                                    <button type="button" class="btn btn-primary btn-active-light-primary my-1 edit-role-btn" data-id="{{ $result->id }}">Edit</button>
                                                     @endcan
+                                                    <button class="btn btn-danger btn-active-light-primary my-1 deleteButton" data-id="{{ $result->id }}">Delete</button>
+
                                                 </div>
                                                 <!--end::Card footer-->
                                             </div>
@@ -436,18 +438,14 @@
 
             // دالة فتح النموذج للتعديل
             function openEditModal(role) {
-                console.log(role,role.name_en,role.name_ar);
                 $('#editId').val(role.id);
                 $('#editNameEn').val(role.name_en);
                 $('#editNameAr').val(role.name_ar);
 
-                // فك جميع التحديدات السابقة من الـ checkboxes
                 $('.permission-checkbox').prop('checked', false);
                 if (role.allp == true) {
-                    console.log("allProp");
                     $('.appper').prop('checked', true);
                 }
-                // تحديد الـ checkboxes التي تطابق الأذونات الحالية للدور
                 role.permissions.forEach(function(permission) {
                     console.log(permission.id);
                     $('.permission-checkbox[value="' + permission.id + '"]').prop('checked', true);
@@ -593,7 +591,6 @@
                     success: function(response) {
                         try {
                             var jsonResponse = JSON.parse(response);
-
                             if (jsonResponse.status == 404) {
                                 Swal.fire({
                                     icon: 'error',
@@ -658,8 +655,7 @@
                     success: function(response) {
                         try {
                             var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
-                            console.log('Delete Response:', jsonResponse); // تحقق من استجابة الحذف
-                            get_data();
+                            location.reload();
                         } catch (e) {
                             console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
                         }

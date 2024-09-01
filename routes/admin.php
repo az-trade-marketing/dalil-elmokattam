@@ -76,6 +76,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     // ============================== stores ====================
     Route::resource('stores', StoreController::class);
     Route::get('get-zone-Coordinate/{id}', [StoreController::class, 'getCoordinates'])->name("zone.get-zone-Coordinate");
+    Route::get('user-store/{id}', [StoreController::class, 'user_store']);
     Route::get('stores-get-data', [StoreController::class, 'data']);
     Route::get("view-test", function () {
         $script_datatable = true;
