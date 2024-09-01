@@ -110,6 +110,7 @@
                             <th>#</th>
                             <th>{{__('admin.name_ar')}}</th>
                             <th>{{__('admin.name_en')}}</th>
+                            <th>{{__('admin.status')}}</th>
                             <th>{{__('admin.logo')}}</th>
                             <th>{{__('admin.')}}</th>
                           </tr>
@@ -149,6 +150,7 @@
                 $.each(response, function(key, item) {
                     var name_ar = item.name_ar ?? '';
                     var name_en = item.name_en ?? '';
+                    var status = item.status  == 1? 'active' : 'deactive';
                     var country_img = item.logo ?  item.logo : '{{asset("/assets/img/user.png")}}' ;
                     $('.country_table').append('<tr>\
                         <td class="text-center pt-4">\
@@ -159,6 +161,9 @@
                         </td>\
                         <td class="align-middle name text-nowrap">\
                             <h6 class="m-0 p-0">' + name_en + '</h6> \
+                        </td>\
+ <td class="align-middle name text-nowrap">\
+                            <h6 class="m-0 p-0">' + status + '</h6> \
                         </td>\
                         <td class="text-center min-w-100">\
                             <div class="avatar avatar-3xl">\
@@ -268,7 +273,7 @@
 
             $(document).on('click', '.copyButton', function() {
                 var relativeUrl = $(this).data('url');
-                
+
                 var baseUrl = window.location.origin;
 
                 var fullUrl = baseUrl + relativeUrl;
@@ -282,7 +287,7 @@
                 alert('تم نسخ الرابط إلى الحافظة: ' + fullUrl);
             });
 
-            
+
 });
 
  </script>
