@@ -91,7 +91,11 @@
                                                             <input type="password" name="password" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.password") }}" />
                                                             <div class="invalid-feedback text-danger" id="error-password"></div>
                                                         </div>
-
+                                                        <div class="col-md-6 fv-row">
+                                                            <label class="fw-semibold fs-6 mb-2">{{ __("admin.date_of_birth") }}</label>
+                                                            <input type="date" name="date_of_birth" class="form-control form-control-solid mb-3 mb-lg-0" />
+                                                            <div class="invalid-feedback text-danger" id="error-date_of_birth"></div>
+                                                        </div>
                                                         <div class="col-md-6 fv-row">
                                                             <label class="required fw-semibold fs-6 mb-2">{{ __("admin.phone") }}</label>
                                                             <input type="text" name="phone"  class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.phone") }}" />
@@ -174,6 +178,11 @@
                                                         <input type="password" name="password" id="editPassword" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.password") }}" />
                                                         <div class="invalid-feedback text-danger" id="error-edit-password" style="display: none;"></div>
                                                     </div>
+                                                    <div class="col-md-6 fv-row">
+                                                        <label class="fw-semibold fs-6 mb-2">{{ __("admin.date_of_birth") }}</label>
+                                                        <input type="date" name="date_of_birth" id="edit-date_of_birth" class="form-control form-control-solid mb-3 mb-lg-0" />
+                                                        <div class="text-danger" id="error-edit-date_of_birth"></div>
+                                                    </div>
                                                     <div class="fv-row mb-7">
                                                         <label class="required fw-semibold fs-6 mb-2">{{ __("admin.phone") }}</label>
                                                         <input type="text" name="phone" id="editPhone" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="{{ __("admin.phone") }}" />
@@ -220,6 +229,7 @@
                             <th>#</th>
                             <th>{{__('admin.firstname')}}</th>
                             <th>{{__('admin.lastname')}}</th>
+                            <th >{{ __("admin.date_of_birth") }}</th>
                             <th>{{__('admin.phone')}}</th>
                             <th>{{__('admin.email')}}</th>
                             <th>{{__('admin.action')}}</th>
@@ -264,6 +274,7 @@
                         $.each(response.data, function(key, item) {
                             var firstname = item.firstname ?? '';
                             var lastname = item.lastname ?? '';
+                            var date_of_birth = item.date_of_birth ?? '';
                             var phone = item.phone ?? '';
                             var email = item.email ?? '';
                             var actionButtons = '';
@@ -284,6 +295,9 @@
                                    <td class="align-middle name text-nowrap">\
                                     <h6 class="m-0 p-0">'+lastname+'</h6>\
                                 </td>\
+                                  <td class="align-middle name text-nowrap">\
+                                    <h6 class="m-0 p-0">'+date_of_birth+'</h6>\
+                                </td>\
                                 <td class="align-middle name text-nowrap">\
                                     <h6 class="m-0 p-0">'+phone+'</h6>\
                                 </td>\
@@ -295,8 +309,6 @@
                                         </td>\
                             </tr>');
                         });
-
-
                         let table = new DataTable('#myTable');
                     }
                 })
@@ -318,6 +330,7 @@
                         $('#editFirstName').val(response.firstname);
                         $('#editLastName').val(response.lastname);
                         $('#editEmail').val(response.email);
+                        $('#edit-date_of_birth').val(response.date_of_birth);
                         $('#editPhone').val(response.phone);
                         // Clear previous selections
                         $('.permission-checkbox').prop('checked', false);

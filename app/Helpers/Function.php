@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\OpeningTime;
+use App\Models\OpningTime;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
@@ -33,7 +35,7 @@ if (!function_exists('upload')) {
         return $imageName;
     }
 }
-
+//////////////////////push notification
 // دالة للحصول على Google Access Token
 if (!function_exists('getGoogleAccessToken')) {
     function getGoogleAccessToken()
@@ -176,6 +178,36 @@ if (!function_exists('sendFirebase')) {
         }
     }
 }
+////////////////////
+if (!function_exists('isStoreOpen')) {
+    function isStoreOpen($store_id)
+    {
+        $currentDay = date('l');
+        $currentTime = date('H:i:s');
+        $currentDate = date('Y-m-d');
+        $isOpen = false;
+        $currentTime = strtotime($currentTime);
+
+        if (!$isOpen) {
+
+            // Check Regular opening time
+            $openingTimes = OpningTime::where('store_id', $store_id)
+                ->where('day_of_week', $currentDay)
+                ->get();
+
+            foreach ($openingTimes as $openingTime) {
+                $startTime = strtotime($openingTime->start_time);
+                $endTime = strtotime($openingTime->end_time);
+                if ($startTime <= $currentTime && $currentTime <= $endTime) {
+                    $isOpen = true;
+                    break;
+                }
+            }
+        }
+        return $isOpen;
+    }
+}
+
 
 
 

@@ -32,7 +32,7 @@ Route::group([
     Route::post('password/reset', [AuthController::class, 'resetPassword']);
     Route::post('login/social', [AuthController::class, 'handleSocialLogin']);
 
-   ////////////////socialite
+    ////////////////socialite
     // Route::get('login/facebook', [SocialAuthController::class, 'redirectToFacebook'])->name('login.facebook');
     // Route::get('login/facebook/callback', [SocialAuthController::class, 'handleFacebookCallback']);
     // Route::get('login/google', [SocialAuthController::class, 'redirectToGoogle'])->name('login.google');
@@ -44,12 +44,12 @@ Route::group([
 ], function ($router) {
     Route::post('password/change', [AuthController::class, 'changePassword']);
     //////users
-     Route::get('getUserProfile', [UserController::class, 'getUserProfile']);
+    Route::get('getUserProfile', [UserController::class, 'getUserProfile']);
     Route::post('editProfile', [UserController::class, 'editProfile']);
     Route::post('editProfileImage', [UserController::class, 'editProfileImage']);
     Route::delete('deleteAccount', [UserController::class, 'deleteAccount']);
     Route::post('/save-token', [UserController::class, 'saveToken'])->name('save-token');
-   //reviews route
+    //reviews route
     Route::post('/review', [ReviewController::class, 'store']);
     Route::post('/review/{review}', [ReviewController::class, 'update']);
     Route::delete('/review/{review}', [ReviewController::class, 'destroy']);
@@ -60,7 +60,7 @@ Route::group([
     Route::get('/user-favorits', [FavoriteController::class, 'index']);
     ////////////
     Route::get('/user-notification', [GeneralController::class, 'notification']);
-     Route::post('/user-notification', [GeneralController::class, 'SwipNotification']);
+    Route::post('/user-notification', [GeneralController::class, 'SwipNotification']);
 });
 ////////categories&tags
 Route::get('categories', [GeneralController::class, 'all_categories']);
@@ -70,8 +70,8 @@ Route::get('zones', [GeneralController::class, 'all_zones']);
 Route::get('stores', [GeneralController::class, 'all_stores']);
 Route::get('/stores/search', [GeneralController::class, 'search']);
 Route::post('/stores/filter', [GeneralController::class, 'filter']);
-   Route::get('/get-nearby-stores', [GeneralController::class, 'getNearbyStores']);
-
+Route::get('/get-nearby-stores', [GeneralController::class, 'getNearbyStores']);
+Route::get('check-online', [GeneralController::class, 'isStoreOpen']);
 ////////helps&support //////contacts
 Route::post('contact-us', [GeneralController::class, 'ContactUs']);
 Route::post('help-support', [GeneralController::class, 'helpSupport']);
