@@ -353,15 +353,14 @@
                 },
                 success: function(response) {
                     try {
-                        var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
-                        location.reload();
-
+                        var jsonResponse = JSON.parse(response);
+                        get_data();
                     } catch (e) {
-                        console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
+                        console.error('Parsing Error:', e);
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('Delete Error:', error); // التحقق من وجود أخطاء في الحذف
+                    console.error('Delete Error:', error);
                 }
             });
         }

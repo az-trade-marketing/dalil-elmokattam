@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('contacts', function (Blueprint $table) {
-            //
+        Schema::table('push_notifications', function (Blueprint $table) {
+            $table->integer("type")->default(0)->comment("0=> inside app , 1=>outside app");
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('contacts', function (Blueprint $table) {
-            //
+        Schema::table('push_notifications', function (Blueprint $table) {
+            $table->dropColumn('type');
         });
     }
 };

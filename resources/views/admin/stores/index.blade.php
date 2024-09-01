@@ -151,14 +151,14 @@
                     var name_en = item.name_en ?? '';
                     var country_img = item.logo ?  item.logo : '{{asset("/assets/img/user.png")}}' ;
                     $('.country_table').append('<tr>\
-                        <td class=" text-center pt-4">\
+                        <td class="text-center pt-4">\
                             <h6>#' + item.id + '</h6> \
                         </td>\
-                        <td class="align-middle name text-nowrap ">\
-                            <h6 class="m-0 p-0">' + name_ar + ' </h6>  \
+                        <td class="align-middle name text-nowrap">\
+                            <h6 class="m-0 p-0">' + name_ar + '</h6> \
                         </td>\
-                        <td class="align-middle name text-nowrap ">\
-                            <h6 class="m-0 p-0">' + name_en + ' </h6>  \
+                        <td class="align-middle name text-nowrap">\
+                            <h6 class="m-0 p-0">' + name_en + '</h6> \
                         </td>\
                         <td class="text-center min-w-100">\
                             <div class="avatar avatar-3xl">\
@@ -168,10 +168,12 @@
                         <td class="min-w-100 pt-3">\
                             <div class="d-flex">\
                                 <a href="/admin/stores/'+ item.id +'/edit" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm me-2">{{ __("admin.edit") }}</a>\
-                                <a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="' + item.id + '" value="' + item.id + '">{{ __("admin.delete") }}</a>\
+                                <a href="javascript:void(0);" style="margin-left:10px;" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="' + item.id + '" value="' + item.id + '">{{ __("admin.delete") }}</a>\
+                                <a href="javascript:void(0);" class="btn btn-secondary btn-flex btn-center btn-sm copyButton" data-url="/admin/stores/' + item.id + '/show">{{ __("admin.copy_link") }}</a>\
                             </div>\
                         </td>\
                     </tr>');
+
                 });
 
                 let table = new DataTable('#myTable');
@@ -242,8 +244,6 @@
             });
 
             function delete_item(item_id) {
-                console.log('Deleting item ID:', item_id); // للتحقق من ID العنصر المراد حذفه
-
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'delete',
@@ -255,7 +255,6 @@
                     success: function(response) {
                         try {
                             var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
-                            console.log('Delete Response:', jsonResponse); // تحقق من استجابة الحذف
                             get_data();
                         } catch (e) {
                             console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
@@ -266,6 +265,24 @@
                     }
                 });
             }
+
+            $(document).on('click', '.copyButton', function() {
+                var relativeUrl = $(this).data('url');
+                
+                var baseUrl = window.location.origin;
+
+                var fullUrl = baseUrl + relativeUrl;
+
+                var $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val(fullUrl).select();
+                document.execCommand("copy");
+                $temp.remove();
+
+                alert('تم نسخ الرابط إلى الحافظة: ' + fullUrl);
+            });
+
+            
 });
 
  </script>

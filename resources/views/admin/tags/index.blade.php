@@ -446,18 +446,8 @@
             url: "/admin/tags/" + item_id,
             data: { id: item_id },
             success: function(response) {
-                try {
-                    if (response.status == "200") {
-                        var jsonResponse = JSON.parse(response);
-                        get_data();
-                    } else if (response.status == "400") {
-                        alert(response.error);
-                    } else if (response.status == "500") {
-                        alert(response.error);
-                    }
-                } catch (e) {
-                    console.error('Parsing Error:', e);
-                }
+                var jsonResponse = JSON.parse(response);
+                get_data();
             },
             error: function(xhr, status, error) {
                 console.error('Delete Error:', error);

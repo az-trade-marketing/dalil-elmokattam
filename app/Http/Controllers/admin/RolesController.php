@@ -153,6 +153,8 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = Role::find($id);
+        $data->delete();
+        return response()->json(['message' => 'Category deleted successfully.']);
     }
 }

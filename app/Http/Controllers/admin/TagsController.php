@@ -7,6 +7,7 @@ use App\Imports\TagsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class TagsController extends Controller
 {
@@ -131,15 +132,14 @@ class TagsController extends Controller
      */
     public function destroy($id)
     {
-        try {
-            $permission = Tag::findOrFail($id);
-            $permission->delete();
-            return response()->json(["message" => "success"], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(["error" => "Permission not found"], 404);
-        } catch (\Exception $e) {
-            return response()->json(["error" => $e->getMessage()], 500);
-        }
+        DB::transaction(function () use ($id) {
+            $tag = Tag::findOrFail($id);
+    
+            $tag->categories()->detach();
+    
+            $tag->delete();
+        });
+        return response()->json(['message' => 'Category deleted successfully.']);
     }
 
 }

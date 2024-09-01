@@ -97,6 +97,7 @@
                                 </div>
                             </div>
                         </div>
+                        @if (!auth()->user()->hasRole('stores'))
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.category') }}</label>
@@ -115,6 +116,8 @@
                                 </select>
                             </div>
                         </div>
+                        @endif
+                        
                         <div class="row mb-10">
                             <div class="col-lg-4">
                                 <div class="form-group">
@@ -173,7 +176,6 @@
                             <textarea type="text" rows="8" name="coordinates" id="coordinates" class="form-control" readonly></textarea>
                         </div>
                         @if (!auth()->user()->hasRole('stores'))
-                            
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.subscriptions') }}</label>
@@ -197,36 +199,24 @@
                         @endif
                         <div class="col-lg-9">
                             <div id="features-container" class="row mb-10">
-                                <!--<div class="row mb-10">-->
-                                <!--    <div class="col-md-3">-->
-                                <!--        <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.image') }}</label>-->
-                                <!--    </div>-->
-                                <!--    <div class="col-lg-9">-->
-                                <!--        <div class="mb-5">-->
-                                <!--            <input type="file" name="image" class="form-control form-control-solid" />-->
-                                <!--            @if ($store->image)-->
-                                <!--                <img src="{{ asset('images/' . $store->image) }}" alt="store image"-->
-                                <!--                    class="mt-2" style="max-width: 200px;">-->
-                                <!--            @endif-->
-                                <!--        </div>-->
-                                <!--    </div>-->
-                                <!--</div>-->
-                                <div class="row mb-10">
-                                    <div class="col-md-3">
-                                        <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.video') }}</label>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <div class="mb-5">
-                                            <input type="file" name="video" class="form-control form-control-solid" />
-                                            @if ($store->vidio)
-                                                <video controls class="mt-2" style="max-width: 300px;">
-                                                    <source src="{{ asset('images/' . $store->vidio) }}" type="video/mp4">
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            @endif
+                                @if (in_array("vidio",$store->subscription?->features?->pluck("type")->toArray()))
+                                    <div class="row mb-10">
+                                        <div class="col-md-3">
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.video') }}</label>
+                                        </div>
+                                        <div class="col-lg-9">
+                                            <div class="mb-5">
+                                                <input type="file" name="video" class="form-control form-control-solid" />
+                                                @if ($store->vidio)
+                                                    <video width="300" height="150" controls>
+                                                        <source src="{{ asset('images/' . $store->vidio) }}" type="video/mp4">
+                                                    </video>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
+                                @if (in_array("multiImage",$store->subscription?->features?->pluck("type")->toArray()))
                                 <div class="row mb-10">
                                     <div class="col-md-3">
                                         <label class="col-lg-4 col-form-label fw-bold fs-6"  style="width: auto">{{ __('admin.multiImage') }}</label>
@@ -234,21 +224,38 @@
                                     <div class="col-lg-9">
                                         <div class="mb-5">
                                             <input type="file" name="multiimage[]" class="form-control form-control-solid" multiple />
+                                            <input type="hidden" name="deleted_images" id="deleted_images">
                                             @if ($store->gallaries)
                                                 @foreach ($store->gallaries as $image)
-                                                    <img src="{{ asset('images/' . $image->image) }}" alt="store multiimage"
-                                                         class="mt-2" style="max-width: 100px; margin-right: 10px;">
+                                                    <div class="image-input image-input-outline" data-kt-image-input="true" style="margin: 30px">
+                                                        <div class="image-input-wrapper w-125px h-125px"
+                                                             style="background-image: url({{ asset('images/' . $image->image) }})">
+                                                        </div>
+                                                        <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" onclick="removeImage('{{ $image->image }}')"
+                                                               data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                                                            <i class="bi bi-pencil-fill fs-7"></i>
+                                                            <input type="file" name="multiimage[]" accept=".png, .jpg, .jpeg" data-image="{{ $image->image }}" />
+                                                        </label>
+                                                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                              data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+                                                            <i class="bi bi-x fs-2"></i>
+                                                        </span>
+                                                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                              data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar"
+                                                              onclick="removeImage('{{ $image->image }}')">
+                                                            <i class="bi bi-x fs-2"></i>
+                                                        </span>
+                                                    </div>
                                                 @endforeach
                                             @endif
                                         </div>
                                     </div>
-
-
-
+                                    
                                 </div>
-
+                                @endif
                             </div>
                         </div>
+                        @if (in_array("image",$store->subscription?->features?->pluck("type")->toArray()))
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.logo') }}</label>
@@ -280,6 +287,18 @@
                                 <div class="form-text">{{ __('category.allowed_file_types:_png,_jpg,_jpeg.') }}</div>
                             </div>
                         </div>
+                        @endif
+
+                         @if (in_array("text",$store->subscription?->features?->pluck("type")->toArray()))
+                        <div class="row mb-10">
+                            <div class="col-md-3">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.text') }}</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <textarea name="contacts" id="" cols="30" rows="10">{{ @$store->contacts }}</textarea>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                     <!--end::Card body-->
                     <div class="card-footer d-flex justify-content-end py-6 px-9">
@@ -657,6 +676,24 @@
 });
 
 
+   </script>
+
+   <script>
+      function removeImage(imageName) {
+        console.log(imageName);
+        const deletedImagesInput = document.getElementById('deleted_images');
+        let deletedImages = deletedImagesInput.value ? deletedImagesInput.value.split(',') : [];
+        if (!deletedImages.includes(imageName)) {
+            deletedImages.push(imageName);
+            deletedImagesInput.value = deletedImages.join(',');
+        }
+
+        // Optionally hide or remove the image from the DOM
+        const imageDiv = document.querySelector(`span[data-image="${imageName}"]`).closest('.image-input');
+        if (imageDiv) {
+            imageDiv.style.display = 'none'; // Hide the image div
+        }
+    }
    </script>
 @endsection
 

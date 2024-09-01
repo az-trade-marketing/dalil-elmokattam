@@ -477,7 +477,7 @@
                                 });
 
                                 swalWithBootstrapButtons.fire({
-                                    title: '{{__('admin.isDelete')}} ' + jsonResponse.name + ' !!?',
+                                    title: '{{__('admin.isDelete')}} ' + jsonResponse.firstname + ' !!?',
                                     text: '{{__('admin.revet')}}',
                                     icon: 'warning',
                                     showCancelButton: true,
@@ -515,22 +515,18 @@
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'delete',
-                    dataType: 'text', // تغيير dataType إلى text
+                    dataType: 'text', 
                     url: "/admin/users/" + item_id,
                     data: {
                         id: item_id
                     },
                     success: function(response) {
-                        try {
-                            var jsonResponse = JSON.parse(response); // تحليل البيانات يدوياً
-                            console.log('Delete Response:', jsonResponse); // تحقق من استجابة الحذف
-                            get_data();
-                        } catch (e) {
-                            console.error('Parsing Error:', e); // التحقق من وجود أخطاء في التحليل
-                        }
+                        var jsonResponse = JSON.parse(response);
+                        console.log(jsonResponse);
+                        get_data();
                     },
                     error: function(xhr, status, error) {
-                        console.error('Delete Error:', error); // التحقق من وجود أخطاء في الحذف
+                        console.error('Delete Error:', error);
                     }
                 });
             }

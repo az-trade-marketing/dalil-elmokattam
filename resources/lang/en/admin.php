@@ -56,7 +56,7 @@ return [
     'tag'      =>   'tag',
     'tags'      =>   'tags',
     'no_roles'      =>   'No roles assigned',
-    'subscription'=>'Subscription',
+    'subscription'=>'packages',
     'features'=>'features',
     'type'=>'type',
     'weekly'=>'weekly',
@@ -86,7 +86,7 @@ return [
     'create'=>'create',
     'edit'=>'edit',
     'upload'=>'upload',
-    'subscriptions' =>'subscriptions',
+    'subscriptions' =>'packages',
     'latitude' => 'latitude',
     'longitude' => 'longitude',
     'search_your_location_here' => 'search your location here',
@@ -136,5 +136,8 @@ return [
     'thursday' => 'Thursday',
     'friday' => 'Friday',
     'create_opening_time'=>'create opening time',
+    'copy_link' => 'Copy Link',
+    'fileDeleted' => 'Deleted Successfully',
     'opening-time'=>'opening time'
+
 ];

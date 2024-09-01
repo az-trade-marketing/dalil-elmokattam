@@ -52,7 +52,6 @@ class PushNotificationController extends Controller
    public function store(Request $request)
 {
     $users = User::all();
-
     if ($users->isNotEmpty()) {
         foreach ($users as $user) {
             
@@ -61,12 +60,24 @@ class PushNotificationController extends Controller
                 $image = upload($avatar);
             }
 
+            if ($request->link) {
+                $segments = explode('/', $request->link);
+                $thirdSegment = isset($segments[4]) ? $segments[4] : null;
+                if ($thirdSegment == "stores") {
+                    $type = 0;
+                    $link = $segments[5];
+                }else{
+                    $type = 1;
+                    $link = $request->link;
+                }
+            }
             $pushNotification = PushNotification::create([
                 'user_id' => $user->id,
                 'title' => $request->title,
                 'message' => $request->message,
                 'image' => $image,
-                'link' => $request->link,
+                'type' => $type,
+                'link' => $link,
             ]);
 
             SendPushNotification::dispatch($pushNotification);

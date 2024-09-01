@@ -35,8 +35,20 @@ if (!function_exists('upload')) {
         return $imageName;
     }
 }
-//////////////////////push notification
-// دالة للحصول على Google Access Token
+if (!function_exists('deleteFile')) {
+    function deleteFile($fileName)
+    {
+        $filePath = public_path('images') . "/" . $fileName;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+            return true;
+        }
+
+        return false;
+    }
+}
+
+
 if (!function_exists('getGoogleAccessToken')) {
     function getGoogleAccessToken()
     {

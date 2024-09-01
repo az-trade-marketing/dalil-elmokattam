@@ -110,7 +110,7 @@ class UserController extends Controller
         }
         $user->delete();
         session()->flash('success', 'تم حذف الحساب بنجاح');
-        return back();
+        return response()->json(['message' => 'Category deleted successfully.']);
     }
 
     public function exportUsers()

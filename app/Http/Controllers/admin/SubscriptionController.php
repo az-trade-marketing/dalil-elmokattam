@@ -29,7 +29,14 @@ class SubscriptionController extends Controller
     public function data()
     {
         $subscriptions = Subscription::query()->orderByDesc("id")->get();
-        return response()->json($subscriptions);
+        $permissions = [
+            'canCreate' => auth()->user()->can('subscription Create'),
+            'canDelete' => auth()->user()->can('subscription Delete')
+        ];
+        return response()->json([
+            'data' => $subscriptions,
+            'permissions' => $permissions
+        ]);
     }
     /**
      * Show the form for creating a new resource.
@@ -90,7 +97,7 @@ class SubscriptionController extends Controller
         $features = $subscription->features->map(function($feature) {
             return app()->getLocale() == "ar" ? $feature->name_ar : $feature->name_en;
         });
-        return response()->json(["features" => $features]);
+        return response()->json(["features" => $features,"subscription"=>$subscription]);
     }
     /**
      * Show the form for editing the specified resource.
@@ -146,8 +153,7 @@ class SubscriptionController extends Controller
     {
         try {
             $subscription = Subscription::findOrFail($id);
-
-            if ($subscription->foreign_key) {
+            if (count($subscription->stores) > 0) {
                 return response()->json(['error' => 'Subscription cannot be deleted because it is referenced by a foreign key.'], 400);
             }
 
@@ -156,6 +162,7 @@ class SubscriptionController extends Controller
 
             return response()->json(['message' => 'Subscription deleted successfully.'], 200);
         } catch (QueryException $e) {
+            dd($e->getMessage());
             return response()->json(['error' => 'Subscription cannot be deleted because it is referenced by a foreign key in feature', 'status' => 400], 400);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to delete Subscription.'], 500);
