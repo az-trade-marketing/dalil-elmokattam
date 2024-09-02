@@ -278,13 +278,19 @@ class GeneralController extends Controller
         $isOpen = isStoreOpen($request->store_id);
         return $isOpen ? 'online' : 'ofline';
     }
-    public function FeaturedStore(Request $request){
-        $featuredStores = Store::has('subscription')->get();
+    public function FeaturedStore(Request $request) {
+        $featuredStores = Store::whereHas('subscription', function ($query) {
+            $query->whereHas('features', function ($query) {
+                $query->where('type', 'featured');
+            });
+        })->get();
+
         return response()->json([
             'isSuccess' => true,
             'data' => StoreResource::collection($featuredStores)
         ]);
     }
+
     public function recentlyAdded(Request $request){
         $recentStores = Store::recentlyAdded()->get();
         return response()->json([
