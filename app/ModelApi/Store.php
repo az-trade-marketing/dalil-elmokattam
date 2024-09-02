@@ -2,6 +2,7 @@
 
 namespace App\ModelApi;
 
+use Carbon\Carbon;
 use App\Models\Admin;
 use App\Models\Report;
 use App\Models\Review;
@@ -27,6 +28,8 @@ class Store extends Model
     // {
     //     return $this->hasManyThrough(Tag::class, 'category_tags', 'store_id', 'id', 'id', 'tag_id');
     // }
+
+
     public function zones() {
         return $this->belongsTo(Zone::class,'zone_id');
     }
@@ -57,5 +60,9 @@ class Store extends Model
         } else {
             return $this->name_en;
         }
+    }
+    public function scopeRecentlyAdded($query)
+    {
+        return $query->where('created_at', '>=', Carbon::now()->subWeek());
     }
 }

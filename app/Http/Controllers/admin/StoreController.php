@@ -52,7 +52,7 @@ class StoreController extends Controller
         $categories = Category::all();
         $zones = Zone::all();
         $subscriptions = Subscription::all();
-        
+
        return view('admin.stores.edit',get_defined_vars());
     }
 
@@ -93,11 +93,11 @@ class StoreController extends Controller
             'description_en' => 'nullable|string|max:255',
             'description_ar' => 'nullable|string|max:255',
             'category_id' => 'required|integer|exists:categories,id',
-            'subscription_id' => [
-                'required_if:role,admin',
-                'integer',
-                'exists:subscriptions,id',
-            ],
+            // 'subscription_id' => [
+            //     'required_if:role,admin',
+            //     'integer',
+            //     'exists:subscriptions,id',
+            // ],
             'zone_id' => 'required|integer|exists:zones,id',
             'lat' => 'required|numeric',
             'lon' => 'required|numeric',
@@ -105,13 +105,13 @@ class StoreController extends Controller
             'email' => 'required|email|unique:stores,email',
             'password' => 'required',
         ]);
-        
+
         $validatedData['admin_id'] = Auth::guard('admin')->user()->id;
-        
+
         // Create the store record with the basic data
-        $validatedData = Arr::except($validatedData, ['password']); 
+        $validatedData = Arr::except($validatedData, ['password']);
         $store = Store::create($validatedData);
-        
+
         $admin = new Admin();
         $admin->name = $store->name_en;
         $admin->email = $store->email;
@@ -129,19 +129,19 @@ class StoreController extends Controller
             $imagePath = upload($logo);
             $store->update(['logo' => $imagePath]);
         }
-        
+
         // Handle text
         if ($request->has('features.text')) {
             $store->update(['contacts' => $request->features['text'] ?? null]);
         }
-        
+
         // Handle video
         if ($request->hasFile('features.vidio')) {
             $video = $request->file('features.vidio');
             $videoPath = upload($video);
             $store->update(['vidio' => $videoPath]);
         }
-        
+
         // Handle multiple images
         if ($request->hasFile('features.multiImage')) {
             foreach ($request->file('features.multiImage') as $file) {
@@ -152,11 +152,11 @@ class StoreController extends Controller
                 $gallaryStory->save();
             }
         }
-        
+
         Session::flash('success', 'Store created successfully');
         return back();
-        
-        
+
+
     }
 
     /**
@@ -184,7 +184,7 @@ class StoreController extends Controller
         $categories = Category::all();
         $zones = Zone::all();
         $subscriptions = Subscription::all();
-        
+
        return view('admin.stores.edit',get_defined_vars());
     }
 
@@ -202,7 +202,7 @@ class StoreController extends Controller
             'name_ar' => 'required|string|max:255',
             'description_en' => 'nullable|string|max:255',
             'description_ar' => 'nullable|string|max:255',
-            'category_id' => 'required|integer|exists:categories,id', 
+            'category_id' => 'required|integer|exists:categories,id',
             'subscription_id' => [
                 'required_if:role,admin',
                 'integer',
@@ -250,7 +250,7 @@ class StoreController extends Controller
                 GallaryStore::where('store_id', $store->id)->where('image', $imageName)->delete();
             }
         }
-    
+
         // Handle updated images
         if ($request->hasFile('multiimage')) {
             foreach ($request->file('multiimage') as $file) {
@@ -282,4 +282,5 @@ class StoreController extends Controller
         $store->delete();
         return response()->json(['message' => 'Category deleted successfully.']);
     }
+
 }

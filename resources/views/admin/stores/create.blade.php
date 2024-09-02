@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.description_en') }}</label>
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.description_ar') }}</label>
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row mb-10">
                             <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.contact') }}</label>
@@ -92,7 +92,7 @@
                                 </div>
                             </div>
                         </div>
-                
+
                         <div class="row mb-10">
                             <div class="col-md-6">
                                 <div class="col-md-3">
@@ -114,7 +114,7 @@
                                     <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.subscriptions') }}</label>
                                 </div>
                                 <div class="col-lg-9">
-                                    <select id="business-type-select-activity" class="form-select activity form-select-solid" data-hide-search="subscription_id" data-placeholder="@lang('admin.subscriptions')" name="subscription_id" required>
+                                    <select id="business-type-select-activity" class="form-select activity form-select-solid" data-hide-search="subscription_id" data-placeholder="@lang('admin.subscriptions')" name="subscription_id" >
                                         <option value="">{{ __( 'admin.chooose' ) }}</option>
                                         @foreach ($subscriptions as $subscription)
                                             <option value="{{ $subscription->id }}" {{ old('subscription_id') == $subscription->id ? 'selected' : '' }}>
@@ -125,13 +125,13 @@
                                 </div>
                             </div>
                         </div>
-                
+
                         <div class="col-md-6">
                             <div id="features-container" class="row mb-10">
                                 <!-- Dynamic feature inputs will be loaded here -->
                             </div>
                         </div>
-                
+
                         <div class="row mb-10">
                             <div class="col-lg-4">
                                 <div class="form-group">
@@ -152,13 +152,13 @@
                                     <input type="text" name="lon" class="form-control" placeholder="{{ __('admin.Ex:') }} 103.344322" id="lon" value="{{ old('lon') }}" required readonly>
                                 </div>
                             </div>
-                
+
                             <div class="col-lg-8">
                                 <input id="pac-input" class="controls rounded" data-toggle="tooltip" data-placement="right" data-original-title="{{ __('admin.search_your_location_here') }}" type="text" placeholder="{{ __('admin.search_here') }}" />
                                 <div id="map" style="position: relative; overflow: hidden; width: 100%; height: 100%;"></div>
                             </div>
                         </div>
-                
+
                         <div class="row mb-10">
                             {{-- <div class="col-md-3">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.logo') }}</label>
@@ -185,7 +185,7 @@
                     <div class="card-footer d-flex justify-content-end py-6 px-9">
                         <button type="reset" class="btn btn-light btn-active-light-primary me-2">{{ __("admin.discard") }}</button>
                         <button type="submit" form="create" value="Submit" class="btn btn-primary">{{ __("admin.save") }}</button>
-            
+
                     </div>
                     <!--end::Card body-->
                 </form>

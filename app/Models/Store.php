@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Store extends Model
 {
@@ -41,27 +42,26 @@ class Store extends Model
     protected static function boot()
     {
         parent::boot();
-
         static::deleting(function ($store) {
-            // Delete all related gallaries
             $store->gallaries()->each(function ($gallary) {
                 $gallary->delete();
             });
-
             // Delete all related reviews
             $store->reviews()->each(function ($review) {
                 $review->delete();
             });
-
             // Delete all related favorites
             $store->favorites()->each(function ($favorite) {
                 $favorite->delete();
             });
-
             // Delete all related reports
             $store->reports()->each(function ($report) {
                 $report->delete();
             });
         });
+    }
+    public function scopeRecentlyAdded($query)
+    {
+        return $query->where('created_at', '>=', Carbon::now()->subWeek());
     }
 }

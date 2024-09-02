@@ -20,7 +20,7 @@
 <script src="{{ asset("admin/assets/js/custom/utilities/modals/create-app.js")}}"></script>
 <script src="{{ asset("admin/assets/js/custom/utilities/modals/users-search.js")}}"></script>
 @endisset
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <!--end::Global Javascript Bundle-->
 <!--begin::Vendors Javascript(used for this page only)-->
 {{-- <script src="{{ asset("admin/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js")}}"></script>

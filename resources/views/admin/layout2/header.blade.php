@@ -31,6 +31,6 @@
 			<link href="{{ asset("admin/assets/css/dataTables.bootstrap5.min.css")}}" rel="stylesheet" type="text/css" />
 		@endif
 		<script src="https://cdn.jsdelivr.net/npm/jquery.repeater@1.2.1/jquery.repeater.min.js"></script>
-
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 	</head>
 	<!--end::Head-->

@@ -264,13 +264,32 @@ class GeneralController extends Controller
     }
     public function isStoreOpen(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'store_id' => 'required|exists:stores,id',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+        }
         if ($validator->fails()) {
             return response()->json(['status'=>false,'message' => $validator->errors()->first()],422);
          }
         $isOpen = isStoreOpen($request->store_id);
         return $isOpen ? 'online' : 'ofline';
+    }
+    public function FeaturedStore(Request $request){
+        $featuredStores = Store::has('subscription')->get();
+        return response()->json([
+            'isSuccess' => true,
+            'data' => StoreResource::collection($featuredStores)
+        ]);
+    }
+    public function recentlyAdded(Request $request){
+        $recentStores = Store::recentlyAdded()->get();
+        return response()->json([
+            'isSuccess' => true,
+            'data' => StoreResource::collection($recentStores)
+        ]);
     }
 }
