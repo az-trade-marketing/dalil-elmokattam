@@ -99,7 +99,7 @@
                                     <label class="col-lg-4 col-form-label required fw-bold fs-6" style="width: auto">{{ __('admin.category') }}</label>
                                 </div>
                                 <div class="col-lg-9">
-                                    <select id="business-type-select-activity" class="form-select activity form-select-solid" data-hide-search="category_id" data-placeholder="@lang('admin.admin_id')" name="category_id" required>
+                                    <select id="category-select" class="form-select activity form-select-solid" data-hide-search="category_id" data-placeholder="@lang('admin.admin_id')" name="category_id" required>
                                         <option value="">{{ __( 'admin.chooose' ) }}</option>
                                         @foreach ($categoreis as $category)
                                             <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -108,6 +108,16 @@
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <div class="col-lg-9">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.tags') }}</label>
+                                    <div class="col-lg-9">
+                                        <select id="tags-select" class="form-select form-select-solid" name="tags[]" multiple>
+                                            <!-- Tags will be populated here -->
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="col-md-6">
                                 <div class="col-md-4">
@@ -124,6 +134,7 @@
                                     </select>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="col-md-6">
@@ -482,6 +493,26 @@ $('.delivery-time').on('click',function (){
                 });
         }
     });
+});
+document.getElementById('category-select').addEventListener('change', function() {
+    var categoryId = this.value;
+
+    if(categoryId) {
+        fetch('/admin/getTags/' + categoryId)
+            .then(response => response.json())
+            .then(data => {
+                var tagsSelect = document.getElementById('tags-select');
+                tagsSelect.innerHTML = ''; // Clear previous tags
+
+                data.data.forEach(tag => {
+                    var option = document.createElement('option');
+                    option.value = tag.id;
+                    option.textContent = tag.name_en; // Assuming 'name' is the tag's display attribute
+                    tagsSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
 });
 
 </script>

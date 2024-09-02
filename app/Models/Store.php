@@ -64,4 +64,7 @@ class Store extends Model
     {
         return $query->where('created_at', '>=', Carbon::now()->subWeek());
     }
+    public function tags() {
+        return $this->belongsToMany(Tag::class,'store_tags');
+    }
 }

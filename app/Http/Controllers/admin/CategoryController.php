@@ -182,5 +182,14 @@ class CategoryController extends Controller
             return response()->json(['error' => 'Failed to delete category.'], 500);
         }
     }
+
+    public function getTags($id)
+    {
+        $category = Category::find($id);
+        $tags = $category ? $category->tags : [];
+
+        return response()->json(["data" => $tags], 200);
+    }
+
 }
 

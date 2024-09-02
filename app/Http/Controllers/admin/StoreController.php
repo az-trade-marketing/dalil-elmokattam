@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Tag;
 use App\Models\Area;
 use App\Models\Zone;
 use App\Models\Admin;
 use App\Models\Store;
 use App\Models\Category;
+use Illuminate\Support\Arr;
+use App\Models\GallaryStore;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreRequest;
 use App\Http\Controllers\Controller;
-use App\Models\GallaryStore;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -87,6 +88,7 @@ class StoreController extends Controller
 
     public function store(Request $request)
     {
+
         $validatedData = $request->validate([
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
@@ -152,6 +154,9 @@ class StoreController extends Controller
                 $gallaryStory->save();
             }
         }
+          foreach ($request->tags as $tagId) {
+        $store->tags()->attach($tagId);
+    }
 
         Session::flash('success', 'Store created successfully');
         return back();

@@ -61,6 +61,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     // ============================== categories ====================
     Route::resource('categories', CategoryController::class);
     Route::get('cat-data', [CategoryController::class, 'cat_cat']);
+    Route::get('getTags/{id}', [CategoryController::class, 'getTags']);
     // ============================== features ====================
     Route::resource('features', FeatureController::class);
     Route::get('features-get-data', [FeatureController::class, 'data']);
