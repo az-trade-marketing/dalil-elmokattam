@@ -139,5 +139,7 @@ return [
     'friday' => 'الجمعة',
     'copy_link' => 'نسخ الرابط',
     'fileDeleted' => 'تم الحذف بنجاح',
+    'opening-time' => 'وقت الفتح',
+    'create_opening_time' => 'إنشاء وقت الفتح',
 
 ];
