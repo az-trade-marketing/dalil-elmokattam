@@ -332,7 +332,6 @@
                                 <th>{{ __('admin.description_en') }}</th>
                                 <th>{{ __('admin.type') }}</th>
                                 <th>{{ __('admin.price') }}</th>
-                                {{-- <th>{{ __('admin.duration') }}</th> --}}
                                 <th>{{ __('admin.action') }}</th>
                             </tr>
                         </thead>
@@ -391,7 +390,7 @@
                             var description_en = item.description_en ?? '';
                             var type = item.type ?? '';
                             var price = item.price ?? '';
-                            var duration = item.duration ?? '';
+
 
                             var actionButtons = '';
                             if (permissions.canCreate) {
@@ -422,9 +421,6 @@
                                     </td>
                                     <td class="align-middle price text-nowrap">
                                         <h6 class="m-0 p-0">${price}</h6>
-                                    </td>
-                                    <td class="align-middle duration text-nowrap">
-                                        <h6 class="m-0 p-0">${duration}</h6>
                                     </td>
                                     <td class="min-w-100 pt-3">
                                         <div class="d-flex">
