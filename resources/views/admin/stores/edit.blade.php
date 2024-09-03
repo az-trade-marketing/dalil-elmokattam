@@ -99,25 +99,36 @@
                         </div>
                         @if (!auth()->user()->hasRole('stores'))
                         <div class="row mb-10">
-                            <div class="col-md-3">
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.category') }}</label>
-                            </div>
+
                             <div class="col-lg-9">
-                                <select id="business-type-select-activity"
-                                    class="form-select activity form-select-solid" data-hide-search="category_id"
-                                    data-placeholder="@lang('admin.category')" name="category_id" required>
-                                    <option value="">{{ __('admin.choose') }}</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}"
-                                            {{ $category->id == $store->category_id ? 'selected' : '' }}>
-                                            {{ $category->{'name_' . app()->getLocale()} }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{{ __('admin.category') }}</label>
+                                <div class="col-lg-9">
+                                    <select id="category-select" class="form-select activity form-select-solid" name="category_id" required>
+                                        <option value="">{{ __('admin.choose') }}</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id', $store->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->{'name_' . lang()} }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
+
+                            <div class="col-lg-9">
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.tags') }}</label>
+                                <div class="col-lg-9">
+                                    <select id="tags-select" class="form-select form-select-solid" name="tags[]" multiple>
+                                        @foreach ($store->tags as $tag)
+                                            <option value="{{ $tag->id }}" selected>{{ $tag->{'name_' . lang()} }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+
                         </div>
                         @endif
-                        
+
                         <div class="row mb-10">
                             <div class="col-lg-4">
                                 <div class="form-group">
@@ -250,7 +261,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                                 @endif
                             </div>
@@ -694,6 +705,35 @@
             imageDiv.style.display = 'none'; // Hide the image div
         }
     }
-   </script>
+
+   document.getElementById('category-select').addEventListener('change', function() {
+    var categoryId = this.value;
+
+    if(categoryId) {
+        fetch('/admin/getTags/' + categoryId)
+            .then(response => response.json())
+            .then(data => {
+                var tagsSelect = document.getElementById('tags-select');
+                var selectedTags = Array.from(tagsSelect.options).filter(option => option.selected).map(option => option.value);
+
+                tagsSelect.innerHTML = ''; // Clear previous tags
+
+                data.data.forEach(tag => {
+                    var option = document.createElement('option');
+                    option.value = tag.id;
+                    option.textContent = tag.name_en;
+
+                    // Check if this tag is already selected
+                    if(selectedTags.includes(String(tag.id))) {
+                        option.selected = true;
+                    }
+
+                    tagsSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+</script>
 @endsection
 

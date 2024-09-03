@@ -66,7 +66,7 @@ class GeneralController extends Controller
             });
 
             // Search in tag names (Arabic and English)
-            $query->orWhereHas('category.tags', function ($q) use ($searchTerm) {
+            $query->orWhereHas('tags', function ($q) use ($searchTerm) {
                 $q->where(function ($q) use ($searchTerm) {
                     $q->where('name_ar', 'like', '%' . $searchTerm . '%')
                         ->orWhere('name_en', 'like', '%' . $searchTerm . '%');
@@ -111,21 +111,21 @@ class GeneralController extends Controller
                 });
 
                 // إذا كانت العلامات موجودة، فلترة ضمن التصنيفات
-                if (!empty($tags)) {
-                    $q->whereHas('tags', function ($q) use ($tags) {
-                        $q->where(function ($q) use ($tags) {
-                            foreach ($tags as $tag) {
-                                $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
-                                    ->orWhere('tags.name_en', 'like', '%' . $tag . '%');
-                            }
-                        });
-                    });
-                }
+                // if (!empty($tags)) {
+                //     $q->whereHas('tags', function ($q) use ($tags) {
+                //         $q->where(function ($q) use ($tags) {
+                //             foreach ($tags as $tag) {
+                //                 $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
+                //                     ->orWhere('tags.name_en', 'like', '%' . $tag . '%');
+                //             }
+                //         });
+                //     });
+                // }
             });
         } else {
             // إذا لم تكن هناك تصنيفات ولكن هناك علامات، فلترة بناءً على العلامات فقط
             if (!empty($tags)) {
-                $query->whereHas('category.tags', function ($q) use ($tags) {
+                $query->whereHas('tags', function ($q) use ($tags) {
                     $q->where(function ($q) use ($tags) {
                         foreach ($tags as $tag) {
                             $q->orWhere('tags.name_ar', 'like', '%' . $tag . '%')
@@ -157,7 +157,7 @@ class GeneralController extends Controller
 
     public function all_stores()
     {
-        $stores = Store::with('category', 'zones', 'reviews', 'subscription', 'category.tags')->get();
+        $stores = Store::with('category', 'zones', 'reviews', 'subscription', 'tags')->get();
         return response()->json(['isSuccess' => true, 'data' => StoreResource::collection($stores)], 200);
     }
     public function ContactUs(Request $request)

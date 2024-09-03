@@ -48,7 +48,7 @@ class StoreController extends Controller
 
     public function user_store($id)
     {
-        $store =  Store::find($id);
+        $store = Store::with('tags')->findOrFail($id);
         $admins = Admin::all();
         $categories = Category::all();
         $zones = Zone::all();
@@ -95,11 +95,11 @@ class StoreController extends Controller
             'description_en' => 'nullable|string|max:255',
             'description_ar' => 'nullable|string|max:255',
             'category_id' => 'required|integer|exists:categories,id',
-            // 'subscription_id' => [
-            //     'required_if:role,admin',
-            //     'integer',
-            //     'exists:subscriptions,id',
-            // ],
+            'subscription_id' => [
+                'required_if:role,admin',
+                'integer',
+                'exists:subscriptions,id',
+            ],
             'zone_id' => 'required|integer|exists:zones,id',
             'lat' => 'required|numeric',
             'lon' => 'required|numeric',
@@ -184,7 +184,8 @@ class StoreController extends Controller
      */
     public function edit($id)
     {
-        $store =  Store::find($id);
+        $store = Store::with('tags')->findOrFail($id);
+        // dd($store->tags);
         $admins = Admin::all();
         $categories = Category::all();
         $zones = Zone::all();
@@ -266,7 +267,9 @@ class StoreController extends Controller
                 $gallaryStory->save();
             }
         }
-
+        if ($request->has('tags')) {
+            $store->tags()->sync($request->tags); // Sync tags with the store
+        }
         Session::flash('success', 'Updated successfully');
         return back();
     }

@@ -28,7 +28,7 @@ class StoreResource extends JsonResource
             'rating' =>  $averageRating,
             'reviews' => ReviewsResource::collection($this->reviews),
             'zone_name' => app()->getLocale() == 'ar' ? $this->zones->name_ar : $this->zones->name_en,
-            'tags' => $this->category->tags->map(function ($tag) use ($locale) {
+            'tags' => $this->tags->map(function ($tag) use ($locale) {
                 return $locale == 'ar' ? $tag->name_ar : $tag->name_en;
             }),
         ];

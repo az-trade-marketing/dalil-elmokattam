@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('store_tags', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('feature_id')->constrained('features')
+            $table->foreignId('tag_id')
+            ->constrained('tags')
             ->onDelete('cascade')
             ->onUpdate('cascade');
             $table->foreignId('store_id')->constrained('stores')
