@@ -133,6 +133,15 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-lg-9">
+                                    <label
+                                        class="required fw-semibold fs-6 mb-2">{{ __('admin.duration') }}</label>
+                                    <input type="number" name="duration"
+                                        class="form-control form-control-solid mb-3 mb-lg-0"
+                                        placeholder="{{ __('admin.duration') }}" />
+                                    <div class="invalid-feedback text-danger" id="error-duration">
+                                    </div>
+                                </div>
                             </div>
 
                         </div>

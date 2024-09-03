@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('description_en')->nullable();
             $table->enum('type',['monthly','weekly','yearly']);
             $table->decimal('price')->default(0);
-            $table->integer('duration')->nullable();
+
             $table->string('status')->default('active');
             $table->timestamps();
         });

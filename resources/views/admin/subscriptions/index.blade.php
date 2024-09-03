@@ -147,15 +147,7 @@
                                                                 placeholder="{{ __('admin.price') }}" />
                                                             <div class="text-danger" id="error-price"></div>
                                                         </div>
-                                                        <div class="col-md-6 fv-row">
-                                                            <label
-                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.duration') }}</label>
-                                                            <input type="number" name="duration"
-                                                                class="form-control form-control-solid mb-3 mb-lg-0"
-                                                                placeholder="{{ __('admin.duration') }}" />
-                                                            <div class="invalid-feedback text-danger" id="error-duration">
-                                                            </div>
-                                                        </div>
+
                                                     </div>
                                                 </div>
 
@@ -294,15 +286,7 @@
                                                             <div class="invalid-feedback text-danger"
                                                                 id="error-edit-price" style="display: none;"></div>
                                                         </div>
-                                                        <div class="col-md-6 fv-row">
-                                                            <label
-                                                                class="required fw-semibold fs-6 mb-2">{{ __('admin.duration') }}</label>
-                                                            <input type="number" name="duration" id="editDuration"
-                                                                class="form-control form-control-solid mb-3 mb-lg-0"
-                                                                placeholder="{{ __('admin.duration') }}" />
-                                                            <div class="invalid-feedback text-danger"
-                                                                id="error-edit-duration" style="display: none;"></div>
-                                                        </div>
+
                                                     </div>
                                                 </div>
 
@@ -348,7 +332,7 @@
                                 <th>{{ __('admin.description_en') }}</th>
                                 <th>{{ __('admin.type') }}</th>
                                 <th>{{ __('admin.price') }}</th>
-                                <th>{{ __('admin.duration') }}</th>
+                                {{-- <th>{{ __('admin.duration') }}</th> --}}
                                 <th>{{ __('admin.action') }}</th>
                             </tr>
                         </thead>
@@ -399,7 +383,7 @@
                         $('#myTable').DataTable().destroy();
                         $('#myTable tbody').empty();
                         var permissions = response.permissions;
-                        
+
                         $.each(response.data, function(key, item) {
                             var title_ar = item.title_ar ?? '';
                             var title_en = item.title_en ?? '';

@@ -27,6 +27,7 @@ return new class extends Migration
             ->onDelete('cascade')
             ->onUpdate('cascade');
             $table->boolean('status')->default(true);
+            $table->integer('duration')->nullable();
             $table->string('lat')->nullable();
             $table->string('lon')->nullable();
             $table->string('mobile')->unique()->nullable();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Area;
 use App\Models\Zone;
@@ -106,6 +107,7 @@ class StoreController extends Controller
             'mobile' => 'required|unique:stores,mobile',
             'email' => 'required|email|unique:stores,email',
             'password' => 'required',
+            'duration' => 'required|numeric',
         ]);
 
         $validatedData['admin_id'] = Auth::guard('admin')->user()->id;
@@ -154,10 +156,13 @@ class StoreController extends Controller
                 $gallaryStory->save();
             }
         }
-          foreach ($request->tags as $tagId) {
-        $store->tags()->attach($tagId);
-    }
-
+        if ($request->has('tags') && is_array($request->tags)) {
+            foreach ($request->tags as $tagId) {
+                $store->tags()->attach($tagId);
+            }
+        }
+        $store->expires_at = Carbon::now()->addDays($store->duration);
+        $store->save();
         Session::flash('success', 'Store created successfully');
         return back();
 
@@ -217,6 +222,7 @@ class StoreController extends Controller
             'zone_id' => 'required|integer|exists:zones,id',
             'lat' => 'required|numeric',
             'lon' => 'required|numeric',
+            'duration' => 'required|numeric',
             'mobile' => 'required|unique:stores,mobile,' . $id,
             'email' => 'required|email|unique:stores,email,' . $id,
         ]);
@@ -270,6 +276,8 @@ class StoreController extends Controller
         if ($request->has('tags')) {
             $store->tags()->sync($request->tags); // Sync tags with the store
         }
+        $store->expires_at = Carbon::now()->addDays($store->duration);
+        $store->save();
         Session::flash('success', 'Updated successfully');
         return back();
     }
