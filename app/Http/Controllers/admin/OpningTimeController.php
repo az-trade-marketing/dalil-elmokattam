@@ -156,7 +156,6 @@ class OpningTimeController extends Controller
      */
     public function destroy($id)
     {
-
         // Find the store by ID
         $store = Store::findOrFail($id);
 
@@ -164,6 +163,7 @@ class OpningTimeController extends Controller
         OpningTime::where('store_id', $store->id)->delete();
 
         // Redirect back with a success message
+        return response()->json("true");
         return redirect()->route('opening-time.index')->with('success', __('admin.delete_success'));
     }
 

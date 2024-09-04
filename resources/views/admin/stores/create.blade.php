@@ -112,9 +112,7 @@
                                 <div class="col-lg-9">
                                     <label class="col-lg-4 col-form-label fw-bold fs-6">{{ __('admin.tags') }}</label>
                                     <div class="col-lg-9">
-                                        <select id="tags-select" class="form-select form-select-solid" name="tags[]" multiple>
-                                            <!-- Tags will be populated here -->
-                                        </select>
+                                        <input id="tags-select" name="tags[]" class="form-control mb-2" value="" />
                                     </div>
                                 </div>
 
@@ -138,7 +136,7 @@
                                         class="required fw-semibold fs-6 mb-2">{{ __('admin.duration') }}</label>
                                     <input type="number" name="duration"
                                         class="form-control form-control-solid mb-3 mb-lg-0"
-                                        placeholder="{{ __('admin.duration') }}" />
+                                        placeholder="{{ __('admin.duration') }}" {{ old('duration') }} />
                                     <div class="invalid-feedback text-danger" id="error-duration">
                                     </div>
                                 </div>
@@ -218,6 +216,8 @@
 @endsection
 @section("js")
 <!--end::Basic info-->
+<script src="{{ asset("admin/assets/js/custom/apps/ecommerce/catalog/save-product.js") }}"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCI03Vsc4rF9UjIAQkpD0oOSv40Zm_6S-Y&libraries=places&callback=initMap&v=3.45.8"></script>
 
@@ -510,15 +510,34 @@ document.getElementById('category-select').addEventListener('change', function()
         fetch('/admin/getTags/' + categoryId)
             .then(response => response.json())
             .then(data => {
-                var tagsSelect = document.getElementById('tags-select');
-                tagsSelect.innerHTML = ''; // Clear previous tags
+                // var tagsSelect = document.getElementById('tags-select');
+                // tagsSelect.innerHTML = ''; // Clear previous tags
 
-                data.data.forEach(tag => {
-                    var option = document.createElement('option');
-                    option.value = tag.id;
-                    option.textContent = tag.name_en; // Assuming 'name' is the tag's display attribute
-                    tagsSelect.appendChild(option);
-                });
+                // data.data.forEach(tag => {
+                //     var option = document.createElement('option');
+                //     option.value = tag.id;
+                //     option.textContent = tag.name_en; // Assuming 'name' is the tag's display attribute
+                //     tagsSelect.appendChild(option);
+                // });
+                    console.log(data.data);
+                    var selectedTags = data.data.map(item => item.name_ar); // أو الحقل المناسب
+
+                    const t = document.getElementById("tags-select");
+                    if (t) {
+                        var tagify = new Tagify(t, {
+                            whitelist: selectedTags,
+                            dropdown: {
+                                maxItems: 20,
+                                classname: "tagify__inline__suggestions",
+                                enabled: 0,
+                                closeOnSelect: false
+                            }
+                        });
+
+                        // إضافة العلامات المحددة
+                        tagify.addTags(selectedTags);
+                    }
+
             })
             .catch(error => console.error('Error:', error));
     }

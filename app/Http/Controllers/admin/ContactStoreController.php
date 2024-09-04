@@ -16,7 +16,7 @@ class ContactStoreController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
         return view('admin.contacts-store.index');
     }
     public function data()
@@ -36,7 +36,19 @@ class ContactStoreController extends Controller
         $record->save();
 
         // Send email
-        Mail::to($record->email)->send(new YourReplyMail($record));
+        // Mail::to($record->email)->send(new YourReplyMail($record));
+        Mail::html("
+            <html>
+            <body>
+                <h1>Hello, $record->name</h1>
+                <p>$record->reply</p>
+                <p>Thank you for contacting us.</p>
+            </body>
+            </html>
+        ", function ($message) use ($record)  {
+            $message->to($record->email)
+                    ->subject('replay');
+        });
 
         return response()->json(['success' => 'Reply sent successfully.']);
     }

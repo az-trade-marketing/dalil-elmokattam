@@ -89,7 +89,6 @@ class StoreController extends Controller
 
     public function store(Request $request)
     {
-
         $validatedData = $request->validate([
             'name_en' => 'required|string|max:255',
             'name_ar' => 'required|string|max:255',
@@ -138,12 +137,11 @@ class StoreController extends Controller
         if ($request->has('features.text')) {
             $store->update(['contacts' => $request->features['text'] ?? null]);
         }
-
         // Handle video
         if ($request->hasFile('features.vidio')) {
             $video = $request->file('features.vidio');
             $videoPath = upload($video);
-            $store->update(['vidio' => $videoPath]);
+            $store->vidio = $videoPath;
         }
 
         // Handle multiple images
@@ -158,7 +156,12 @@ class StoreController extends Controller
         }
         if ($request->has('tags') && is_array($request->tags)) {
             foreach ($request->tags as $tagId) {
-                $store->tags()->attach($tagId);
+                $decodedData = json_decode($tagId, true);
+                $tags = array_map(function($item) {
+                    return $item['value'];
+                }, $decodedData);
+                $tag = Tag::where("name_ar",$tags)->orWhere("name_en",$tags)->first();
+                $store->tags()->attach($tag->id);
             }
         }
         $store->expires_at = Carbon::now()->addDays($store->duration);

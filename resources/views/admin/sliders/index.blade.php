@@ -250,7 +250,7 @@
                             var imagePath = '{{ image_path() }}/';
                             var actionButtons = '';
                             if (permissions.canCreate) {
-                                actionButtons += ' <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-id="'+ item.id +'">{{ __("admin.edit") }}</a>';
+                                actionButtons += ' <a href="javascript:void(0);" class="btn btn-primary btn-active-light-primary btn-flex btn-center btn-sm editButton me-2" data-bs-toggle="modal" data-bs-target="#kt_modal_edit_user" data-id="'+ item.id +'">{{ __("admin.edit") }}</a>';
                             }
                             if (permissions.canDelete) {
                                 actionButtons += '<a href="javascript:void(0);" class="btn btn-danger btn-active-light-primary btn-flex btn-center btn-sm deleteButton" data-id="'+ item.id +'" value="'+item.id+'">{{ __("admin.delete") }}</a>';
@@ -285,6 +285,7 @@
 
             $(document).on('click', '.editButton', function() {
     var id = $(this).data('id');
+    console.log("gooooood");
 
     $.ajax({
         url: '/admin/sliders/' + id,
@@ -293,7 +294,6 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         success: function(response) {
-            dd
             $('#editId').val(response.id);
             $('#editTitle').val(response.title);
             $('#editStore').val(response.store_id);
